@@ -1,0 +1,35 @@
+@direccionApi = http://localhost:5279
+
+### Estado de la API
+GET {{direccionApi}}/api/health
+Accept: application/json
+
+### Inicio de sesión
+POST {{direccionApi}}/api/auth/login
+Content-Type: application/json
+
+{
+  "nombreUsuario": "admin",
+  "contrasena": "Admin123!"
+}
+
+### Sesión actual
+# Pegar el token devuelto por el login en la variable token.
+@token = PEGAR_TOKEN_AQUI
+GET {{direccionApi}}/api/auth/me
+Authorization: Bearer {{token}}
+Accept: application/json
+
+### Panel de control
+GET {{direccionApi}}/api/dashboard
+Authorization: Bearer {{token}}
+Accept: application/json
+
+### Productos
+GET {{direccionApi}}/api/productos?pagina=1&tamano=10
+Authorization: Bearer {{token}}
+Accept: application/json
+
+### Cierre de sesión
+POST {{direccionApi}}/api/auth/logout
+Authorization: Bearer {{token}}

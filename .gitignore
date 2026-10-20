@@ -1,0 +1,59 @@
+# ============================================================
+# Sistema de Inventarios - archivos ignorados por Git
+# ============================================================
+
+# .NET / Visual Studio
+**/bin/
+**/obj/
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.pdb
+*.cache
+
+# Next.js / Node
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/.turbo/
+frontend/.vercel/
+frontend/coverage/
+*.tsbuildinfo
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Variables de entorno y secretos
+.env
+.env.*
+!.env.example
+!**/.env.example
+appsettings.Production.json
+appsettings.*.local.json
+
+# Publicación y empaquetados
+publish/
+*.zip
+*.rar
+*.7z
+
+# Documentos generados
+docs/informe.html
+__pycache__/
+*.pyc
+
+# Registros y respaldos
+*.log
+*.bak
+*.trn
+
+# Sistema operativo / editores
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/
+*.swp

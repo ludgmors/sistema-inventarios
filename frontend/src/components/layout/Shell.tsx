@@ -1,0 +1,23 @@
+"use client";
+
+import { useState, type ReactNode } from "react";
+import { Sidebar } from "./Sidebar";
+import { Topbar } from "./Topbar";
+
+export function Shell({ children }: { children: ReactNode }) {
+  const [menuAbierto, setMenuAbierto] = useState(false);
+
+  return (
+    <div className="min-h-screen bg-slate-100">
+      <Sidebar abierto={menuAbierto} onCerrar={() => setMenuAbierto(false)} />
+
+      <div className="lg:pl-64 print:pl-0">
+        <Topbar onAbrirMenu={() => setMenuAbierto(true)} />
+
+        <main className="mx-auto w-full max-w-[1600px] p-4 lg:p-8 print:p-0">
+          {children}
+        </main>
+      </div>
+    </div>
+  );
+}
