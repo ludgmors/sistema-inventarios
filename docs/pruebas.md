@@ -30,6 +30,7 @@ Este documento registra las pruebas técnicas ejecutadas durante el desarrollo y
 | CP-05 | Arrancar el frontend | Escucha en el puerto 3000 | Servicio iniciado | Aprobada |
 | CP-06 | Consultar `/api/health` | Respuesta correcta | Correcta | Aprobada |
 | CP-07 | Abrir `/swagger` | Interfaz OpenAPI | Disponible | Aprobada |
+| CP-08 | Validar rutas principales con Edge automatizado | 9 rutas con 200 y sin errores de consola | Correcto | Aprobada |
 
 ## 3. Seguridad
 

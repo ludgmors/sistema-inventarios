@@ -56,7 +56,7 @@ export function Topbar({ onAbrirMenu }: { onAbrirMenu: () => void }) {
 
         <div className="min-w-0">
           <h2 className="truncate text-sm font-semibold text-slate-800">{titulo}</h2>
-          <p className="hidden items-center gap-1 text-[11px] capitalize text-slate-400 sm:flex">
+          <p className="hidden items-center gap-1 text-[11px] text-slate-400 first-letter:uppercase sm:flex">
             <CalendarDays className="h-3 w-3" />
             {fechaLarga()}
           </p>

@@ -10,6 +10,7 @@ export const formatoNumero = (valor: number | null | undefined): string =>
     maximumFractionDigits: 4,
   }).format(Number(valor ?? 0));
 
+// Fechas en formato DD/MM/AAAA; la moneda conserva la configuración de Panamá.
 export const formatoFecha = (
   valor: string | null | undefined,
   incluirHora = false,
@@ -20,7 +21,7 @@ export const formatoFecha = (
 
   if (Number.isNaN(fecha.getTime())) return "—";
 
-  return new Intl.DateTimeFormat("es-PA", {
+  return new Intl.DateTimeFormat("es-MX", {
     day: "2-digit",
     month: "2-digit",
     year: "numeric",
@@ -35,7 +36,7 @@ export const formatoFechaCorta = (valor: string | null | undefined): string => {
   const fecha = new Date(valor);
   if (Number.isNaN(fecha.getTime())) return "—";
 
-  return new Intl.DateTimeFormat("es-PA", {
+  return new Intl.DateTimeFormat("es-MX", {
     day: "2-digit",
     month: "short",
   }).format(fecha);
@@ -57,7 +58,7 @@ export const haceDiasISO = (dias: number): string => {
 };
 
 export const fechaLarga = (): string =>
-  new Intl.DateTimeFormat("es-PA", {
+  new Intl.DateTimeFormat("es-MX", {
     weekday: "long",
     day: "numeric",
     month: "long",
