@@ -48,6 +48,7 @@ Este documento registra las pruebas técnicas ejecutadas durante el desarrollo y
 | CS-10 | Cambio de contraseña con clave actual incorrecta | Error de negocio | Aprobada |
 | CS-11 | Inspeccionar la cookie en el navegador | `HttpOnly`, `SameSite=Lax` | Configurada |
 | CS-12 | Abrir `/productos` sin cookie | Redirección a `/login` | Aprobada |
+| CS-13 | Escribir una ruta restringida con otro rol | Pantalla de acceso restringido, sin formularios | Aprobada |
 
 ## 4. Catálogos
 

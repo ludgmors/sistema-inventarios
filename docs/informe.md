@@ -250,7 +250,7 @@ El impuesto **ITBMS de Panamá** se utiliza únicamente como valor inicial de de
 | **Ventas** | Clientes, ventas, notas de crédito/débito, existencias y reportes. |
 | **Consulta** | Acceso de solo lectura a catálogos, movimientos, existencias, reportes y perfil. |
 
-La API aplica la autorización real. El menú del frontend oculta opciones no permitidas, pero la seguridad no depende de la interfaz.
+La API aplica la autorización real. El menú del frontend oculta opciones no permitidas y, si se escribe una ruta restringida, muestra una pantalla de acceso restringido; la seguridad no depende de la interfaz.
 
 ## 10. Arquitectura del sistema
 
