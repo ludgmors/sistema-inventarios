@@ -89,6 +89,7 @@ dotnet publish -c Release -o publish
 
 ## Documentación
 
+- [Contexto consolidado del proyecto](CONTEXTO.md)
 - [Informe del proyecto](docs/informe.md)
 - [Informe en PDF](docs/informe.pdf)
 - [Manual de usuario](docs/manual-usuario.md)

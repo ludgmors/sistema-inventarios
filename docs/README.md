@@ -2,6 +2,8 @@
 
 Esta carpeta reúne los documentos de análisis, diseño, operación, pruebas y entrega del proyecto.
 
+> Para una visión consolidada del estado, la arquitectura, los comandos y los pendientes, consultar [`../CONTEXTO.md`](../CONTEXTO.md).
+
 ## Contenido
 
 | Documento | Descripción |
