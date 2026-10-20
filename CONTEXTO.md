@@ -361,6 +361,7 @@ La documentación interactiva está en Swagger.
 | `docs/guion-video.md` | Guion cronometrado de 30 minutos + 5. |
 | `docs/checklist-entrega.md` | Control de requisitos y entregables. |
 | `docs/generar-informe.py` | Generador del HTML imprimible del informe. |
+| `COMO-EJECUTAR.md` | Guía paso a paso para arrancar, verificar y resolver problemas locales. |
 
 Pruebas ejecutadas:
 

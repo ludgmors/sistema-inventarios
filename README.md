@@ -31,6 +31,8 @@ sistema-inventarios/
 
 ## Puesta en marcha
 
+> Guía detallada con verificación y solución de problemas: [`COMO-EJECUTAR.md`](COMO-EJECUTAR.md).
+
 ### 1. Base de datos
 
 La cadena de conexión de desarrollo está en `backend/Inventarios.Api/appsettings.json`:
@@ -90,6 +92,7 @@ dotnet publish -c Release -o publish
 ## Documentación
 
 - [Contexto consolidado del proyecto](CONTEXTO.md)
+- [Cómo ejecutar el proyecto](COMO-EJECUTAR.md)
 - [Informe del proyecto](docs/informe.md)
 - [Informe en PDF](docs/informe.pdf)
 - [Manual de usuario](docs/manual-usuario.md)
