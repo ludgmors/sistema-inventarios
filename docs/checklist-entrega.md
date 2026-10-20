@@ -52,7 +52,7 @@ Este checklist relaciona los requisitos del curso con el estado del proyecto y l
 | Aplicación publicada en web | Pendiente | Requiere cuentas de Vercel y MonsterASP.NET. |
 | Frontend en GitHub | Pendiente | Repositorio local listo para inicializar. |
 | Backend en GitHub | Pendiente | Mismo repositorio, carpeta `backend/`. |
-| Informe PDF | Pendiente de exportar | Fuente Markdown completa en `docs/informe.md`. |
+| Informe PDF | Completado | `docs/informe.pdf`, 28 páginas con diagramas renderizados. |
 | Informe en Google Drive | Pendiente | Subir PDF y configurar permiso de lectura. |
 | Video de 30 minutos | Pendiente | Guion completo en `docs/guion-video.md`. |
 | Video en Google Drive | Pendiente | Subir MP4 y configurar permiso de lectura. |
@@ -86,8 +86,8 @@ Este checklist relaciona los requisitos del curso con el estado del proyecto y l
 - [x] Documentos de prueba depurados.
 - [x] `.gitignore` configurado.
 - [x] Variables de entorno de ejemplo creadas.
-- [ ] Revisar que no haya secretos reales en el repositorio.
-- [ ] Inicializar Git y hacer el primer commit.
+- [x] Revisar que no haya secretos reales en el repositorio.
+- [x] Inicializar Git y hacer el primer commit.
 - [ ] Crear repositorio remoto y subir.
 
 ### Seguridad
@@ -126,8 +126,8 @@ Este checklist relaciona los requisitos del curso con el estado del proyecto y l
 ### Documentación y entrega
 
 - [ ] Completar nombres y porcentajes.
-- [ ] Exportar el informe a PDF.
-- [ ] Revisar que los diagramas Mermaid se vean en el PDF.
+- [x] Exportar el informe a PDF.
+- [x] Revisar que los diagramas Mermaid se vean en el PDF.
 - [ ] Grabar el video con todos los integrantes.
 - [ ] Verificar audio y duración.
 - [ ] Subir informe y video a Google Drive.

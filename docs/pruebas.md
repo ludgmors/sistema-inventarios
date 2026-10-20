@@ -182,6 +182,8 @@ Estas pruebas deben ejecutarse en el navegador y en el entorno publicado:
 | UAT-07 | Prueba en Vercel/MonsterASP.NET | _[Integrante]_ | Enlaces |
 | UAT-08 | Revisión responsive en móvil | _[Integrante]_ | Captura |
 
+UAT-01 y UAT-08 se validaron en local con Edge automatizado. Deben repetirse en el entorno publicado antes de la entrega.
+
 ## 13. Criterios de aceptación
 
 La entrega se considera funcional cuando:
