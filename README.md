@@ -90,6 +90,7 @@ dotnet publish -c Release -o publish
 ## Documentación
 
 - [Informe del proyecto](docs/informe.md)
+- [Informe en PDF](docs/informe.pdf)
 - [Manual de usuario](docs/manual-usuario.md)
 - [Guía de despliegue](docs/despliegue.md)
 - [Guion del video](docs/guion-video.md)

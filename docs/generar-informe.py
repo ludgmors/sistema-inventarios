@@ -1,10 +1,14 @@
 """Genera una versión HTML imprimible del informe a partir de Markdown.
 
+Requisitos:
+    python -m pip install markdown
+    Microsoft Edge (para imprimir el HTML a PDF)
+
 Uso:
     python docs/generar-informe.py
 
-El HTML resultante incluye los diagramas Mermaid y puede imprimirse a PDF con
-Microsoft Edge en modo headless. El comando utilizado se documenta al final.
+Después, imprimir docs/informe.html a PDF con Edge en modo headless. El
+comando exacto está documentado en docs/README.md.
 """
 
 from __future__ import annotations
