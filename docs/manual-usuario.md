@@ -112,7 +112,7 @@ Ruta: **Operaciones → Compras**
 1. Presionar **Nueva compra**.
 2. Seleccionar el proveedor.
 3. Confirmar o cambiar la fecha.
-4. Verificar el porcentaje de impuesto. El valor inicial es 7 %, pero puede modificarse.
+4. Verificar el porcentaje de impuesto. El valor inicial es 12 %, pero puede modificarse.
 5. Agregar una o más líneas:
    - producto;
    - cantidad;
@@ -321,7 +321,7 @@ Grupos disponibles:
 | Grupo | Ejemplos |
 |---|---|
 | Empresa | Nombre, documento, dirección, teléfono, correo |
-| Impuestos | Porcentaje inicial (7 % por defecto) |
+| Impuestos | Porcentaje inicial (12 % por defecto) |
 | Moneda | Símbolo y código ISO |
 | Inventario | Permitir stock negativo, existencia mínima por defecto |
 | Documentos | Prefijos de compras, ventas, notas y ajustes |

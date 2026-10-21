@@ -161,7 +161,7 @@ export default function PaginaPanel() {
                   tick={{ fontSize: 11, fill: "#64748b" }}
                   axisLine={false}
                   tickLine={false}
-                  tickFormatter={(valor: number) => `$${valor}`}
+                  tickFormatter={(valor: number) => `Q${valor}`}
                 />
                 <Tooltip
                   formatter={(valor) => [formatoMoneda(Number(valor)), "Ventas"]}

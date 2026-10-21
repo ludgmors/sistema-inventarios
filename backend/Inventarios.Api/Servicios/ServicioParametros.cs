@@ -43,7 +43,7 @@ public class ServicioParametros
     }
 
     public Task<decimal> ImpuestoPorcentajeAsync()
-        => ObtenerDecimalAsync("Impuesto.Porcentaje", 7m);
+        => ObtenerDecimalAsync("Impuesto.Porcentaje", 12m);
 
     public Task<bool> PermiteStockNegativoAsync()
         => ObtenerBooleanoAsync("Inventario.PermitirStockNegativo", false);

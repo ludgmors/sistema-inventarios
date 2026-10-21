@@ -31,7 +31,7 @@ export default function PaginaNuevaCompra() {
 
   const [proveedorId, setProveedorId] = useState(0);
   const [fecha, setFecha] = useState(hoyISO());
-  const [impuestoPorcentaje, setImpuestoPorcentaje] = useState(7);
+  const [impuestoPorcentaje, setImpuestoPorcentaje] = useState(12);
   const [observaciones, setObservaciones] = useState("");
   const [lineas, setLineas] = useState<LineaCompra[]>([
     { productoId: 0, cantidad: 1, precioUnitario: 0 },

@@ -8,6 +8,8 @@ namespace Inventarios.Api.Datos;
 
 public class SembradorDatos
 {
+    private const decimal TasaCambioUsdAQuetzales = 7.80m;
+
     private readonly ContextoInventarios _contexto;
     private readonly IPasswordHasher<Usuario> _hasher;
     private readonly Servicios.ServicioCompras _compras;
@@ -34,6 +36,7 @@ public class SembradorDatos
 
         await SembrarSeguridadAsync();
         await SembrarParametrosAsync();
+        await ConvertirMonedaAQuetzalesAsync();
         await SembrarSecuenciasAsync();
         await SembrarCatalogosAsync();
         await SembrarOperacionesDemoAsync();
@@ -94,13 +97,13 @@ public class SembradorDatos
         var parametros = new List<ParametroSistema>
         {
             new() { Clave = "Empresa.Nombre", Valor = "Distribuidora El Buen Precio", Descripcion = "Nombre comercial de la empresa", Grupo = "Empresa" },
-            new() { Clave = "Empresa.Documento", Valor = "8-888-8888", Descripcion = "RUC o documento fiscal", Grupo = "Empresa" },
-            new() { Clave = "Empresa.Direccion", Valor = "Ciudad de Panamá, Panamá", Descripcion = "Dirección principal", Grupo = "Empresa" },
-            new() { Clave = "Empresa.Telefono", Valor = "+507 6000-0000", Descripcion = "Teléfono de contacto", Grupo = "Empresa" },
+            new() { Clave = "Empresa.Documento", Valor = "8765432-1", Descripcion = "NIT o documento fiscal", Grupo = "Empresa" },
+            new() { Clave = "Empresa.Direccion", Valor = "Zona 1, Ciudad de Guatemala, Guatemala", Descripcion = "Dirección principal", Grupo = "Empresa" },
+            new() { Clave = "Empresa.Telefono", Valor = "+502 6000-0000", Descripcion = "Teléfono de contacto", Grupo = "Empresa" },
             new() { Clave = "Empresa.Correo", Valor = "info@buenprecio.com", Descripcion = "Correo de contacto", Grupo = "Empresa" },
-            new() { Clave = "Impuesto.Porcentaje", Valor = "7", Descripcion = "Porcentaje de impuesto aplicado a las transacciones", Grupo = "Impuestos" },
-            new() { Clave = "Moneda.Simbolo", Valor = "$", Descripcion = "Símbolo de la moneda", Grupo = "Moneda" },
-            new() { Clave = "Moneda.Codigo", Valor = "USD", Descripcion = "Código ISO de la moneda", Grupo = "Moneda" },
+            new() { Clave = "Impuesto.Porcentaje", Valor = "12", Descripcion = "Porcentaje de impuesto aplicado a las transacciones", Grupo = "Impuestos" },
+            new() { Clave = "Moneda.Simbolo", Valor = "Q", Descripcion = "Símbolo de la moneda", Grupo = "Moneda" },
+            new() { Clave = "Moneda.Codigo", Valor = "GTQ", Descripcion = "Código ISO de la moneda", Grupo = "Moneda" },
             new() { Clave = "Inventario.PermitirStockNegativo", Valor = "false", Descripcion = "Permite vender sin existencia disponible", Grupo = "Inventario" },
             new() { Clave = "Inventario.ExistenciaMinimaDefecto", Valor = "5", Descripcion = "Existencia mínima sugerida por producto", Grupo = "Inventario" },
             new() { Clave = "Documento.PrefijoCompra", Valor = "COMP", Descripcion = "Prefijo de compras", Grupo = "Documentos" },
@@ -120,6 +123,176 @@ public class SembradorDatos
 
         await _contexto.SaveChangesAsync();
     }
+
+    private async Task ConvertirMonedaAQuetzalesAsync()
+    {
+        var parametros = await _contexto.ParametrosSistema.ToDictionaryAsync(parametro => parametro.Clave);
+
+        if (!parametros.TryGetValue("Moneda.Codigo", out var codigo) ||
+            !string.Equals(codigo.Valor, "USD", StringComparison.OrdinalIgnoreCase))
+        {
+            return;
+        }
+
+        await using var transaccion = await _contexto.Database.BeginTransactionAsync();
+
+        foreach (var producto in await _contexto.Productos.ToListAsync())
+        {
+            producto.PrecioCosto = ConvertirImporte(producto.PrecioCosto);
+            producto.PrecioVenta = ConvertirImporte(producto.PrecioVenta);
+        }
+
+        foreach (var movimiento in await _contexto.MovimientosInventario.ToListAsync())
+        {
+            movimiento.CostoUnitario = ConvertirImporte(movimiento.CostoUnitario);
+        }
+
+        foreach (var compra in await _contexto.Compras.Include(compra => compra.Detalles).ToListAsync())
+        {
+            foreach (var detalle in compra.Detalles)
+            {
+                detalle.PrecioUnitario = ConvertirImporte(detalle.PrecioUnitario);
+                detalle.Subtotal = Math.Round(
+                    detalle.Cantidad * detalle.PrecioUnitario, 2, MidpointRounding.AwayFromZero);
+            }
+
+            compra.Subtotal = compra.Detalles.Sum(detalle => detalle.Subtotal);
+            compra.ImpuestoPorcentaje = 12m;
+            compra.Impuesto = Math.Round(
+                compra.Subtotal * compra.ImpuestoPorcentaje / 100m, 2, MidpointRounding.AwayFromZero);
+            compra.Total = compra.Subtotal + compra.Impuesto;
+        }
+
+        foreach (var venta in await _contexto.Ventas.Include(venta => venta.Detalles).ToListAsync())
+        {
+            foreach (var detalle in venta.Detalles)
+            {
+                detalle.PrecioUnitario = ConvertirImporte(detalle.PrecioUnitario);
+                detalle.Descuento = ConvertirImporte(detalle.Descuento);
+                detalle.Subtotal = Math.Round(
+                    Math.Round(detalle.Cantidad * detalle.PrecioUnitario, 2, MidpointRounding.AwayFromZero) - detalle.Descuento,
+                    2,
+                    MidpointRounding.AwayFromZero);
+            }
+
+            venta.Subtotal = venta.Detalles.Sum(detalle => detalle.Subtotal);
+            venta.Descuento = ConvertirImporte(venta.Descuento);
+            venta.ImpuestoPorcentaje = 12m;
+
+            var baseImponible = venta.Subtotal - venta.Descuento;
+            venta.Impuesto = Math.Round(
+                baseImponible * venta.ImpuestoPorcentaje / 100m, 2, MidpointRounding.AwayFromZero);
+            venta.Total = baseImponible + venta.Impuesto;
+        }
+
+        foreach (var nota in await _contexto.NotasAjuste.Include(nota => nota.Detalles).ToListAsync())
+        {
+            foreach (var detalle in nota.Detalles)
+            {
+                detalle.PrecioUnitario = ConvertirImporte(detalle.PrecioUnitario);
+                detalle.Subtotal = Math.Round(
+                    detalle.Cantidad * detalle.PrecioUnitario, 2, MidpointRounding.AwayFromZero);
+            }
+
+            nota.Subtotal = nota.Detalles.Sum(detalle => detalle.Subtotal);
+            nota.ImpuestoPorcentaje = 12m;
+            nota.Impuesto = Math.Round(
+                nota.Subtotal * nota.ImpuestoPorcentaje / 100m, 2, MidpointRounding.AwayFromZero);
+            nota.Total = nota.Subtotal + nota.Impuesto;
+        }
+
+        ActualizarParametro(parametros, "Moneda.Simbolo", "Q");
+        ActualizarParametro(parametros, "Moneda.Codigo", "GTQ");
+        ActualizarParametro(parametros, "Impuesto.Porcentaje", "12");
+        ActualizarParametroSiCoincide(parametros, "Empresa.Documento", "8-888-8888", "8765432-1");
+        ActualizarParametroSiCoincide(parametros, "Empresa.Direccion", "Ciudad de Panamá, Panamá", "Zona 1, Ciudad de Guatemala, Guatemala");
+        ActualizarParametroSiCoincide(parametros, "Empresa.Telefono", "+507 6000-0000", "+502 6000-0000");
+
+        await ActualizarDatosDemoGuatemalaAsync();
+
+        await _contexto.SaveChangesAsync();
+        await transaccion.CommitAsync();
+
+        _logger.LogInformation(
+            "Datos convertidos de USD a GTQ con tipo de cambio {Tasa}.", TasaCambioUsdAQuetzales);
+    }
+
+    private async Task ActualizarDatosDemoGuatemalaAsync()
+    {
+        foreach (var proveedor in await _contexto.Proveedores.ToListAsync())
+        {
+            switch (proveedor.Codigo)
+            {
+                case "PRV-001":
+                    proveedor.Documento = ActualizarSiCoincide(proveedor.Documento, "8-123-4567", "1234567-8");
+                    proveedor.Telefono = ActualizarSiCoincide(proveedor.Telefono, "+507 6111-1111", "+502 6111-1111");
+                    proveedor.Direccion = ActualizarSiCoincide(proveedor.Direccion, "Vía España, Ciudad de Panamá", "Zona 4, Ciudad de Guatemala");
+                    break;
+                case "PRV-002":
+                    proveedor.Documento = ActualizarSiCoincide(proveedor.Documento, "8-234-5678", "2345678-9");
+                    proveedor.Telefono = ActualizarSiCoincide(proveedor.Telefono, "+507 6222-2222", "+502 6222-2222");
+                    proveedor.Direccion = ActualizarSiCoincide(proveedor.Direccion, "Zona Industrial, Panamá", "Zona 12, Ciudad de Guatemala");
+                    break;
+                case "PRV-003":
+                    proveedor.Documento = ActualizarSiCoincide(proveedor.Documento, "8-345-6789", "3456789-0");
+                    proveedor.Telefono = ActualizarSiCoincide(proveedor.Telefono, "+507 6333-3333", "+502 6333-3333");
+                    proveedor.Direccion = ActualizarSiCoincide(proveedor.Direccion, "Avenida Balboa, Panamá", "Mixco, Guatemala");
+                    break;
+            }
+        }
+
+        foreach (var cliente in await _contexto.Clientes.ToListAsync())
+        {
+            switch (cliente.Codigo)
+            {
+                case "CLI-001":
+                    cliente.Telefono = ActualizarSiCoincide(cliente.Telefono, "+507 6000-0000", "+502 6000-0000");
+                    break;
+                case "CLI-002":
+                    cliente.Documento = ActualizarSiCoincide(cliente.Documento, "8-456-7890", "4567890-1");
+                    cliente.Telefono = ActualizarSiCoincide(cliente.Telefono, "+507 6444-4444", "+502 6444-4444");
+                    break;
+                case "CLI-003":
+                    cliente.Documento = ActualizarSiCoincide(cliente.Documento, "8-567-8901", "5678901-2");
+                    cliente.Telefono = ActualizarSiCoincide(cliente.Telefono, "+507 6555-5555", "+502 6555-5555");
+                    break;
+                case "CLI-004":
+                    cliente.Documento = ActualizarSiCoincide(cliente.Documento, "8-678-9012", "6789012-3");
+                    cliente.Telefono = ActualizarSiCoincide(cliente.Telefono, "+507 6666-6666", "+502 6666-6666");
+                    break;
+            }
+        }
+    }
+
+    private static void ActualizarParametro(
+        IDictionary<string, ParametroSistema> parametros,
+        string clave,
+        string valor)
+    {
+        if (parametros.TryGetValue(clave, out var parametro))
+        {
+            parametro.Valor = valor;
+        }
+    }
+
+    private static void ActualizarParametroSiCoincide(
+        IDictionary<string, ParametroSistema> parametros,
+        string clave,
+        string valorAnterior,
+        string valorNuevo)
+    {
+        if (parametros.TryGetValue(clave, out var parametro) &&
+            string.Equals(parametro.Valor, valorAnterior, StringComparison.Ordinal))
+        {
+            parametro.Valor = valorNuevo;
+        }
+    }
+
+    private static string? ActualizarSiCoincide(string? valorActual, string valorAnterior, string valorNuevo) =>
+        string.Equals(valorActual, valorAnterior, StringComparison.Ordinal) ? valorNuevo : valorActual;
+
+    private static decimal ConvertirImporte(decimal importe) =>
+        Math.Round(importe * TasaCambioUsdAQuetzales, 2, MidpointRounding.AwayFromZero);
 
     private async Task SembrarSecuenciasAsync()
     {
@@ -163,9 +336,9 @@ public class SembradorDatos
         if (!await _contexto.Proveedores.AnyAsync())
         {
             _contexto.Proveedores.AddRange(
-                new Proveedor { Codigo = "PRV-001", RazonSocial = "Distribuidora La Central", Documento = "8-123-4567", Contacto = "Luis Pérez", Telefono = "+507 6111-1111", Correo = "ventas@lacentral.com", Direccion = "Vía España, Ciudad de Panamá" },
-                new Proveedor { Codigo = "PRV-002", RazonSocial = "Alimentos del Istmo", Documento = "8-234-5678", Contacto = "Marta Ruiz", Telefono = "+507 6222-2222", Correo = "pedidos@istmo.com", Direccion = "Zona Industrial, Panamá" },
-                new Proveedor { Codigo = "PRV-003", RazonSocial = "Suministros del Pacífico", Documento = "8-345-6789", Contacto = "Jorge Díaz", Telefono = "+507 6333-3333", Correo = "compras@pacifico.com", Direccion = "Avenida Balboa, Panamá" });
+                new Proveedor { Codigo = "PRV-001", RazonSocial = "Distribuidora La Central", Documento = "1234567-8", Contacto = "Luis Pérez", Telefono = "+502 6111-1111", Correo = "ventas@lacentral.com", Direccion = "Zona 4, Ciudad de Guatemala" },
+                new Proveedor { Codigo = "PRV-002", RazonSocial = "Alimentos del Istmo", Documento = "2345678-9", Contacto = "Marta Ruiz", Telefono = "+502 6222-2222", Correo = "pedidos@istmo.com", Direccion = "Zona 12, Ciudad de Guatemala" },
+                new Proveedor { Codigo = "PRV-003", RazonSocial = "Suministros del Pacífico", Documento = "3456789-0", Contacto = "Jorge Díaz", Telefono = "+502 6333-3333", Correo = "compras@pacifico.com", Direccion = "Mixco, Guatemala" });
 
             await _contexto.SaveChangesAsync();
         }
@@ -173,10 +346,10 @@ public class SembradorDatos
         if (!await _contexto.Clientes.AnyAsync())
         {
             _contexto.Clientes.AddRange(
-                new Cliente { Codigo = "CLI-001", Nombre = "Cliente General", Documento = "CF", Telefono = "+507 6000-0000" },
-                new Cliente { Codigo = "CLI-002", Nombre = "Supermercado El Ahorro", Documento = "8-456-7890", Telefono = "+507 6444-4444", Correo = "compras@elahorro.com" },
-                new Cliente { Codigo = "CLI-003", Nombre = "Farmacia San José", Documento = "8-567-8901", Telefono = "+507 6555-5555", Correo = "admin@farmaciasanjose.com" },
-                new Cliente { Codigo = "CLI-004", Nombre = "Restaurante La Esquina", Documento = "8-678-9012", Telefono = "+507 6666-6666", Correo = "gerencia@laesquina.com" });
+                new Cliente { Codigo = "CLI-001", Nombre = "Cliente General", Documento = "CF", Telefono = "+502 6000-0000" },
+                new Cliente { Codigo = "CLI-002", Nombre = "Supermercado El Ahorro", Documento = "4567890-1", Telefono = "+502 6444-4444", Correo = "compras@elahorro.com" },
+                new Cliente { Codigo = "CLI-003", Nombre = "Farmacia San José", Documento = "5678901-2", Telefono = "+502 6555-5555", Correo = "admin@farmaciasanjose.com" },
+                new Cliente { Codigo = "CLI-004", Nombre = "Restaurante La Esquina", Documento = "6789012-3", Telefono = "+502 6666-6666", Correo = "gerencia@laesquina.com" });
 
             await _contexto.SaveChangesAsync();
         }
@@ -186,18 +359,18 @@ public class SembradorDatos
             var categorias = await _contexto.Categorias.ToDictionaryAsync(categoria => categoria.Nombre);
 
             _contexto.Productos.AddRange(
-                new Producto { Codigo = "BEB-001", Nombre = "Agua Mineral 600 ml", CategoriaId = categorias["Bebidas"].Id, PrecioCosto = 0.35m, PrecioVenta = 0.75m, ExistenciaMinima = 24 },
-                new Producto { Codigo = "BEB-002", Nombre = "Refresco de Cola 2 L", CategoriaId = categorias["Bebidas"].Id, PrecioCosto = 1.20m, PrecioVenta = 2.25m, ExistenciaMinima = 12 },
-                new Producto { Codigo = "BEB-003", Nombre = "Jugo de Naranja 1 L", CategoriaId = categorias["Bebidas"].Id, PrecioCosto = 1.10m, PrecioVenta = 2.00m, ExistenciaMinima = 10 },
-                new Producto { Codigo = "ALI-001", Nombre = "Arroz Blanco 5 lb", CategoriaId = categorias["Alimentos"].Id, PrecioCosto = 2.80m, PrecioVenta = 4.50m, ExistenciaMinima = 15 },
-                new Producto { Codigo = "ALI-002", Nombre = "Frijol Rojo 1 lb", CategoriaId = categorias["Alimentos"].Id, PrecioCosto = 0.95m, PrecioVenta = 1.75m, ExistenciaMinima = 20 },
-                new Producto { Codigo = "ALI-003", Nombre = "Aceite Vegetal 1 L", CategoriaId = categorias["Alimentos"].Id, PrecioCosto = 1.80m, PrecioVenta = 3.25m, ExistenciaMinima = 12 },
-                new Producto { Codigo = "ALI-004", Nombre = "Café Molido 500 g", CategoriaId = categorias["Alimentos"].Id, PrecioCosto = 4.20m, PrecioVenta = 6.95m, ExistenciaMinima = 8 },
-                new Producto { Codigo = "LIM-001", Nombre = "Detergente en Polvo 1 kg", CategoriaId = categorias["Limpieza"].Id, PrecioCosto = 2.10m, PrecioVenta = 3.75m, ExistenciaMinima = 8 },
-                new Producto { Codigo = "LIM-002", Nombre = "Jabón de Baño", CategoriaId = categorias["Limpieza"].Id, PrecioCosto = 0.55m, PrecioVenta = 1.25m, ExistenciaMinima = 25 },
-                new Producto { Codigo = "LIM-003", Nombre = "Cloro 1 L", CategoriaId = categorias["Limpieza"].Id, PrecioCosto = 1.00m, PrecioVenta = 1.95m, ExistenciaMinima = 10 },
-                new Producto { Codigo = "PAP-001", Nombre = "Cuaderno 100 hojas", CategoriaId = categorias["Papelería"].Id, PrecioCosto = 0.80m, PrecioVenta = 1.60m, ExistenciaMinima = 30 },
-                new Producto { Codigo = "PAP-002", Nombre = "Bolígrafo Azul", CategoriaId = categorias["Papelería"].Id, PrecioCosto = 0.25m, PrecioVenta = 0.75m, ExistenciaMinima = 50 });
+                new Producto { Codigo = "BEB-001", Nombre = "Agua Mineral 600 ml", CategoriaId = categorias["Bebidas"].Id, PrecioCosto = 2.73m, PrecioVenta = 5.85m, ExistenciaMinima = 24 },
+                new Producto { Codigo = "BEB-002", Nombre = "Refresco de Cola 2 L", CategoriaId = categorias["Bebidas"].Id, PrecioCosto = 9.36m, PrecioVenta = 17.55m, ExistenciaMinima = 12 },
+                new Producto { Codigo = "BEB-003", Nombre = "Jugo de Naranja 1 L", CategoriaId = categorias["Bebidas"].Id, PrecioCosto = 8.58m, PrecioVenta = 15.60m, ExistenciaMinima = 10 },
+                new Producto { Codigo = "ALI-001", Nombre = "Arroz Blanco 5 lb", CategoriaId = categorias["Alimentos"].Id, PrecioCosto = 21.84m, PrecioVenta = 35.10m, ExistenciaMinima = 15 },
+                new Producto { Codigo = "ALI-002", Nombre = "Frijol Rojo 1 lb", CategoriaId = categorias["Alimentos"].Id, PrecioCosto = 7.41m, PrecioVenta = 13.65m, ExistenciaMinima = 20 },
+                new Producto { Codigo = "ALI-003", Nombre = "Aceite Vegetal 1 L", CategoriaId = categorias["Alimentos"].Id, PrecioCosto = 14.04m, PrecioVenta = 25.35m, ExistenciaMinima = 12 },
+                new Producto { Codigo = "ALI-004", Nombre = "Café Molido 500 g", CategoriaId = categorias["Alimentos"].Id, PrecioCosto = 32.76m, PrecioVenta = 54.21m, ExistenciaMinima = 8 },
+                new Producto { Codigo = "LIM-001", Nombre = "Detergente en Polvo 1 kg", CategoriaId = categorias["Limpieza"].Id, PrecioCosto = 16.38m, PrecioVenta = 29.25m, ExistenciaMinima = 8 },
+                new Producto { Codigo = "LIM-002", Nombre = "Jabón de Baño", CategoriaId = categorias["Limpieza"].Id, PrecioCosto = 4.29m, PrecioVenta = 9.75m, ExistenciaMinima = 25 },
+                new Producto { Codigo = "LIM-003", Nombre = "Cloro 1 L", CategoriaId = categorias["Limpieza"].Id, PrecioCosto = 7.80m, PrecioVenta = 15.21m, ExistenciaMinima = 10 },
+                new Producto { Codigo = "PAP-001", Nombre = "Cuaderno 100 hojas", CategoriaId = categorias["Papelería"].Id, PrecioCosto = 6.24m, PrecioVenta = 12.48m, ExistenciaMinima = 30 },
+                new Producto { Codigo = "PAP-002", Nombre = "Bolígrafo Azul", CategoriaId = categorias["Papelería"].Id, PrecioCosto = 1.95m, PrecioVenta = 5.85m, ExistenciaMinima = 50 });
 
             await _contexto.SaveChangesAsync();
 
@@ -264,13 +437,13 @@ public class SembradorDatos
         {
             ProveedorId = proveedores[0].Id,
             Fecha = DateTime.Today.AddDays(-12).AddHours(9),
-            ImpuestoPorcentaje = 7,
+            ImpuestoPorcentaje = 12,
             Observaciones = "Compra de reposición semanal",
             Detalles = new List<CompraLineaSolicitud>
             {
-                new() { ProductoId = productos["BEB-001"].Id, Cantidad = 48, PrecioUnitario = 0.35m },
-                new() { ProductoId = productos["ALI-001"].Id, Cantidad = 24, PrecioUnitario = 2.80m },
-                new() { ProductoId = productos["ALI-004"].Id, Cantidad = 18, PrecioUnitario = 4.20m }
+                new() { ProductoId = productos["BEB-001"].Id, Cantidad = 48, PrecioUnitario = 2.73m },
+                new() { ProductoId = productos["ALI-001"].Id, Cantidad = 24, PrecioUnitario = 21.84m },
+                new() { ProductoId = productos["ALI-004"].Id, Cantidad = 18, PrecioUnitario = 32.76m }
             }
         }, admin.Id);
 
@@ -278,13 +451,13 @@ public class SembradorDatos
         {
             ProveedorId = proveedores[Math.Min(2, proveedores.Count - 1)].Id,
             Fecha = DateTime.Today.AddDays(-9).AddHours(11),
-            ImpuestoPorcentaje = 7,
+            ImpuestoPorcentaje = 12,
             Observaciones = "Compra de artículos de limpieza",
             Detalles = new List<CompraLineaSolicitud>
             {
-                new() { ProductoId = productos["LIM-001"].Id, Cantidad = 20, PrecioUnitario = 2.10m },
-                new() { ProductoId = productos["LIM-002"].Id, Cantidad = 60, PrecioUnitario = 0.55m },
-                new() { ProductoId = productos["LIM-003"].Id, Cantidad = 30, PrecioUnitario = 1.00m }
+                new() { ProductoId = productos["LIM-001"].Id, Cantidad = 20, PrecioUnitario = 16.38m },
+                new() { ProductoId = productos["LIM-002"].Id, Cantidad = 60, PrecioUnitario = 4.29m },
+                new() { ProductoId = productos["LIM-003"].Id, Cantidad = 30, PrecioUnitario = 7.80m }
             }
         }, admin.Id);
 
@@ -308,7 +481,7 @@ public class SembradorDatos
                 Fecha = DateTime.Today.AddDays(-venta.DiasAtras).AddHours(10 + venta.DiasAtras % 6),
                 FormaPago = venta.FormaPago,
                 Descuento = 0,
-                ImpuestoPorcentaje = 7,
+                ImpuestoPorcentaje = 12,
                 Detalles = venta.Lineas.Select(linea => new VentaLineaSolicitud
                 {
                     ProductoId = productos[linea.Codigo].Id,

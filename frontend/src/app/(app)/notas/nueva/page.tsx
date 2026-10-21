@@ -27,7 +27,7 @@ export default function PaginaNuevaNota() {
   const [tipo, setTipo] = useState<"Credito" | "Debito">("Credito");
   const [motivo, setMotivo] = useState("");
   const [fecha, setFecha] = useState(hoyISO());
-  const [impuestoPorcentaje, setImpuestoPorcentaje] = useState(7);
+  const [impuestoPorcentaje, setImpuestoPorcentaje] = useState(12);
   const [lineas, setLineas] = useState<LineaNota[]>([]);
   const [guardando, setGuardando] = useState(false);
   const [error, setError] = useState("");
@@ -61,7 +61,7 @@ export default function PaginaNuevaNota() {
         precioUnitario: detalle.precioUnitario,
       })),
     );
-    setImpuestoPorcentaje(venta.impuestoPorcentaje ?? 7);
+    setImpuestoPorcentaje(venta.impuestoPorcentaje ?? 12);
   }, [venta]);
 
   const creditoUtilizado = useMemo(

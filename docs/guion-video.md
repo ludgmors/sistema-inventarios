@@ -92,7 +92,7 @@
 
 > La misión del sistema es proporcionar a las pequeñas y medianas empresas una herramienta web confiable para controlar sus existencias y operaciones comerciales. El objetivo general es desarrollar e implementar un sistema que integre proveedores, productos, compras, ventas, notas, movimientos y existencias, con acceso seguro por roles y reportes.
 >
-> El alcance incluye seguridad, catálogos, operaciones, inventario, reportes y parámetros. No incluye contabilidad general, facturación electrónica fiscal, múltiples almacenes, inventario por lotes ni pagos en línea. El ITBMS del 7 % se usa solo como valor inicial configurable, no como una regla fija.
+> El alcance incluye seguridad, catálogos, operaciones, inventario, reportes y parámetros. No incluye contabilidad general, facturación electrónica fiscal, múltiples almacenes, inventario por lotes ni pagos en línea. El IVA del 12 % se usa solo como valor inicial configurable, no como una regla fija.
 
 **Acciones:**
 

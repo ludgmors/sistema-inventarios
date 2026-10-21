@@ -1,16 +1,16 @@
 export const formatoMoneda = (valor: number | null | undefined): string =>
-  new Intl.NumberFormat("es-PA", {
+  new Intl.NumberFormat("es-GT", {
     style: "currency",
-    currency: "USD",
+    currency: "GTQ",
     minimumFractionDigits: 2,
   }).format(Number(valor ?? 0));
 
 export const formatoNumero = (valor: number | null | undefined): string =>
-  new Intl.NumberFormat("es-PA", {
+  new Intl.NumberFormat("es-GT", {
     maximumFractionDigits: 4,
   }).format(Number(valor ?? 0));
 
-// Fechas en formato DD/MM/AAAA; la moneda conserva la configuración de Panamá.
+// Fechas en formato DD/MM/AAAA; la moneda usa la configuración de Guatemala.
 export const formatoFecha = (
   valor: string | null | undefined,
   incluirHora = false,

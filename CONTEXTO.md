@@ -198,7 +198,7 @@ sistema_inventarios/
 - Solo el Administrador puede anular documentos.
 - La anulación revierte el inventario y conserva el documento y su historial.
 - La numeración usa prefijos y secuencias configurables.
-- El impuesto es configurable; el 7 % de ITBMS es solo el valor inicial de demostración.
+- El impuesto es configurable; el 12 % de IVA es solo el valor inicial de demostración.
 - Los cambios de impuesto, moneda o prefijos aplican a documentos nuevos; los históricos conservan sus valores.
 - Cada movimiento guarda saldo anterior, saldo nuevo, costo, usuario, fecha, origen y documento.
 
@@ -209,6 +209,7 @@ sistema_inventarios/
 - Migración inicial: `20261020054853_Inicial`.
 - La API aplica migraciones y carga datos iniciales al arrancar.
 - El sembrador de operaciones demo solo se ejecuta si no existen compras ni ventas.
+- Si `Moneda.Codigo` es `USD`, el sembrador convierte una sola vez los importes a GTQ (tasa 7.80), actualiza los parámetros y los datos demo de Guatemala, y deja el código en `GTQ`; la operación es idempotente.
 
 Estado actual de la base:
 
@@ -227,8 +228,8 @@ Estado actual de la base:
 Parámetros relevantes:
 
 - `Sesion.MinutosExpiracion = 480`.
-- `Impuesto.Porcentaje = 7` (valor inicial configurable).
-- Moneda: USD.
+- `Impuesto.Porcentaje = 12` (valor inicial configurable).
+- Moneda: GTQ (quetzales).
 - Prefijos de documentos configurables.
 
 ## 11. Configuración local
@@ -452,13 +453,13 @@ API_URL=https://<dominio-backend>
 - **PowerShell 5.1 y acentos:** al enviar JSON, puede corromper caracteres. Usar `curl.exe` con `--data-binary` y un archivo UTF-8 sin BOM, no `ConvertTo-Json | curl -d`.
 - **Bloqueo de compilación:** si la API está ejecutándose, el `.exe` queda bloqueado. Detener el proceso antes de `dotnet build`.
 - **Reinicio:** después de compilar el backend o el frontend, reiniciar el servidor para usar el binario nuevo.
-- **Fechas:** el frontend usa `es-MX` para mostrar `DD/MM/AAAA`; la moneda conserva `es-PA` y USD.
+- **Fechas:** el frontend usa `es-MX` para mostrar `DD/MM/AAAA`; la moneda usa `es-GT` y GTQ.
 - **Mermaid en PDF:** el generador carga Mermaid desde jsDelivr. Sin conexión, usar una copia local o exportar los diagramas por separado.
 - **Informe HTML:** `docs/informe.html` es un archivo generado y está ignorado por Git. El PDF sí se versiona.
 - **Datos demo:** no ejecutar procesos de limpieza o reseed sin respaldar; el sembrador de operaciones solo corre si no hay compras ni ventas.
 - **Autorización:** la protección de rutas del frontend es de experiencia de usuario; la seguridad real la aplica la API.
 - **Cookie:** `access_token` es `httpOnly`; no intentar leerla desde JavaScript.
-- **Impuesto:** no hardcodear 7 %; usar el parámetro `Impuesto.Porcentaje`.
+- **Impuesto:** no hardcodear 12 %; usar el parámetro `Impuesto.Porcentaje`.
 - **Sesión:** la duración se toma de `Sesion.MinutosExpiracion`; si no existe, usa `Jwt:MinutosExpiracion` y limita el rango a 5–43200 minutos.
 
 ## 21. Criterio de finalización

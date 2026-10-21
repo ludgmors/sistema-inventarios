@@ -13,7 +13,7 @@ export function useEmpresa() {
     direccion: mapa.get("Empresa.Direccion") ?? "",
     telefono: mapa.get("Empresa.Telefono") ?? "",
     correo: mapa.get("Empresa.Correo") ?? "",
-    moneda: mapa.get("Moneda.Simbolo") ?? "$",
-    impuesto: Number(mapa.get("Impuesto.Porcentaje") ?? 7),
+    moneda: mapa.get("Moneda.Simbolo") ?? "Q",
+    impuesto: Number(mapa.get("Impuesto.Porcentaje") ?? 12),
   };
 }

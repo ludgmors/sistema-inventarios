@@ -280,11 +280,11 @@ export default function PaginaProveedores() {
               />
             </Campo>
 
-            <Campo etiqueta="Documento / RUC">
+            <Campo etiqueta="Documento / NIT">
               <Entrada
                 value={formulario.documento}
                 onChange={(evento) => setFormulario({ ...formulario, documento: evento.target.value })}
-                placeholder="8-123-4567"
+                placeholder="1234567-8"
                 maxLength={50}
               />
             </Campo>
@@ -314,7 +314,7 @@ export default function PaginaProveedores() {
               <Entrada
                 value={formulario.telefono}
                 onChange={(evento) => setFormulario({ ...formulario, telefono: evento.target.value })}
-                placeholder="+507 6000-0000"
+                placeholder="+502 6000-0000"
                 maxLength={30}
               />
             </Campo>

@@ -112,7 +112,7 @@ export default function PaginaDetalleVenta() {
             <div>
               <h1 className="text-lg font-bold text-slate-900">{empresa.nombre}</h1>
               {empresa.documento && (
-                <p className="text-xs text-slate-500">RUC / Documento: {empresa.documento}</p>
+                <p className="text-xs text-slate-500">NIT / Documento: {empresa.documento}</p>
               )}
               {empresa.direccion && <p className="text-xs text-slate-500">{empresa.direccion}</p>}
               <p className="text-xs text-slate-500">

@@ -36,7 +36,7 @@ export default function PaginaNuevaVenta() {
   const [fecha, setFecha] = useState(hoyISO());
   const [formaPago, setFormaPago] = useState("Efectivo");
   const [descuento, setDescuento] = useState(0);
-  const [impuestoPorcentaje, setImpuestoPorcentaje] = useState(7);
+  const [impuestoPorcentaje, setImpuestoPorcentaje] = useState(12);
   const [observaciones, setObservaciones] = useState("");
   const [lineas, setLineas] = useState<LineaVenta[]>([
     { productoId: 0, cantidad: 1, precioUnitario: 0, descuento: 0 },
@@ -352,7 +352,7 @@ export default function PaginaNuevaVenta() {
               <div className="flex items-center justify-between gap-3 text-slate-500">
                 <dt>Descuento general</dt>
                 <dd className="flex items-center gap-1">
-                  <span className="text-xs text-slate-400">$</span>
+                  <span className="text-xs text-slate-400">Q</span>
                   <input
                     type="number"
                     min={0}

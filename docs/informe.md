@@ -71,7 +71,7 @@ Proporcionar a las pequeñas y medianas empresas una herramienta web confiable, 
 
 ### 2.2 Visión
 
-Ser una solución de referencia para la gestión de inventarios en Panamá, caracterizada por su facilidad de uso, su capacidad de adaptación a distintos parámetros empresariales y la transparencia de su información operativa y financiera.
+Ser una solución de referencia para la gestión de inventarios en Guatemala, caracterizada por su facilidad de uso, su capacidad de adaptación a distintos parámetros empresariales y la transparencia de su información operativa y financiera.
 
 ### 2.3 Objetivo general
 
@@ -140,7 +140,7 @@ El sistema no incluye, en esta versión:
 - conversión entre múltiples monedas;
 - migración automática de datos desde otros sistemas.
 
-El impuesto **ITBMS de Panamá** se utiliza únicamente como valor inicial de demostración (7 %). No es una regla fija del sistema: el porcentaje puede modificarse en los parámetros y ajustarse en cada documento. Los documentos históricos conservan el impuesto con el que fueron registrados.
+El impuesto **IVA de Guatemala** se utiliza únicamente como valor inicial de demostración (12 %). No es una regla fija del sistema: el porcentaje puede modificarse en los parámetros y ajustarse en cada documento. Los documentos históricos conservan el impuesto con el que fueron registrados.
 
 ## 5. Requerimientos funcionales
 
@@ -199,7 +199,7 @@ El impuesto **ITBMS de Panamá** se utiliza únicamente como valor inicial de de
 | RN-03 | Toda compra registrada genera una entrada de inventario y actualiza el costo promedio ponderado del producto. |
 | RN-04 | Toda venta registrada genera una salida de inventario. |
 | RN-05 | Una venta se rechaza si la cantidad solicitada supera la existencia, salvo que el parámetro `Inventario.PermitirStockNegativo` esté en `true`. |
-| RN-06 | El impuesto debe ser un valor entre 0 y 100. El 7 % de ITBMS es solo el valor inicial configurable. |
+| RN-06 | El impuesto debe ser un valor entre 0 y 100. El 12 % de IVA es solo el valor inicial configurable. |
 | RN-07 | Las líneas de una venta deben tener cantidad mayor que cero, precio no negativo y descuento no negativo. |
 | RN-08 | Una nota de crédito requiere una venta registrada y solo puede incluir productos de esa venta. |
 | RN-09 | El total acumulado de notas de crédito registradas no puede superar el total de la venta de referencia. |
