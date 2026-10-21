@@ -31,6 +31,59 @@ npm run dev
 
 Luego abrir http://localhost:3000 e iniciar sesión con `admin` / `Admin123!`.
 
+### 1.1. Si un compañero descarga el proyecto
+
+El repositorio incluye el código y la documentación, pero **no incluye** la base de datos, `node_modules`, `bin`, `obj` ni `.env.local`. Cada persona debe preparar su entorno y generar su propia base local.
+
+Requisitos: los mismos de la sección 2. En resumen: Windows 10 u 11, .NET SDK 8, Node.js 22 y SQL Server 2022 Developer o Express.
+
+Pasos:
+
+1. Clonar el repositorio:
+
+   ```powershell
+   git clone <URL_DEL_REPOSITORIO>
+   cd sistema_inventarios
+   ```
+
+   Si el repositorio es privado, primero deben agregar a los compañeros como colaboradores.
+
+2. Iniciar SQL Server y verificar la conexión:
+
+   ```powershell
+   Get-Service MSSQLSERVER
+   sqlcmd -S localhost -E -C -Q "SELECT @@VERSION"
+   ```
+
+   Si usan SQL Server Express, la instancia suele ser `localhost\SQLEXPRESS` y deben ajustar la cadena de conexión en `backend/Inventarios.Api/appsettings.json`.
+
+3. Ejecutar el backend:
+
+   ```powershell
+   cd backend\Inventarios.Api
+   dotnet restore
+   dotnet run --urls http://localhost:5279
+   ```
+
+   La API crea la base `SistemaInventarios`, aplica las migraciones y carga los datos demo automáticamente. El usuario de Windows debe tener permisos para crear bases de datos en su SQL Server.
+
+4. Ejecutar el frontend:
+
+   ```powershell
+   cd frontend
+   Copy-Item .env.example .env.local
+   npm install
+   npm run dev
+   ```
+
+5. Abrir `http://localhost:3000` e iniciar sesión con `admin` / `Admin123!`.
+
+Notas:
+
+- Cada compañero tendrá una base nueva con los datos demo en quetzales; no verá las ventas o compras que existan en el equipo de otra persona. Si necesitan exactamente los mismos datos, se puede compartir un respaldo `.bak` y restaurarlo con los pasos de la sección 11.
+- En macOS o Linux se puede ejecutar .NET y Node, pero SQL Server no está disponible de forma nativa. En ese caso se necesitaría SQL Server en Docker o un servidor remoto y ajustar la cadena de conexión. Esta guía está probada en Windows.
+- No subir al repositorio `.env.local`, `node_modules`, `bin`, `obj` ni respaldos `.bak`.
+
 ---
 
 ## 2. Requisitos
