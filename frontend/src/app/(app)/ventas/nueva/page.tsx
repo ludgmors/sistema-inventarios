@@ -144,7 +144,7 @@ export default function PaginaNuevaVenta() {
     <div>
       <Link
         href="/ventas"
-        className="mb-4 inline-flex items-center gap-1 text-xs font-medium text-slate-500 hover:text-slate-800"
+        className="mb-4 inline-flex items-center gap-1 text-xs font-medium text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-100"
       >
         <ArrowLeft className="h-3.5 w-3.5" /> Volver a ventas
       </Link>
@@ -165,7 +165,7 @@ export default function PaginaNuevaVenta() {
           </Aviso>
         )}
 
-        <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+        <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-5 shadow-sm">
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <Campo etiqueta="Cliente" className="lg:col-span-2">
               <Seleccion
@@ -205,11 +205,11 @@ export default function PaginaNuevaVenta() {
           </div>
         </div>
 
-        <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-          <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
+        <div className="overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-sm">
+          <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 px-5 py-4">
             <div>
-              <h2 className="text-sm font-semibold text-slate-900">Productos vendidos</h2>
-              <p className="text-xs text-slate-500">
+              <h2 className="text-sm font-semibold text-slate-900 dark:text-slate-100">Productos vendidos</h2>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
                 Los precios se cargan del catálogo y pueden ajustarse.
               </p>
             </div>
@@ -224,7 +224,7 @@ export default function PaginaNuevaVenta() {
             </Boton>
           </div>
 
-          <div className="divide-y divide-slate-100">
+          <div className="divide-y divide-slate-100 dark:divide-slate-800">
             {lineas.map((linea, indice) => {
               const producto = productosPorId.get(linea.productoId);
               const importe = Math.max(
@@ -299,14 +299,14 @@ export default function PaginaNuevaVenta() {
                     <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-400">
                       Importe
                     </p>
-                    <p className="text-sm font-bold text-slate-800">{formatoMoneda(importe)}</p>
+                    <p className="text-sm font-bold text-slate-800 dark:text-slate-100">{formatoMoneda(importe)}</p>
                   </div>
 
                   <button
                     type="button"
                     onClick={() => eliminarLinea(indice)}
                     disabled={lineas.length === 1}
-                    className="mb-0.5 flex h-10 w-10 items-center justify-center rounded-lg text-slate-400 transition hover:bg-red-50 hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-30"
+                    className="mb-0.5 flex h-10 w-10 items-center justify-center rounded-lg text-slate-400 transition hover:bg-red-50 dark:hover:bg-red-950/40 hover:text-red-600 dark:hover:text-red-400 disabled:cursor-not-allowed disabled:opacity-30"
                     aria-label="Eliminar línea"
                   >
                     <Trash2 className="h-4 w-4" />
@@ -315,7 +315,7 @@ export default function PaginaNuevaVenta() {
                   {producto && (
                     <p
                       className={`text-[11px] sm:col-span-6 sm:-mt-2 ${
-                        stockInsuficiente ? "font-semibold text-red-600" : "text-slate-400"
+                        stockInsuficiente ? "font-semibold text-red-600 dark:text-red-400" : "text-slate-400"
                       }`}
                     >
                       Existencia: {producto.existenciaActual} {producto.unidadMedida} · Precio
@@ -330,7 +330,7 @@ export default function PaginaNuevaVenta() {
         </div>
 
         <div className="grid gap-5 lg:grid-cols-[1fr_380px]">
-          <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div className="space-y-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-5 shadow-sm">
             <Campo etiqueta="Observaciones">
               <AreaTexto
                 value={observaciones}
@@ -341,15 +341,15 @@ export default function PaginaNuevaVenta() {
             </Campo>
           </div>
 
-          <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-            <h2 className="mb-3 text-sm font-semibold text-slate-900">Resumen</h2>
+          <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-5 shadow-sm">
+            <h2 className="mb-3 text-sm font-semibold text-slate-900 dark:text-slate-100">Resumen</h2>
             <dl className="space-y-2 text-sm">
-              <div className="flex justify-between text-slate-500">
+              <div className="flex justify-between text-slate-500 dark:text-slate-400">
                 <dt>Subtotal</dt>
                 <dd>{formatoMoneda(subtotal)}</dd>
               </div>
 
-              <div className="flex items-center justify-between gap-3 text-slate-500">
+              <div className="flex items-center justify-between gap-3 text-slate-500 dark:text-slate-400">
                 <dt>Descuento general</dt>
                 <dd className="flex items-center gap-1">
                   <span className="text-xs text-slate-400">Q</span>
@@ -359,12 +359,12 @@ export default function PaginaNuevaVenta() {
                     step="0.01"
                     value={descuento}
                     onChange={(evento) => setDescuento(Number(evento.target.value))}
-                    className="h-8 w-24 rounded-md border border-slate-300 px-2 text-right text-xs outline-none focus:border-emerald-600"
+                    className="h-8 w-24 rounded-md border border-slate-300 dark:border-slate-600 px-2 text-right text-xs outline-none focus:border-emerald-600"
                   />
                 </dd>
               </div>
 
-              <div className="flex items-center justify-between gap-3 text-slate-500">
+              <div className="flex items-center justify-between gap-3 text-slate-500 dark:text-slate-400">
                 <dt>Impuesto (%)</dt>
                 <dd>
                   <input
@@ -374,17 +374,17 @@ export default function PaginaNuevaVenta() {
                     step="0.01"
                     value={impuestoPorcentaje}
                     onChange={(evento) => setImpuestoPorcentaje(Number(evento.target.value))}
-                    className="h-8 w-20 rounded-md border border-slate-300 px-2 text-right text-xs outline-none focus:border-emerald-600"
+                    className="h-8 w-20 rounded-md border border-slate-300 dark:border-slate-600 px-2 text-right text-xs outline-none focus:border-emerald-600"
                   />
                 </dd>
               </div>
 
-              <div className="flex justify-between text-slate-500">
+              <div className="flex justify-between text-slate-500 dark:text-slate-400">
                 <dt>Impuesto</dt>
                 <dd>{formatoMoneda(impuesto)}</dd>
               </div>
 
-              <div className="flex justify-between border-t border-slate-200 pt-2 text-base font-bold text-slate-900">
+              <div className="flex justify-between border-t border-slate-200 dark:border-slate-700 pt-2 text-base font-bold text-slate-900 dark:text-slate-100">
                 <dt>Total</dt>
                 <dd>{formatoMoneda(total)}</dd>
               </div>

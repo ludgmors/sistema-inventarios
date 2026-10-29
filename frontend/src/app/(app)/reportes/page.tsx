@@ -161,7 +161,7 @@ export default function PaginaReportes() {
       render: (venta) => (
         <Link
           href={`/ventas/${venta.id}`}
-          className="font-mono text-xs font-semibold text-emerald-700 hover:text-emerald-800"
+          className="font-mono text-xs font-semibold text-emerald-700 dark:text-emerald-300 hover:text-emerald-800 dark:hover:text-emerald-200"
         >
           {venta.numero}
         </Link>
@@ -171,7 +171,7 @@ export default function PaginaReportes() {
       clave: "fecha",
       titulo: "Fecha",
       render: (venta) => (
-        <span className="whitespace-nowrap text-xs text-slate-500">
+        <span className="whitespace-nowrap text-xs text-slate-500 dark:text-slate-400">
           {formatoFecha(venta.fecha)}
         </span>
       ),
@@ -181,7 +181,7 @@ export default function PaginaReportes() {
       titulo: "Cliente",
       render: (venta) => (
         <div>
-          <p className="text-sm font-medium text-slate-800">{venta.cliente}</p>
+          <p className="text-sm font-medium text-slate-800 dark:text-slate-100">{venta.cliente}</p>
           <p className="text-[11px] text-slate-400">
             {venta.usuario} · {venta.formaPago}
           </p>
@@ -193,7 +193,7 @@ export default function PaginaReportes() {
       titulo: "Subtotal",
       alineacion: "derecha",
       render: (venta) => (
-        <span className="text-xs text-slate-500">{formatoMoneda(venta.subtotal)}</span>
+        <span className="text-xs text-slate-500 dark:text-slate-400">{formatoMoneda(venta.subtotal)}</span>
       ),
     },
     {
@@ -201,7 +201,7 @@ export default function PaginaReportes() {
       titulo: "Impuesto",
       alineacion: "derecha",
       render: (venta) => (
-        <span className="text-xs text-slate-500">{formatoMoneda(venta.impuesto)}</span>
+        <span className="text-xs text-slate-500 dark:text-slate-400">{formatoMoneda(venta.impuesto)}</span>
       ),
     },
     {
@@ -209,7 +209,7 @@ export default function PaginaReportes() {
       titulo: "Total",
       alineacion: "derecha",
       render: (venta) => (
-        <span className="text-sm font-bold text-slate-900">{formatoMoneda(venta.total)}</span>
+        <span className="text-sm font-bold text-slate-900 dark:text-slate-100">{formatoMoneda(venta.total)}</span>
       ),
     },
     {
@@ -227,7 +227,7 @@ export default function PaginaReportes() {
       render: (compra) => (
         <Link
           href={`/compras/${compra.id}`}
-          className="font-mono text-xs font-semibold text-emerald-700 hover:text-emerald-800"
+          className="font-mono text-xs font-semibold text-emerald-700 dark:text-emerald-300 hover:text-emerald-800 dark:hover:text-emerald-200"
         >
           {compra.numero}
         </Link>
@@ -237,7 +237,7 @@ export default function PaginaReportes() {
       clave: "fecha",
       titulo: "Fecha",
       render: (compra) => (
-        <span className="whitespace-nowrap text-xs text-slate-500">
+        <span className="whitespace-nowrap text-xs text-slate-500 dark:text-slate-400">
           {formatoFecha(compra.fecha)}
         </span>
       ),
@@ -247,7 +247,7 @@ export default function PaginaReportes() {
       titulo: "Proveedor",
       render: (compra) => (
         <div>
-          <p className="text-sm font-medium text-slate-800">{compra.proveedor}</p>
+          <p className="text-sm font-medium text-slate-800 dark:text-slate-100">{compra.proveedor}</p>
           <p className="text-[11px] text-slate-400">Registró: {compra.usuario}</p>
         </div>
       ),
@@ -257,7 +257,7 @@ export default function PaginaReportes() {
       titulo: "Subtotal",
       alineacion: "derecha",
       render: (compra) => (
-        <span className="text-xs text-slate-500">{formatoMoneda(compra.subtotal)}</span>
+        <span className="text-xs text-slate-500 dark:text-slate-400">{formatoMoneda(compra.subtotal)}</span>
       ),
     },
     {
@@ -265,7 +265,7 @@ export default function PaginaReportes() {
       titulo: "Impuesto",
       alineacion: "derecha",
       render: (compra) => (
-        <span className="text-xs text-slate-500">{formatoMoneda(compra.impuesto)}</span>
+        <span className="text-xs text-slate-500 dark:text-slate-400">{formatoMoneda(compra.impuesto)}</span>
       ),
     },
     {
@@ -273,7 +273,7 @@ export default function PaginaReportes() {
       titulo: "Total",
       alineacion: "derecha",
       render: (compra) => (
-        <span className="text-sm font-bold text-slate-900">{formatoMoneda(compra.total)}</span>
+        <span className="text-sm font-bold text-slate-900 dark:text-slate-100">{formatoMoneda(compra.total)}</span>
       ),
     },
     {
@@ -291,7 +291,7 @@ export default function PaginaReportes() {
       render: (nota) => (
         <Link
           href={`/notas/${nota.id}`}
-          className="font-mono text-xs font-semibold text-emerald-700 hover:text-emerald-800"
+          className="font-mono text-xs font-semibold text-emerald-700 dark:text-emerald-300 hover:text-emerald-800 dark:hover:text-emerald-200"
         >
           {nota.numero}
         </Link>
@@ -301,7 +301,7 @@ export default function PaginaReportes() {
       clave: "fecha",
       titulo: "Fecha",
       render: (nota) => (
-        <span className="whitespace-nowrap text-xs text-slate-500">{formatoFecha(nota.fecha)}</span>
+        <span className="whitespace-nowrap text-xs text-slate-500 dark:text-slate-400">{formatoFecha(nota.fecha)}</span>
       ),
     },
     {
@@ -314,7 +314,7 @@ export default function PaginaReportes() {
       clave: "venta",
       titulo: "Venta",
       render: (nota) => (
-        <span className="font-mono text-xs text-slate-600">{nota.ventaNumero}</span>
+        <span className="font-mono text-xs text-slate-600 dark:text-slate-300">{nota.ventaNumero}</span>
       ),
     },
     {
@@ -322,7 +322,7 @@ export default function PaginaReportes() {
       titulo: "Cliente / motivo",
       render: (nota) => (
         <div className="max-w-xs">
-          <p className="truncate text-sm font-medium text-slate-800">{nota.cliente}</p>
+          <p className="truncate text-sm font-medium text-slate-800 dark:text-slate-100">{nota.cliente}</p>
           <p className="truncate text-[11px] text-slate-400">{nota.motivo}</p>
         </div>
       ),
@@ -332,7 +332,7 @@ export default function PaginaReportes() {
       titulo: "Total",
       alineacion: "derecha",
       render: (nota) => (
-        <span className="text-sm font-bold text-slate-900">{formatoMoneda(nota.total)}</span>
+        <span className="text-sm font-bold text-slate-900 dark:text-slate-100">{formatoMoneda(nota.total)}</span>
       ),
     },
     {
@@ -377,9 +377,9 @@ export default function PaginaReportes() {
         }
       />
 
-      <div className="no-imprimir mb-4 grid gap-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:grid-cols-2 lg:grid-cols-4">
+      <div className="no-imprimir mb-4 grid gap-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-4 shadow-sm sm:grid-cols-2 lg:grid-cols-4">
         <div>
-          <label className="mb-1.5 block text-xs font-semibold text-slate-600" htmlFor="reporte-desde">
+          <label className="mb-1.5 block text-xs font-semibold text-slate-600 dark:text-slate-300" htmlFor="reporte-desde">
             Desde
           </label>
           <input
@@ -387,12 +387,12 @@ export default function PaginaReportes() {
             type="date"
             value={desde}
             onChange={(evento) => setDesde(evento.target.value)}
-            className="h-10 w-full rounded-lg border border-slate-300 bg-white px-3 text-sm outline-none focus:border-emerald-600"
+            className="h-10 w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-3 text-sm outline-none focus:border-emerald-600"
           />
         </div>
 
         <div>
-          <label className="mb-1.5 block text-xs font-semibold text-slate-600" htmlFor="reporte-hasta">
+          <label className="mb-1.5 block text-xs font-semibold text-slate-600 dark:text-slate-300" htmlFor="reporte-hasta">
             Hasta
           </label>
           <input
@@ -400,7 +400,7 @@ export default function PaginaReportes() {
             type="date"
             value={hasta}
             onChange={(evento) => setHasta(evento.target.value)}
-            className="h-10 w-full rounded-lg border border-slate-300 bg-white px-3 text-sm outline-none focus:border-emerald-600"
+            className="h-10 w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-3 text-sm outline-none focus:border-emerald-600"
           />
         </div>
 
@@ -442,7 +442,7 @@ export default function PaginaReportes() {
           )}
 
           {(pestana === "resumen" || pestana === "notas") && (
-            <div className="flex h-10 items-center rounded-lg border border-dashed border-slate-200 px-3 text-[11px] text-slate-400">
+            <div className="flex h-10 items-center rounded-lg border border-dashed border-slate-200 dark:border-slate-700 px-3 text-[11px] text-slate-400">
               {pestana === "resumen"
                 ? "El resumen incluye documentos registrados y anulados del período."
                 : "Filtre las notas por tipo para conciliar devoluciones y cargos."}
@@ -451,7 +451,7 @@ export default function PaginaReportes() {
         </div>
       </div>
 
-      <div className="no-imprimir mb-5 flex flex-wrap gap-1 rounded-xl border border-slate-200 bg-white p-1.5 shadow-sm">
+      <div className="no-imprimir mb-5 flex flex-wrap gap-1 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-1.5 shadow-sm">
         {pestanas.map((item) => (
           <button
             key={item.valor}
@@ -460,7 +460,7 @@ export default function PaginaReportes() {
             className={`inline-flex h-9 items-center gap-2 rounded-lg px-3 text-xs font-semibold transition ${
               pestana === item.valor
                 ? "bg-emerald-700 text-white shadow-sm"
-                : "text-slate-600 hover:bg-slate-100"
+                : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
             }`}
           >
             {item.valor === "resumen" && <TrendingUp className="h-3.5 w-3.5" />}
@@ -481,14 +481,14 @@ export default function PaginaReportes() {
       {pestana === "resumen" && (
         <div className="space-y-6">
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-            <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+            <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-5 shadow-sm">
               <div className="flex items-center justify-between">
-                <p className="text-xs font-medium text-slate-500">Ventas del período</p>
-                <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-50 text-emerald-700">
+                <p className="text-xs font-medium text-slate-500 dark:text-slate-400">Ventas del período</p>
+                <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300">
                   <ArrowUpRight className="h-4 w-4" />
                 </span>
               </div>
-              <p className="mt-2 text-2xl font-bold text-slate-900">
+              <p className="mt-2 text-2xl font-bold text-slate-900 dark:text-slate-100">
                 {formatoMoneda(resumen?.totalVentas ?? 0)}
               </p>
               <p className="mt-1 text-[11px] text-slate-400">
@@ -496,14 +496,14 @@ export default function PaginaReportes() {
               </p>
             </div>
 
-            <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+            <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-5 shadow-sm">
               <div className="flex items-center justify-between">
-                <p className="text-xs font-medium text-slate-500">Compras del período</p>
-                <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-50 text-blue-700">
+                <p className="text-xs font-medium text-slate-500 dark:text-slate-400">Compras del período</p>
+                <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300">
                   <ArrowDownRight className="h-4 w-4" />
                 </span>
               </div>
-              <p className="mt-2 text-2xl font-bold text-slate-900">
+              <p className="mt-2 text-2xl font-bold text-slate-900 dark:text-slate-100">
                 {formatoMoneda(resumen?.totalCompras ?? 0)}
               </p>
               <p className="mt-1 text-[11px] text-slate-400">
@@ -511,14 +511,14 @@ export default function PaginaReportes() {
               </p>
             </div>
 
-            <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+            <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-5 shadow-sm">
               <div className="flex items-center justify-between">
-                <p className="text-xs font-medium text-slate-500">Notas de crédito</p>
-                <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-50 text-violet-700">
+                <p className="text-xs font-medium text-slate-500 dark:text-slate-400">Notas de crédito</p>
+                <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-50 dark:bg-violet-950/40 text-violet-700 dark:text-violet-300">
                   <TrendingDown className="h-4 w-4" />
                 </span>
               </div>
-              <p className="mt-2 text-2xl font-bold text-slate-900">
+              <p className="mt-2 text-2xl font-bold text-slate-900 dark:text-slate-100">
                 {formatoMoneda(resumen?.totalNotasCredito ?? 0)}
               </p>
               <p className="mt-1 text-[11px] text-slate-400">
@@ -528,13 +528,13 @@ export default function PaginaReportes() {
           </div>
 
           <div className="grid gap-6 xl:grid-cols-2">
-            <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+            <section className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-5 shadow-sm">
               <div className="mb-4 flex items-center justify-between gap-3">
                 <div>
-                  <h2 className="text-sm font-semibold text-slate-900">Productos más vendidos</h2>
+                  <h2 className="text-sm font-semibold text-slate-900 dark:text-slate-100">Productos más vendidos</h2>
                   <p className="text-xs text-slate-400">Por cantidad, en el período seleccionado.</p>
                 </div>
-                <TrendingUp className="h-4 w-4 text-emerald-600" />
+                <TrendingUp className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
               </div>
 
               {!topProductos?.length ? (
@@ -546,14 +546,14 @@ export default function PaginaReportes() {
                   {topProductos.map((producto) => (
                     <li key={producto.productoId}>
                       <div className="flex items-center justify-between gap-3 text-xs">
-                        <span className="min-w-0 truncate font-medium text-slate-700">
+                        <span className="min-w-0 truncate font-medium text-slate-700 dark:text-slate-200">
                           {producto.nombre}
                         </span>
-                        <span className="shrink-0 font-semibold text-slate-900">
+                        <span className="shrink-0 font-semibold text-slate-900 dark:text-slate-100">
                           {formatoNumero(producto.cantidadVendida)}
                         </span>
                       </div>
-                      <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-slate-100">
+                      <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800">
                         <div
                           className="h-full rounded-full bg-emerald-600"
                           style={{
@@ -571,13 +571,13 @@ export default function PaginaReportes() {
               )}
             </section>
 
-            <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+            <section className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-5 shadow-sm">
               <div className="mb-4 flex items-center justify-between gap-3">
                 <div>
-                  <h2 className="text-sm font-semibold text-slate-900">Productos bajo mínimo</h2>
+                  <h2 className="text-sm font-semibold text-slate-900 dark:text-slate-100">Productos bajo mínimo</h2>
                   <p className="text-xs text-slate-400">Alertas actuales de reposición.</p>
                 </div>
-                <TrendingDown className="h-4 w-4 text-red-500" />
+                <TrendingDown className="h-4 w-4 text-red-500 dark:text-red-400" />
               </div>
 
               {!bajoMinimo?.length ? (
@@ -585,14 +585,14 @@ export default function PaginaReportes() {
                   Todo el inventario está sobre el nivel mínimo.
                 </p>
               ) : (
-                <ul className="divide-y divide-slate-100">
+                <ul className="divide-y divide-slate-100 dark:divide-slate-800">
                   {bajoMinimo.map((producto) => (
                     <li
                       key={producto.productoId}
                       className="flex items-center justify-between gap-3 py-2.5"
                     >
                       <div className="min-w-0">
-                        <p className="truncate text-xs font-semibold text-slate-800">
+                        <p className="truncate text-xs font-semibold text-slate-800 dark:text-slate-100">
                           {producto.nombre}
                         </p>
                         <p className="text-[11px] text-slate-400">
@@ -600,7 +600,7 @@ export default function PaginaReportes() {
                         </p>
                       </div>
                       <div className="shrink-0 text-right">
-                        <p className="text-xs font-bold text-red-600">
+                        <p className="text-xs font-bold text-red-600 dark:text-red-400">
                           {formatoNumero(producto.existenciaActual)}
                         </p>
                         <p className="text-[10px] text-slate-400">
@@ -619,9 +619,9 @@ export default function PaginaReportes() {
       {pestana === "ventas" && (
         <section>
           <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-slate-500 dark:text-slate-400">
               {ventas?.length ?? 0} documento(s) ·{" "}
-              <span className="font-semibold text-slate-800">
+              <span className="font-semibold text-slate-800 dark:text-slate-100">
                 {formatoMoneda(totalVentasPeriodo)}
               </span>
             </p>
@@ -639,9 +639,9 @@ export default function PaginaReportes() {
       {pestana === "compras" && (
         <section>
           <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-slate-500 dark:text-slate-400">
               {compras?.length ?? 0} documento(s) ·{" "}
-              <span className="font-semibold text-slate-800">
+              <span className="font-semibold text-slate-800 dark:text-slate-100">
                 {formatoMoneda(totalComprasPeriodo)}
               </span>
             </p>
@@ -659,9 +659,9 @@ export default function PaginaReportes() {
       {pestana === "notas" && (
         <section>
           <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-slate-500 dark:text-slate-400">
               {notas?.length ?? 0} nota(s) ·{" "}
-              <span className="font-semibold text-slate-800">
+              <span className="font-semibold text-slate-800 dark:text-slate-100">
                 {formatoMoneda(totalNotasPeriodo)}
               </span>
             </p>

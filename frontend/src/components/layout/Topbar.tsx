@@ -4,6 +4,7 @@ import { CalendarDays, LogOut, Menu } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useAuth } from "./AuthProvider";
 import { fechaLarga } from "@/lib/formato";
+import { SelectorTema } from "@/components/tema/SelectorTema";
 
 const titulos: { ruta: string; titulo: string }[] = [
   { ruta: "/productos", titulo: "Productos" },
@@ -43,19 +44,19 @@ export function Topbar({ onAbrirMenu }: { onAbrirMenu: () => void }) {
     .toUpperCase();
 
   return (
-    <header className="no-imprimir sticky top-0 z-20 flex h-16 items-center justify-between gap-3 border-b border-slate-200 bg-white/90 px-4 backdrop-blur lg:px-8">
+    <header className="no-imprimir sticky top-0 z-20 flex h-16 items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-700 bg-white/90 dark:bg-slate-900/90 px-4 backdrop-blur lg:px-8">
       <div className="flex min-w-0 items-center gap-3">
         <button
           type="button"
           onClick={onAbrirMenu}
-          className="rounded-lg border border-slate-200 p-2 text-slate-600 hover:bg-slate-50 lg:hidden"
+          className="rounded-lg border border-slate-200 dark:border-slate-700 p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 lg:hidden"
           aria-label="Abrir menú"
         >
           <Menu className="h-5 w-5" />
         </button>
 
         <div className="min-w-0">
-          <h2 className="truncate text-sm font-semibold text-slate-800">{titulo}</h2>
+          <h2 className="truncate text-sm font-semibold text-slate-800 dark:text-slate-100">{titulo}</h2>
           <p className="hidden items-center gap-1 text-[11px] text-slate-400 first-letter:uppercase sm:flex">
             <CalendarDays className="h-3 w-3" />
             {fechaLarga()}
@@ -64,9 +65,10 @@ export function Topbar({ onAbrirMenu }: { onAbrirMenu: () => void }) {
       </div>
 
       <div className="flex items-center gap-2 sm:gap-3">
+        <SelectorTema />
         <div className="hidden text-right sm:block">
-          <p className="text-xs font-semibold text-slate-800">{usuario?.nombreCompleto}</p>
-          <p className="text-[10px] uppercase tracking-wide text-emerald-700">{usuario?.rol}</p>
+          <p className="text-xs font-semibold text-slate-800 dark:text-slate-100">{usuario?.nombreCompleto}</p>
+          <p className="text-[10px] uppercase tracking-wide text-emerald-700 dark:text-emerald-300">{usuario?.rol}</p>
         </div>
 
         <div className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-700 text-xs font-bold text-white">
@@ -76,7 +78,7 @@ export function Topbar({ onAbrirMenu }: { onAbrirMenu: () => void }) {
         <button
           type="button"
           onClick={() => void cerrarSesion()}
-          className="rounded-lg border border-slate-200 p-2 text-slate-500 transition hover:border-red-200 hover:bg-red-50 hover:text-red-600"
+          className="rounded-lg border border-slate-200 dark:border-slate-700 p-2 text-slate-500 dark:text-slate-400 transition hover:border-red-200 dark:hover:border-red-800 hover:bg-red-50 dark:hover:bg-red-950/40 hover:text-red-600 dark:hover:text-red-400"
           title="Cerrar sesión"
           aria-label="Cerrar sesión"
         >

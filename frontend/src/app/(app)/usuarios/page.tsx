@@ -169,7 +169,7 @@ export default function PaginaUsuarios() {
       titulo: "Usuario",
       render: (usuario) => (
         <div className="flex items-center gap-3">
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-slate-100 text-xs font-bold text-slate-600">
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-xs font-bold text-slate-600 dark:text-slate-300">
             {usuario.nombreCompleto
               .split(" ")
               .filter(Boolean)
@@ -179,8 +179,8 @@ export default function PaginaUsuarios() {
               .toUpperCase()}
           </span>
           <div>
-            <p className="text-sm font-semibold text-slate-800">{usuario.nombreCompleto}</p>
-            <p className="font-mono text-[11px] text-slate-400">@{usuario.nombreUsuario}</p>
+            <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">{usuario.nombreCompleto}</p>
+            <p className="font-mono text-[11px] text-slate-400">{usuario.nombreUsuario}</p>
           </div>
         </div>
       ),
@@ -188,7 +188,7 @@ export default function PaginaUsuarios() {
     {
       clave: "correo",
       titulo: "Correo",
-      render: (usuario) => <span className="text-xs text-slate-500">{usuario.correo}</span>,
+      render: (usuario) => <span className="text-xs text-slate-500 dark:text-slate-400">{usuario.correo}</span>,
     },
     {
       clave: "rol",
@@ -210,7 +210,7 @@ export default function PaginaUsuarios() {
       clave: "acceso",
       titulo: "Último acceso",
       render: (usuario) => (
-        <span className="text-xs text-slate-500">
+        <span className="text-xs text-slate-500 dark:text-slate-400">
           {usuario.ultimoAcceso ? formatoFecha(usuario.ultimoAcceso, true) : "Nunca"}
         </span>
       ),
@@ -272,18 +272,18 @@ export default function PaginaUsuarios() {
         </div>
       )}
 
-      <div className="mb-4 grid gap-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm lg:grid-cols-[1fr_auto]">
+      <div className="mb-4 grid gap-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-4 shadow-sm lg:grid-cols-[1fr_auto]">
         <div className="relative">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
           <input
             value={busqueda}
             onChange={(evento) => setBusqueda(evento.target.value)}
             placeholder="Buscar por nombre, usuario o correo…"
-            className="h-10 w-full rounded-lg border border-slate-300 bg-white pl-9 pr-3 text-sm outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/15"
+            className="h-10 w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 pl-9 pr-3 text-sm outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/15"
           />
         </div>
 
-        <div className="flex items-center gap-2 rounded-lg bg-slate-50 px-3 text-xs text-slate-500">
+        <div className="flex items-center gap-2 rounded-lg bg-slate-50 dark:bg-slate-800 px-3 text-xs text-slate-500 dark:text-slate-400">
           <UserCog className="h-4 w-4 text-slate-400" />
           {datos?.length ?? 0} usuario(s) · 4 roles disponibles
         </div>
@@ -355,9 +355,8 @@ export default function PaginaUsuarios() {
                 onChange={(evento) =>
                   setFormulario({ ...formulario, nombreUsuario: evento.target.value })
                 }
-                maxLength={50}
-                pattern="[a-zA-Z0-9._-]+"
-                title="Solo letras, números, puntos, guiones y guiones bajos."
+                maxLength={150}
+                title="Ingrese un alias o un correo electrónico válido."
                 disabled={Boolean(editando)}
                 required
               />
@@ -397,7 +396,7 @@ export default function PaginaUsuarios() {
             <Campo
               etiqueta="Contraseña inicial"
               requerido
-              ayuda="Mínimo 8 caracteres. El usuario podrá cambiarla desde su perfil."
+              ayuda="Mínimo 12 caracteres. El usuario podrá cambiarla desde su perfil."
             >
               <Entrada
                 type="password"
@@ -405,7 +404,7 @@ export default function PaginaUsuarios() {
                 onChange={(evento) =>
                   setFormulario({ ...formulario, contrasena: evento.target.value })
                 }
-                minLength={8}
+                minLength={12} maxLength={100}
                 autoComplete="new-password"
                 required
               />
@@ -413,7 +412,7 @@ export default function PaginaUsuarios() {
           )}
 
           {editando && (
-            <label className="flex items-center gap-2 text-xs font-medium text-slate-600">
+            <label className="flex items-center gap-2 text-xs font-medium text-slate-600 dark:text-slate-300">
               <input
                 type="checkbox"
                 checked={formulario.activo}
@@ -421,7 +420,7 @@ export default function PaginaUsuarios() {
                   setFormulario({ ...formulario, activo: evento.target.checked })
                 }
                 disabled={editando.id === usuarioActual?.id}
-                className="h-4 w-4 rounded border-slate-300 text-emerald-700 focus:ring-emerald-600"
+                className="h-4 w-4 rounded border-slate-300 dark:border-slate-600 text-emerald-700 dark:text-emerald-300 focus:ring-emerald-600"
               />
               Usuario activo
             </label>
@@ -466,7 +465,7 @@ export default function PaginaUsuarios() {
               type="password"
               value={claveNueva}
               onChange={(evento) => setClaveNueva(evento.target.value)}
-              minLength={8}
+              minLength={12} maxLength={100}
               autoComplete="new-password"
               required
             />
@@ -477,7 +476,7 @@ export default function PaginaUsuarios() {
               type="password"
               value={claveConfirmacion}
               onChange={(evento) => setClaveConfirmacion(evento.target.value)}
-              minLength={8}
+              minLength={12} maxLength={100}
               autoComplete="new-password"
               required
             />

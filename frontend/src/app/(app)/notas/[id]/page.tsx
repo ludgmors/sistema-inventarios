@@ -52,7 +52,7 @@ export default function PaginaDetalleNota() {
     return (
       <div className="space-y-4">
         <Aviso tono="error">{error || "No se encontró la nota."}</Aviso>
-        <Link href="/notas" className="text-sm font-semibold text-emerald-700">
+        <Link href="/notas" className="text-sm font-semibold text-emerald-700 dark:text-emerald-300">
           Volver a notas
         </Link>
       </div>
@@ -66,7 +66,7 @@ export default function PaginaDetalleNota() {
       <div className="no-imprimir flex flex-wrap items-center justify-between gap-3">
         <Link
           href="/notas"
-          className="inline-flex items-center gap-1 text-xs font-medium text-slate-500 hover:text-slate-800"
+          className="inline-flex items-center gap-1 text-xs font-medium text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-100"
         >
           <ArrowLeft className="h-3.5 w-3.5" /> Volver a notas
         </Link>
@@ -74,7 +74,7 @@ export default function PaginaDetalleNota() {
         <div className="flex flex-wrap gap-2">
           <Link
             href={`/ventas/${nota.ventaId}`}
-            className="inline-flex h-10 items-center gap-2 rounded-lg border border-slate-300 bg-white px-4 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-50"
+            className="inline-flex h-10 items-center gap-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-4 text-sm font-medium text-slate-700 dark:text-slate-200 shadow-sm transition hover:bg-slate-50 dark:hover:bg-slate-800"
           >
             Ver venta {nota.ventaNumero}
           </Link>
@@ -101,29 +101,29 @@ export default function PaginaDetalleNota() {
 
       {errorAccion && <div className="no-imprimir"><Aviso tono="error">{errorAccion}</Aviso></div>}
 
-      <article className="documento-impresion mx-auto max-w-4xl rounded-xl border border-slate-200 bg-white p-6 shadow-sm sm:p-9">
-        <header className="flex flex-wrap items-start justify-between gap-6 border-b border-slate-200 pb-6">
+      <article className="documento-impresion mx-auto max-w-4xl rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-sm sm:p-9">
+        <header className="flex flex-wrap items-start justify-between gap-6 border-b border-slate-200 dark:border-slate-700 pb-6">
           <div className="flex items-start gap-3">
             <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-700 text-white">
               <Building2 className="h-6 w-6" />
             </span>
             <div>
-              <h1 className="text-lg font-bold text-slate-900">{empresa.nombre}</h1>
+              <h1 className="text-lg font-bold text-slate-900 dark:text-slate-100">{empresa.nombre}</h1>
               {empresa.documento && (
-                <p className="text-xs text-slate-500">NIT / Documento: {empresa.documento}</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400">NIT / Documento: {empresa.documento}</p>
               )}
-              {empresa.direccion && <p className="text-xs text-slate-500">{empresa.direccion}</p>}
-              <p className="text-xs text-slate-500">
+              {empresa.direccion && <p className="text-xs text-slate-500 dark:text-slate-400">{empresa.direccion}</p>}
+              <p className="text-xs text-slate-500 dark:text-slate-400">
                 {empresa.telefono} {empresa.correo && `· ${empresa.correo}`}
               </p>
             </div>
           </div>
 
           <div className="text-right">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-emerald-700">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-emerald-700 dark:text-emerald-300">
               {esCredito ? "Nota de crédito" : "Nota de débito"}
             </p>
-            <p className="mt-1 font-mono text-xl font-bold text-slate-900">{nota.numero}</p>
+            <p className="mt-1 font-mono text-xl font-bold text-slate-900 dark:text-slate-100">{nota.numero}</p>
             <div className="mt-2 flex justify-end">
               <InsigniaEstado estado={nota.estado} />
             </div>
@@ -135,29 +135,29 @@ export default function PaginaDetalleNota() {
             <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-400">
               Cliente
             </p>
-            <p className="mt-1 text-sm font-semibold text-slate-800">{nota.cliente}</p>
+            <p className="mt-1 text-sm font-semibold text-slate-800 dark:text-slate-100">{nota.cliente}</p>
           </div>
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-400">
               Fecha
             </p>
-            <p className="mt-1 text-sm text-slate-700">{formatoFecha(nota.fecha, true)}</p>
+            <p className="mt-1 text-sm text-slate-700 dark:text-slate-200">{formatoFecha(nota.fecha, true)}</p>
           </div>
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-400">
               Venta de referencia
             </p>
-            <p className="mt-1 font-mono text-sm text-slate-700">{nota.ventaNumero}</p>
+            <p className="mt-1 font-mono text-sm text-slate-700 dark:text-slate-200">{nota.ventaNumero}</p>
           </div>
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-400">
               Registrado por
             </p>
-            <p className="mt-1 text-sm text-slate-700">{nota.usuario}</p>
+            <p className="mt-1 text-sm text-slate-700 dark:text-slate-200">{nota.usuario}</p>
           </div>
         </section>
 
-        <section className="mt-4 flex flex-wrap items-center gap-2 rounded-lg bg-slate-50 px-3 py-2 text-xs text-slate-600">
+        <section className="mt-4 flex flex-wrap items-center gap-2 rounded-lg bg-slate-50 dark:bg-slate-800 px-3 py-2 text-xs text-slate-600 dark:text-slate-300">
           <Insignia tono={esCredito ? "azul" : "morado"}>
             {esCredito ? "Crédito" : "Débito"}
           </Insignia>
@@ -168,10 +168,10 @@ export default function PaginaDetalleNota() {
           </span>
         </section>
 
-        <section className="mt-7 overflow-hidden rounded-lg border border-slate-200">
+        <section className="mt-7 overflow-hidden rounded-lg border border-slate-200 dark:border-slate-700">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-slate-200 bg-slate-50 text-left text-[10px] uppercase tracking-wide text-slate-500">
+              <tr className="border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-left text-[10px] uppercase tracking-wide text-slate-500 dark:text-slate-400">
                 <th className="px-3 py-2.5">Código</th>
                 <th className="px-3 py-2.5">Producto</th>
                 <th className="px-3 py-2.5 text-right">Cantidad</th>
@@ -179,20 +179,20 @@ export default function PaginaDetalleNota() {
                 <th className="px-3 py-2.5 text-right">Subtotal</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
               {nota.detalles.map((detalle) => (
                 <tr key={detalle.id}>
-                  <td className="px-3 py-2.5 font-mono text-xs text-slate-500">
+                  <td className="px-3 py-2.5 font-mono text-xs text-slate-500 dark:text-slate-400">
                     {detalle.codigoProducto}
                   </td>
-                  <td className="px-3 py-2.5 text-slate-700">{detalle.producto}</td>
-                  <td className="px-3 py-2.5 text-right text-slate-600">
+                  <td className="px-3 py-2.5 text-slate-700 dark:text-slate-200">{detalle.producto}</td>
+                  <td className="px-3 py-2.5 text-right text-slate-600 dark:text-slate-300">
                     {formatoNumero(detalle.cantidad)}
                   </td>
-                  <td className="px-3 py-2.5 text-right text-slate-600">
+                  <td className="px-3 py-2.5 text-right text-slate-600 dark:text-slate-300">
                     {formatoMoneda(detalle.precioUnitario)}
                   </td>
-                  <td className="px-3 py-2.5 text-right font-medium text-slate-800">
+                  <td className="px-3 py-2.5 text-right font-medium text-slate-800 dark:text-slate-100">
                     {formatoMoneda(detalle.subtotal)}
                   </td>
                 </tr>
@@ -206,31 +206,31 @@ export default function PaginaDetalleNota() {
             <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-400">
               Motivo
             </p>
-            <p className="mt-1 text-xs leading-relaxed text-slate-600">{nota.motivo}</p>
+            <p className="mt-1 text-xs leading-relaxed text-slate-600 dark:text-slate-300">{nota.motivo}</p>
             {nota.fechaAnulacion && (
-              <p className="mt-3 rounded-lg bg-red-50 px-3 py-2 text-xs text-red-700">
+              <p className="mt-3 rounded-lg bg-red-50 dark:bg-red-950/40 px-3 py-2 text-xs text-red-700 dark:text-red-300">
                 Documento anulado el {formatoFecha(nota.fechaAnulacion, true)}.
               </p>
             )}
           </div>
 
           <dl className="w-full space-y-2 text-sm sm:w-64">
-            <div className="flex justify-between text-slate-500">
+            <div className="flex justify-between text-slate-500 dark:text-slate-400">
               <dt>Subtotal</dt>
               <dd>{formatoMoneda(nota.subtotal)}</dd>
             </div>
-            <div className="flex justify-between text-slate-500">
+            <div className="flex justify-between text-slate-500 dark:text-slate-400">
               <dt>Impuesto ({nota.impuestoPorcentaje}%)</dt>
               <dd>{formatoMoneda(nota.impuesto)}</dd>
             </div>
-            <div className="flex justify-between border-t border-slate-200 pt-2 text-base font-bold text-slate-900">
+            <div className="flex justify-between border-t border-slate-200 dark:border-slate-700 pt-2 text-base font-bold text-slate-900 dark:text-slate-100">
               <dt>Total</dt>
               <dd>{formatoMoneda(nota.total)}</dd>
             </div>
           </dl>
         </section>
 
-        <footer className="mt-8 border-t border-slate-100 pt-3 text-center text-[10px] text-slate-400">
+        <footer className="mt-8 border-t border-slate-100 dark:border-slate-800 pt-3 text-center text-[10px] text-slate-400">
           Documento generado por el Sistema de Inventarios · {formatoFecha(new Date().toISOString(), true)}
         </footer>
       </article>

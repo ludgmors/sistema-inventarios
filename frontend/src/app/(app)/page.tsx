@@ -68,13 +68,13 @@ export default function PaginaPanel() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-wider text-emerald-700">
+          <p className="text-xs font-semibold uppercase tracking-wider text-emerald-700 dark:text-emerald-300">
             Resumen general
           </p>
-          <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-900">
-            Hola, {usuario?.nombreCompleto.split(" ")[0]} 👋
+          <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
+            Hola, {usuario?.nombreCompleto.split(" ")[0]}
           </h1>
-          <p className="mt-1 text-sm text-slate-500">
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
             Este es el estado actual de su inventario y sus operaciones.
           </p>
         </div>
@@ -86,7 +86,7 @@ export default function PaginaPanel() {
               <Link
                 key={accion.href}
                 href={accion.href}
-                className="inline-flex h-9 items-center gap-2 rounded-lg border border-slate-300 bg-white px-3 text-xs font-semibold text-slate-700 shadow-sm transition hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-800"
+                className="inline-flex h-9 items-center gap-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-3 text-xs font-semibold text-slate-700 dark:text-slate-200 shadow-sm transition hover:border-emerald-300 dark:hover:border-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 hover:text-emerald-800 dark:hover:text-emerald-200"
               >
                 <Icono className="h-4 w-4" />
                 {accion.etiqueta}
@@ -134,7 +134,7 @@ export default function PaginaPanel() {
           acciones={
             <Link
               href="/reportes"
-              className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 hover:text-emerald-800"
+              className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 dark:text-emerald-300 hover:text-emerald-800 dark:hover:text-emerald-200"
             >
               Ver reportes <ArrowUpRight className="h-3.5 w-3.5" />
             </Link>
@@ -149,16 +149,16 @@ export default function PaginaPanel() {
                     <stop offset="95%" stopColor="#047857" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--borde)" vertical={false} />
                 <XAxis
                   dataKey="fecha"
                   tickFormatter={(valor: string) => formatoFechaCorta(valor)}
-                  tick={{ fontSize: 11, fill: "#64748b" }}
+                  tick={{ fontSize: 11, fill: "var(--texto-suave)" }}
                   axisLine={false}
                   tickLine={false}
                 />
                 <YAxis
-                  tick={{ fontSize: 11, fill: "#64748b" }}
+                  tick={{ fontSize: 11, fill: "var(--texto-suave)" }}
                   axisLine={false}
                   tickLine={false}
                   tickFormatter={(valor: number) => `Q${valor}`}
@@ -168,7 +168,9 @@ export default function PaginaPanel() {
                   labelFormatter={(valor) => formatoFechaCorta(String(valor))}
                   contentStyle={{
                     borderRadius: 10,
-                    border: "1px solid #e2e8f0",
+                    border: "1px solid var(--borde)",
+                    backgroundColor: "var(--superficie)",
+                    color: "var(--texto)",
                     fontSize: 12,
                   }}
                 />
@@ -198,16 +200,16 @@ export default function PaginaPanel() {
                 <li key={producto.productoId}>
                   <div className="flex items-center justify-between gap-3 text-xs">
                     <span className="flex min-w-0 items-center gap-2">
-                      <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-slate-100 text-[10px] font-bold text-slate-500">
+                      <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-slate-100 dark:bg-slate-800 text-[10px] font-bold text-slate-500 dark:text-slate-400">
                         {indice + 1}
                       </span>
-                      <span className="truncate font-medium text-slate-700">{producto.nombre}</span>
+                      <span className="truncate font-medium text-slate-700 dark:text-slate-200">{producto.nombre}</span>
                     </span>
-                    <span className="shrink-0 font-semibold text-slate-900">
+                    <span className="shrink-0 font-semibold text-slate-900 dark:text-slate-100">
                       {formatoNumero(producto.cantidadVendida)}
                     </span>
                   </div>
-                  <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-slate-100">
+                  <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800">
                     <div
                       className="h-full rounded-full bg-emerald-600"
                       style={{ width: `${(producto.cantidadVendida / maximoTop) * 100}%` }}
@@ -228,21 +230,21 @@ export default function PaginaPanel() {
         >
           {datos.productosBajoMinimoLista.length === 0 ? (
             <div className="flex flex-col items-center gap-2 py-8 text-center">
-              <Boxes className="h-8 w-8 text-emerald-500" />
-              <p className="text-xs font-medium text-slate-600">Todo el inventario está sobre el mínimo.</p>
+              <Boxes className="h-8 w-8 text-emerald-500 dark:text-emerald-400" />
+              <p className="text-xs font-medium text-slate-600 dark:text-slate-300">Todo el inventario está sobre el mínimo.</p>
             </div>
           ) : (
-            <ul className="divide-y divide-slate-100">
+            <ul className="divide-y divide-slate-100 dark:divide-slate-800">
               {datos.productosBajoMinimoLista.map((producto) => (
                 <li key={producto.productoId} className="flex items-center justify-between gap-3 py-2.5">
                   <div className="min-w-0">
-                    <p className="truncate text-xs font-semibold text-slate-800">{producto.nombre}</p>
+                    <p className="truncate text-xs font-semibold text-slate-800 dark:text-slate-100">{producto.nombre}</p>
                     <p className="text-[11px] text-slate-400">
                       {producto.codigo} · {producto.categoria}
                     </p>
                   </div>
                   <div className="shrink-0 text-right">
-                    <p className="text-xs font-bold text-red-600">{formatoNumero(producto.existenciaActual)}</p>
+                    <p className="text-xs font-bold text-red-600 dark:text-red-400">{formatoNumero(producto.existenciaActual)}</p>
                     <p className="text-[10px] text-slate-400">mín. {formatoNumero(producto.existenciaMinima)}</p>
                   </div>
                 </li>
@@ -257,7 +259,7 @@ export default function PaginaPanel() {
           acciones={
             <Link
               href="/ventas"
-              className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 hover:text-emerald-800"
+              className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 dark:text-emerald-300 hover:text-emerald-800 dark:hover:text-emerald-200"
             >
               Ver todas <ArrowUpRight className="h-3.5 w-3.5" />
             </Link>
@@ -266,13 +268,13 @@ export default function PaginaPanel() {
           {datos.ultimasVentas.length === 0 ? (
             <p className="py-8 text-center text-xs text-slate-400">Aún no hay ventas registradas.</p>
           ) : (
-            <ul className="divide-y divide-slate-100">
+            <ul className="divide-y divide-slate-100 dark:divide-slate-800">
               {datos.ultimasVentas.map((venta) => (
                 <li key={venta.id} className="flex items-center justify-between gap-3 py-2.5">
                   <div className="min-w-0">
                     <Link
                       href={`/ventas/${venta.id}`}
-                      className="text-xs font-semibold text-slate-800 hover:text-emerald-700"
+                      className="text-xs font-semibold text-slate-800 dark:text-slate-100 hover:text-emerald-700 dark:hover:text-emerald-300"
                     >
                       {venta.numero}
                     </Link>
@@ -284,7 +286,7 @@ export default function PaginaPanel() {
                     <Insignia tono={venta.estado === "Anulada" ? "rojo" : "verde"}>
                       {venta.estado}
                     </Insignia>
-                    <span className="text-xs font-bold text-slate-900">{formatoMoneda(venta.total)}</span>
+                    <span className="text-xs font-bold text-slate-900 dark:text-slate-100">{formatoMoneda(venta.total)}</span>
                   </div>
                 </li>
               ))}
@@ -293,14 +295,14 @@ export default function PaginaPanel() {
         </TarjetaSeccion>
       </div>
 
-      <Tarjeta className="flex flex-wrap items-center justify-between gap-4 border-emerald-100 bg-gradient-to-r from-emerald-50 to-white p-5">
+      <Tarjeta className="flex flex-wrap items-center justify-between gap-4 border-emerald-100 dark:border-emerald-900 bg-gradient-to-r from-emerald-50 dark:from-emerald-950/60 to-white dark:to-slate-900 p-5">
         <div className="flex items-start gap-3">
-          <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-100 text-emerald-700">
+          <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-100 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300">
             <TrendingUp className="h-5 w-5" />
           </span>
           <div>
-            <p className="text-sm font-semibold text-slate-800">Inventario valorizado</p>
-            <p className="text-xs text-slate-500">
+            <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">Inventario valorizado</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400">
               Consulte el costo y el valor de venta de todas sus existencias.
             </p>
           </div>

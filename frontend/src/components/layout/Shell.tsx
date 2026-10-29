@@ -34,7 +34,7 @@ export function Shell({ children }: { children: ReactNode }) {
   const permitida = usuario ? puedeAbrir(ruta, usuario.rol) : false;
 
   return (
-    <div className="min-h-screen bg-slate-100">
+    <div className="min-h-screen bg-slate-100 dark:bg-slate-950">
       <Sidebar abierto={menuAbierto} onCerrar={() => setMenuAbierto(false)} />
 
       <div className="lg:pl-64 print:pl-0">

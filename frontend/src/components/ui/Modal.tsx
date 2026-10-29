@@ -48,20 +48,20 @@ export function Modal({
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-slate-900/50 p-4 backdrop-blur-sm sm:items-center">
       <div
-        className={`animar-aparecer my-8 w-full ${tamanos[tamano]} rounded-xl bg-white shadow-2xl`}
+        className={`animar-aparecer my-8 w-full ${tamanos[tamano]} rounded-xl bg-white dark:bg-slate-900 shadow-2xl`}
         role="dialog"
         aria-modal="true"
         aria-label={titulo}
       >
-        <div className="flex items-start justify-between gap-4 border-b border-slate-100 px-5 py-4">
+        <div className="flex items-start justify-between gap-4 border-b border-slate-100 dark:border-slate-800 px-5 py-4">
           <div>
-            <h2 className="text-base font-semibold text-slate-900">{titulo}</h2>
-            {descripcion && <p className="mt-0.5 text-xs text-slate-500">{descripcion}</p>}
+            <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100">{titulo}</h2>
+            {descripcion && <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{descripcion}</p>}
           </div>
           <button
             type="button"
             onClick={onCerrar}
-            className="rounded-lg p-1.5 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+            className="rounded-lg p-1.5 text-slate-400 transition hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-700 dark:hover:text-slate-200"
             aria-label="Cerrar"
           >
             <X className="h-5 w-5" />
@@ -71,7 +71,7 @@ export function Modal({
         <div className="px-5 py-4">{children}</div>
 
         {pie && (
-          <div className="flex flex-wrap justify-end gap-2 border-t border-slate-100 px-5 py-3">
+          <div className="flex flex-wrap justify-end gap-2 border-t border-slate-100 dark:border-slate-800 px-5 py-3">
             {pie}
           </div>
         )}

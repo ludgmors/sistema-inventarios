@@ -26,11 +26,11 @@ const descripcionesGrupo: Record<string, string> = {
   Moneda: "Configuración de presentación de importes.",
   Inventario: "Reglas generales para el control de existencias.",
   Documentos: "Prefijo utilizado al generar la numeración de cada tipo de documento.",
-  Seguridad: "Parámetros de duración de la sesión de usuario.",
+  Seguridad: "Duración de sesiones, límites de actividad y bloqueos temporales. Los cambios de límites se aplican en un máximo de 10 segundos.",
 };
 
 const esNumero = (clave: string) =>
-  ["Impuesto.Porcentaje", "Sesion.MinutosExpiracion", "Inventario.ExistenciaMinimaDefecto"].includes(
+  clave.startsWith("Seguridad.") || ["Impuesto.Porcentaje", "Sesion.MinutosExpiracion", "Inventario.ExistenciaMinimaDefecto"].includes(
     clave,
   );
 
@@ -146,17 +146,17 @@ export default function PaginaParametros() {
         {grupos.map(([grupo, parametros]) => (
           <section
             key={grupo}
-            className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm"
+            className="overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-sm"
           >
-            <div className="flex items-start gap-3 border-b border-slate-100 px-5 py-4">
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-emerald-50 text-emerald-700">
+            <div className="flex items-start gap-3 border-b border-slate-100 dark:border-slate-800 px-5 py-4">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300">
                 <Settings className="h-4 w-4" />
               </span>
               <div>
-                <h2 className="text-sm font-semibold text-slate-900">
+                <h2 className="text-sm font-semibold text-slate-900 dark:text-slate-100">
                   {titulosGrupo[grupo] ?? grupo}
                 </h2>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-slate-500 dark:text-slate-400">
                   {descripcionesGrupo[grupo] ?? "Configuración general del sistema."}
                 </p>
               </div>

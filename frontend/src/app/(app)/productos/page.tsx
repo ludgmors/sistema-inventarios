@@ -139,7 +139,7 @@ export default function PaginaProductos() {
       clave: "codigo",
       titulo: "Código",
       render: (producto) => (
-        <span className="font-mono text-xs font-semibold text-slate-600">{producto.codigo}</span>
+        <span className="font-mono text-xs font-semibold text-slate-600 dark:text-slate-300">{producto.codigo}</span>
       ),
     },
     {
@@ -147,7 +147,7 @@ export default function PaginaProductos() {
       titulo: "Producto",
       render: (producto) => (
         <div>
-          <p className="text-sm font-semibold text-slate-800">{producto.nombre}</p>
+          <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">{producto.nombre}</p>
           <p className="text-[11px] text-slate-400">
             {producto.categoria} · {producto.unidadMedida}
           </p>
@@ -160,7 +160,7 @@ export default function PaginaProductos() {
       alineacion: "derecha",
       render: (producto) => (
         <div className="text-right">
-          <p className={`text-sm font-bold ${producto.bajoMinimo ? "text-red-600" : "text-slate-800"}`}>
+          <p className={`text-sm font-bold ${producto.bajoMinimo ? "text-red-600 dark:text-red-400" : "text-slate-800 dark:text-slate-100"}`}>
             {formatoNumero(producto.existenciaActual)}
           </p>
           <p className="text-[10px] text-slate-400">mín. {formatoNumero(producto.existenciaMinima)}</p>
@@ -172,7 +172,7 @@ export default function PaginaProductos() {
       titulo: "Costo",
       alineacion: "derecha",
       render: (producto) => (
-        <span className="text-xs text-slate-500">{formatoMoneda(producto.precioCosto)}</span>
+        <span className="text-xs text-slate-500 dark:text-slate-400">{formatoMoneda(producto.precioCosto)}</span>
       ),
     },
     {
@@ -180,7 +180,7 @@ export default function PaginaProductos() {
       titulo: "Precio venta",
       alineacion: "derecha",
       render: (producto) => (
-        <span className="text-xs font-semibold text-slate-800">{formatoMoneda(producto.precioVenta)}</span>
+        <span className="text-xs font-semibold text-slate-800 dark:text-slate-100">{formatoMoneda(producto.precioVenta)}</span>
       ),
     },
     {
@@ -237,7 +237,7 @@ export default function PaginaProductos() {
         </div>
       )}
 
-      <div className="mb-4 grid gap-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mb-4 grid gap-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-4 shadow-sm sm:grid-cols-2 lg:grid-cols-4">
         <div className="relative">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
           <input
@@ -247,7 +247,7 @@ export default function PaginaProductos() {
               setPagina(1);
             }}
             placeholder="Buscar por código o nombre…"
-            className="h-10 w-full rounded-lg border border-slate-300 bg-white pl-9 pr-3 text-sm outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/15"
+            className="h-10 w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 pl-9 pr-3 text-sm outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/15"
           />
         </div>
 
@@ -266,26 +266,26 @@ export default function PaginaProductos() {
           ))}
         </Seleccion>
 
-        <label className="flex h-10 items-center gap-2 rounded-lg border border-slate-200 px-3 text-xs font-medium text-slate-600">
+        <label className="flex h-10 items-center gap-2 rounded-lg border border-slate-200 dark:border-slate-700 px-3 text-xs font-medium text-slate-600 dark:text-slate-300">
           <input
             type="checkbox"
             checked={soloActivos}
             onChange={(evento) =>
               cambiarFiltro(() => setSoloActivos(evento.target.checked))
             }
-            className="h-4 w-4 rounded border-slate-300 text-emerald-700 focus:ring-emerald-600"
+            className="h-4 w-4 rounded border-slate-300 dark:border-slate-600 text-emerald-700 dark:text-emerald-300 focus:ring-emerald-600"
           />
           Solo activos
         </label>
 
-        <label className="flex h-10 items-center gap-2 rounded-lg border border-slate-200 px-3 text-xs font-medium text-slate-600">
+        <label className="flex h-10 items-center gap-2 rounded-lg border border-slate-200 dark:border-slate-700 px-3 text-xs font-medium text-slate-600 dark:text-slate-300">
           <input
             type="checkbox"
             checked={soloBajoMinimo}
             onChange={(evento) =>
               cambiarFiltro(() => setSoloBajoMinimo(evento.target.checked))
             }
-            className="h-4 w-4 rounded border-slate-300 text-emerald-700 focus:ring-emerald-600"
+            className="h-4 w-4 rounded border-slate-300 dark:border-slate-600 text-emerald-700 dark:text-emerald-300 focus:ring-emerald-600"
           />
           <SlidersHorizontal className="h-3.5 w-3.5" />
           Bajo mínimo
@@ -439,14 +439,14 @@ export default function PaginaProductos() {
             </Campo>
           </div>
 
-          <label className="flex items-center gap-2 text-xs font-medium text-slate-600">
+          <label className="flex items-center gap-2 text-xs font-medium text-slate-600 dark:text-slate-300">
             <input
               type="checkbox"
               checked={formulario.activo}
               onChange={(evento) =>
                 setFormulario({ ...formulario, activo: evento.target.checked })
               }
-              className="h-4 w-4 rounded border-slate-300 text-emerald-700 focus:ring-emerald-600"
+              className="h-4 w-4 rounded border-slate-300 dark:border-slate-600 text-emerald-700 dark:text-emerald-300 focus:ring-emerald-600"
             />
             Producto activo
           </label>

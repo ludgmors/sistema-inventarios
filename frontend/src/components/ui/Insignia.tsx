@@ -3,12 +3,12 @@ import type { ReactNode } from "react";
 type Tono = "verde" | "rojo" | "amarillo" | "azul" | "gris" | "morado";
 
 const tonos: Record<Tono, string> = {
-  verde: "bg-emerald-50 text-emerald-700 ring-emerald-600/20",
-  rojo: "bg-red-50 text-red-700 ring-red-600/20",
-  amarillo: "bg-amber-50 text-amber-700 ring-amber-600/20",
-  azul: "bg-blue-50 text-blue-700 ring-blue-600/20",
-  gris: "bg-slate-100 text-slate-600 ring-slate-500/20",
-  morado: "bg-violet-50 text-violet-700 ring-violet-600/20",
+  verde: "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 ring-emerald-600/20",
+  rojo: "bg-red-50 dark:bg-red-950/40 text-red-700 dark:text-red-300 ring-red-600/20",
+  amarillo: "bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 ring-amber-600/20",
+  azul: "bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 ring-blue-600/20",
+  gris: "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 ring-slate-500/20",
+  morado: "bg-violet-50 dark:bg-violet-950/40 text-violet-700 dark:text-violet-300 ring-violet-600/20",
 };
 
 export function Insignia({

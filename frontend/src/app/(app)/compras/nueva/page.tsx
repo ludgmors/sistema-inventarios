@@ -122,7 +122,7 @@ export default function PaginaNuevaCompra() {
     <div>
       <Link
         href="/compras"
-        className="mb-4 inline-flex items-center gap-1 text-xs font-medium text-slate-500 hover:text-slate-800"
+        className="mb-4 inline-flex items-center gap-1 text-xs font-medium text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-100"
       >
         <ArrowLeft className="h-3.5 w-3.5" /> Volver a compras
       </Link>
@@ -135,7 +135,7 @@ export default function PaginaNuevaCompra() {
       <form onSubmit={guardar} className="space-y-5">
         {error && <Aviso tono="error">{error}</Aviso>}
 
-        <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+        <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-5 shadow-sm">
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <Campo etiqueta="Proveedor" requerido className="lg:col-span-2">
               <Seleccion
@@ -174,11 +174,11 @@ export default function PaginaNuevaCompra() {
           </div>
         </div>
 
-        <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-          <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
+        <div className="overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-sm">
+          <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 px-5 py-4">
             <div>
-              <h2 className="text-sm font-semibold text-slate-900">Productos de la compra</h2>
-              <p className="text-xs text-slate-500">Seleccione los productos y cantidades recibidas.</p>
+              <h2 className="text-sm font-semibold text-slate-900 dark:text-slate-100">Productos de la compra</h2>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Seleccione los productos y cantidades recibidas.</p>
             </div>
             <Boton
               type="button"
@@ -191,7 +191,7 @@ export default function PaginaNuevaCompra() {
             </Boton>
           </div>
 
-          <div className="divide-y divide-slate-100">
+          <div className="divide-y divide-slate-100 dark:divide-slate-800">
             {lineas.map((linea, indice) => {
               const producto = productosPorId.get(linea.productoId);
               const importe = Number(linea.cantidad || 0) * Number(linea.precioUnitario || 0);
@@ -240,14 +240,14 @@ export default function PaginaNuevaCompra() {
                     <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-400">
                       Importe
                     </p>
-                    <p className="text-sm font-bold text-slate-800">{formatoMoneda(importe)}</p>
+                    <p className="text-sm font-bold text-slate-800 dark:text-slate-100">{formatoMoneda(importe)}</p>
                   </div>
 
                   <button
                     type="button"
                     onClick={() => eliminarLinea(indice)}
                     disabled={lineas.length === 1}
-                    className="mb-0.5 flex h-10 w-10 items-center justify-center rounded-lg text-slate-400 transition hover:bg-red-50 hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-30"
+                    className="mb-0.5 flex h-10 w-10 items-center justify-center rounded-lg text-slate-400 transition hover:bg-red-50 dark:hover:bg-red-950/40 hover:text-red-600 dark:hover:text-red-400 disabled:cursor-not-allowed disabled:opacity-30"
                     aria-label="Eliminar línea"
                   >
                     <Trash2 className="h-4 w-4" />
@@ -266,7 +266,7 @@ export default function PaginaNuevaCompra() {
         </div>
 
         <div className="grid gap-5 lg:grid-cols-[1fr_360px]">
-          <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-5 shadow-sm">
             <Campo etiqueta="Observaciones">
               <AreaTexto
                 value={observaciones}
@@ -277,18 +277,18 @@ export default function PaginaNuevaCompra() {
             </Campo>
           </div>
 
-          <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-            <h2 className="mb-3 text-sm font-semibold text-slate-900">Resumen</h2>
+          <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-5 shadow-sm">
+            <h2 className="mb-3 text-sm font-semibold text-slate-900 dark:text-slate-100">Resumen</h2>
             <dl className="space-y-2 text-sm">
-              <div className="flex justify-between text-slate-500">
+              <div className="flex justify-between text-slate-500 dark:text-slate-400">
                 <dt>Subtotal</dt>
                 <dd>{formatoMoneda(subtotal)}</dd>
               </div>
-              <div className="flex justify-between text-slate-500">
+              <div className="flex justify-between text-slate-500 dark:text-slate-400">
                 <dt>Impuesto ({impuestoPorcentaje}%)</dt>
                 <dd>{formatoMoneda(impuesto)}</dd>
               </div>
-              <div className="flex justify-between border-t border-slate-200 pt-2 text-base font-bold text-slate-900">
+              <div className="flex justify-between border-t border-slate-200 dark:border-slate-700 pt-2 text-base font-bold text-slate-900 dark:text-slate-100">
                 <dt>Total</dt>
                 <dd>{formatoMoneda(total)}</dd>
               </div>

@@ -125,7 +125,7 @@ export default function PaginaClientes() {
       clave: "codigo",
       titulo: "Código",
       render: (cliente) => (
-        <span className="font-mono text-xs font-semibold text-slate-600">{cliente.codigo}</span>
+        <span className="font-mono text-xs font-semibold text-slate-600 dark:text-slate-300">{cliente.codigo}</span>
       ),
     },
     {
@@ -133,7 +133,7 @@ export default function PaginaClientes() {
       titulo: "Cliente",
       render: (cliente) => (
         <div>
-          <p className="text-sm font-semibold text-slate-800">{cliente.nombre}</p>
+          <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">{cliente.nombre}</p>
           <p className="text-[11px] text-slate-400">{cliente.documento || "Sin documento"}</p>
         </div>
       ),
@@ -143,7 +143,7 @@ export default function PaginaClientes() {
       titulo: "Contacto",
       render: (cliente) => (
         <div>
-          <p className="text-xs text-slate-600">{cliente.telefono || "—"}</p>
+          <p className="text-xs text-slate-600 dark:text-slate-300">{cliente.telefono || "—"}</p>
           <p className="text-[11px] text-slate-400">{cliente.correo || ""}</p>
         </div>
       ),
@@ -152,7 +152,7 @@ export default function PaginaClientes() {
       clave: "fecha",
       titulo: "Registro",
       render: (cliente) => (
-        <span className="text-xs text-slate-500">{formatoFecha(cliente.fechaCreacion)}</span>
+        <span className="text-xs text-slate-500 dark:text-slate-400">{formatoFecha(cliente.fechaCreacion)}</span>
       ),
     },
     {
@@ -187,7 +187,7 @@ export default function PaginaClientes() {
               tamano="sm"
               onClick={() => setPorEliminar(cliente)}
               icono={<Trash2 className="h-3.5 w-3.5" />}
-              className="text-red-600 hover:bg-red-50"
+              className="text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/40"
             />
           )}
         </div>
@@ -224,7 +224,7 @@ export default function PaginaClientes() {
             setPagina(1);
           }}
           placeholder="Buscar por código, nombre o documento…"
-          className="h-10 w-full rounded-lg border border-slate-300 bg-white pl-9 pr-3 text-sm outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/15"
+          className="h-10 w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 pl-9 pr-3 text-sm outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/15"
         />
       </div>
 
@@ -327,12 +327,12 @@ export default function PaginaClientes() {
             />
           </Campo>
 
-          <label className="flex items-center gap-2 text-xs font-medium text-slate-600">
+          <label className="flex items-center gap-2 text-xs font-medium text-slate-600 dark:text-slate-300">
             <input
               type="checkbox"
               checked={formulario.activo}
               onChange={(evento) => setFormulario({ ...formulario, activo: evento.target.checked })}
-              className="h-4 w-4 rounded border-slate-300 text-emerald-700 focus:ring-emerald-600"
+              className="h-4 w-4 rounded border-slate-300 dark:border-slate-600 text-emerald-700 dark:text-emerald-300 focus:ring-emerald-600"
             />
             Cliente activo
           </label>

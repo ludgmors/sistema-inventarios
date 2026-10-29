@@ -146,7 +146,7 @@ function ModalKardex({
               type="date"
               value={desde}
               onChange={(evento) => setDesde(evento.target.value)}
-              className="h-10 w-full rounded-lg border border-slate-300 bg-white px-3 text-sm outline-none focus:border-emerald-600"
+              className="h-10 w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-3 text-sm outline-none focus:border-emerald-600"
             />
           </Campo>
           <Campo etiqueta="Hasta">
@@ -154,18 +154,18 @@ function ModalKardex({
               type="date"
               value={hasta}
               onChange={(evento) => setHasta(evento.target.value)}
-              className="h-10 w-full rounded-lg border border-slate-300 bg-white px-3 text-sm outline-none focus:border-emerald-600"
+              className="h-10 w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-3 text-sm outline-none focus:border-emerald-600"
             />
           </Campo>
         </div>
 
         {error && <Aviso tono="error">{error}</Aviso>}
 
-        <div className="overflow-hidden rounded-lg border border-slate-200">
+        <div className="overflow-hidden rounded-lg border border-slate-200 dark:border-slate-700">
           <div className="max-h-[420px] overflow-auto">
             <table className="w-full min-w-[760px] text-sm">
-              <thead className="sticky top-0 z-10 bg-slate-50">
-                <tr className="border-b border-slate-200 text-left text-[10px] uppercase tracking-wide text-slate-500">
+              <thead className="sticky top-0 z-10 bg-slate-50 dark:bg-slate-800">
+                <tr className="border-b border-slate-200 dark:border-slate-700 text-left text-[10px] uppercase tracking-wide text-slate-500 dark:text-slate-400">
                   <th className="px-3 py-2.5">Fecha</th>
                   <th className="px-3 py-2.5">Tipo</th>
                   <th className="px-3 py-2.5">Origen / documento</th>
@@ -175,7 +175,7 @@ function ModalKardex({
                   <th className="px-3 py-2.5">Usuario</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                 {cargando ? (
                   <tr>
                     <td colSpan={7} className="px-3 py-8 text-center text-xs text-slate-400">
@@ -191,36 +191,36 @@ function ModalKardex({
                 ) : (
                   datos.map((fila) => (
                     <tr key={fila.id}>
-                      <td className="whitespace-nowrap px-3 py-2.5 text-xs text-slate-500">
+                      <td className="whitespace-nowrap px-3 py-2.5 text-xs text-slate-500 dark:text-slate-400">
                         {formatoFecha(fila.fecha, true)}
                       </td>
                       <td className="px-3 py-2.5">
                         <InsigniaEstado estado={fila.tipo} />
                       </td>
                       <td className="px-3 py-2.5">
-                        <p className="text-xs text-slate-600">{nombreOrigen(fila.origen)}</p>
+                        <p className="text-xs text-slate-600 dark:text-slate-300">{nombreOrigen(fila.origen)}</p>
                         <p className="font-mono text-[10px] text-slate-400">
                           {fila.documentoNumero ?? "—"}
                         </p>
                       </td>
                       <td
                         className={`px-3 py-2.5 text-right text-xs font-bold ${
-                          fila.tipo === "Entrada" ? "text-emerald-700" : "text-red-600"
+                          fila.tipo === "Entrada" ? "text-emerald-700 dark:text-emerald-300" : "text-red-600 dark:text-red-400"
                         }`}
                       >
                         {fila.tipo === "Entrada" ? "+" : "−"}
                         {formatoNumero(fila.cantidad)}
                       </td>
-                      <td className="px-3 py-2.5 text-right text-xs text-slate-500">
+                      <td className="px-3 py-2.5 text-right text-xs text-slate-500 dark:text-slate-400">
                         {formatoMoneda(fila.costoUnitario)}
                       </td>
-                      <td className="px-3 py-2.5 text-right text-xs text-slate-600">
+                      <td className="px-3 py-2.5 text-right text-xs text-slate-600 dark:text-slate-300">
                         {formatoNumero(fila.saldoAnterior)} →{" "}
-                        <span className="font-semibold text-slate-800">
+                        <span className="font-semibold text-slate-800 dark:text-slate-100">
                           {formatoNumero(fila.saldoNuevo)}
                         </span>
                       </td>
-                      <td className="px-3 py-2.5 text-xs text-slate-500">{fila.usuario}</td>
+                      <td className="px-3 py-2.5 text-xs text-slate-500 dark:text-slate-400">{fila.usuario}</td>
                     </tr>
                   ))
                 )}
@@ -313,7 +313,7 @@ export default function PaginaExistencias() {
       titulo: "Producto",
       render: (item) => (
         <div>
-          <p className="text-sm font-semibold text-slate-800">{item.nombre}</p>
+          <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">{item.nombre}</p>
           <p className="font-mono text-[11px] text-slate-400">
             {item.codigo} · {item.categoria}
           </p>
@@ -328,7 +328,7 @@ export default function PaginaExistencias() {
         <div className="text-right">
           <p
             className={`text-sm font-bold ${
-              item.bajoMinimo ? "text-red-600" : "text-slate-900"
+              item.bajoMinimo ? "text-red-600 dark:text-red-400" : "text-slate-900 dark:text-slate-100"
             }`}
           >
             {formatoNumero(item.existenciaActual)}
@@ -361,7 +361,7 @@ export default function PaginaExistencias() {
       titulo: "Costo unit.",
       alineacion: "derecha",
       render: (item) => (
-        <span className="text-xs text-slate-500">{formatoMoneda(item.precioCosto)}</span>
+        <span className="text-xs text-slate-500 dark:text-slate-400">{formatoMoneda(item.precioCosto)}</span>
       ),
     },
     {
@@ -369,7 +369,7 @@ export default function PaginaExistencias() {
       titulo: "Precio venta",
       alineacion: "derecha",
       render: (item) => (
-        <span className="text-xs font-medium text-slate-700">{formatoMoneda(item.precioVenta)}</span>
+        <span className="text-xs font-medium text-slate-700 dark:text-slate-200">{formatoMoneda(item.precioVenta)}</span>
       ),
     },
     {
@@ -378,8 +378,8 @@ export default function PaginaExistencias() {
       alineacion: "derecha",
       render: (item) => (
         <div className="text-right text-[11px]">
-          <p className="text-slate-500">Costo: {formatoMoneda(item.valorCosto)}</p>
-          <p className="font-semibold text-slate-700">Venta: {formatoMoneda(item.valorVenta)}</p>
+          <p className="text-slate-500 dark:text-slate-400">Costo: {formatoMoneda(item.valorCosto)}</p>
+          <p className="font-semibold text-slate-700 dark:text-slate-200">Venta: {formatoMoneda(item.valorVenta)}</p>
         </div>
       ),
     },
@@ -436,12 +436,12 @@ export default function PaginaExistencias() {
       )}
 
       <div className="mb-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+        <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-4 shadow-sm">
           <div className="flex items-center justify-between">
-            <p className="text-xs font-medium text-slate-500">Productos activos</p>
+            <p className="text-xs font-medium text-slate-500 dark:text-slate-400">Productos activos</p>
             <PackageSearch className="h-4 w-4 text-slate-400" />
           </div>
-          <p className="mt-2 text-2xl font-bold text-slate-900">
+          <p className="mt-2 text-2xl font-bold text-slate-900 dark:text-slate-100">
             {formatoNumero(resumen?.totalProductos ?? 0)}
           </p>
           <p className="mt-1 text-[11px] text-slate-400">
@@ -449,43 +449,43 @@ export default function PaginaExistencias() {
           </p>
         </div>
 
-        <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+        <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-4 shadow-sm">
           <div className="flex items-center justify-between">
-            <p className="text-xs font-medium text-slate-500">Unidades en stock</p>
+            <p className="text-xs font-medium text-slate-500 dark:text-slate-400">Unidades en stock</p>
             <Boxes className="h-4 w-4 text-slate-400" />
           </div>
-          <p className="mt-2 text-2xl font-bold text-slate-900">
+          <p className="mt-2 text-2xl font-bold text-slate-900 dark:text-slate-100">
             {formatoNumero(resumen?.unidadesEnStock ?? 0)}
           </p>
           <p className="mt-1 text-[11px] text-slate-400">suma de todas las existencias</p>
         </div>
 
-        <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+        <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-4 shadow-sm">
           <div className="flex items-center justify-between">
-            <p className="text-xs font-medium text-slate-500">Valor al costo</p>
+            <p className="text-xs font-medium text-slate-500 dark:text-slate-400">Valor al costo</p>
             <Warehouse className="h-4 w-4 text-slate-400" />
           </div>
-          <p className="mt-2 text-2xl font-bold text-slate-900">
+          <p className="mt-2 text-2xl font-bold text-slate-900 dark:text-slate-100">
             {formatoMoneda(resumen?.valorCosto ?? 0)}
           </p>
           <p className="mt-1 text-[11px] text-slate-400">inversión actual en inventario</p>
         </div>
 
-        <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4 shadow-sm">
+        <div className="rounded-xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/40 p-4 shadow-sm">
           <div className="flex items-center justify-between">
-            <p className="text-xs font-medium text-emerald-700">Valor de venta</p>
-            <Boxes className="h-4 w-4 text-emerald-600" />
+            <p className="text-xs font-medium text-emerald-700 dark:text-emerald-300">Valor de venta</p>
+            <Boxes className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
           </div>
-          <p className="mt-2 text-2xl font-bold text-emerald-900">
+          <p className="mt-2 text-2xl font-bold text-emerald-900 dark:text-emerald-100">
             {formatoMoneda(resumen?.valorVenta ?? 0)}
           </p>
-          <p className="mt-1 text-[11px] text-emerald-700">
+          <p className="mt-1 text-[11px] text-emerald-700 dark:text-emerald-300">
             margen potencial: {formatoMoneda((resumen?.valorVenta ?? 0) - (resumen?.valorCosto ?? 0))}
           </p>
         </div>
       </div>
 
-      <div className="mb-4 grid gap-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:grid-cols-2 lg:grid-cols-5">
+      <div className="mb-4 grid gap-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-4 shadow-sm sm:grid-cols-2 lg:grid-cols-5">
         <div className="relative lg:col-span-2">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
           <input
@@ -495,7 +495,7 @@ export default function PaginaExistencias() {
               setPagina(1);
             }}
             placeholder="Código, producto o categoría…"
-            className="h-10 w-full rounded-lg border border-slate-300 bg-white pl-9 pr-3 text-sm outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/15"
+            className="h-10 w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 pl-9 pr-3 text-sm outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/15"
           />
         </div>
 
@@ -515,7 +515,7 @@ export default function PaginaExistencias() {
           ))}
         </Seleccion>
 
-        <label className="flex h-10 items-center gap-2 rounded-lg border border-slate-200 px-3 text-xs font-medium text-slate-600">
+        <label className="flex h-10 items-center gap-2 rounded-lg border border-slate-200 dark:border-slate-700 px-3 text-xs font-medium text-slate-600 dark:text-slate-300">
           <input
             type="checkbox"
             checked={soloBajoMinimo}
@@ -523,12 +523,12 @@ export default function PaginaExistencias() {
               setSoloBajoMinimo(evento.target.checked);
               setPagina(1);
             }}
-            className="h-4 w-4 rounded border-slate-300 text-emerald-700 focus:ring-emerald-600"
+            className="h-4 w-4 rounded border-slate-300 dark:border-slate-600 text-emerald-700 dark:text-emerald-300 focus:ring-emerald-600"
           />
           Solo bajo mínimo
         </label>
 
-        <label className="flex h-10 items-center gap-2 rounded-lg border border-slate-200 px-3 text-xs font-medium text-slate-600">
+        <label className="flex h-10 items-center gap-2 rounded-lg border border-slate-200 dark:border-slate-700 px-3 text-xs font-medium text-slate-600 dark:text-slate-300">
           <input
             type="checkbox"
             checked={soloActivos}
@@ -536,7 +536,7 @@ export default function PaginaExistencias() {
               setSoloActivos(evento.target.checked);
               setPagina(1);
             }}
-            className="h-4 w-4 rounded border-slate-300 text-emerald-700 focus:ring-emerald-600"
+            className="h-4 w-4 rounded border-slate-300 dark:border-slate-600 text-emerald-700 dark:text-emerald-300 focus:ring-emerald-600"
           />
           Solo activos
         </label>

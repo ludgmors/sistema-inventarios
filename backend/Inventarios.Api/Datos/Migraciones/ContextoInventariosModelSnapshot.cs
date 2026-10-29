@@ -251,6 +251,82 @@ namespace Inventarios.Api.Datos.Migraciones
                     b.ToTable("CompraDetalles", (string)null);
                 });
 
+            modelBuilder.Entity("Inventarios.Api.Entidades.DesafioAcceso", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)");
+
+                    b.Property<string>("Correo")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<DateTime>("CreadoUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ExpiraUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("HashCodigo")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.Property<string>("HashNavegador")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.Property<int>("Intentos")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RolId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UltimoEnvioUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("UsadoUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("VersionCredenciales")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExpiraUtc");
+
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("DesafiosAcceso", (string)null);
+                });
+
+            modelBuilder.Entity("Inventarios.Api.Entidades.LimiteAcceso", b =>
+                {
+                    b.Property<string>("Clave")
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.Property<DateTime?>("BloqueadoHastaUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Cantidad")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("InicioUtc")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Clave");
+
+                    b.ToTable("LimitesAcceso", (string)null);
+                });
+
             modelBuilder.Entity("Inventarios.Api.Entidades.MovimientoInventario", b =>
                 {
                     b.Property<long>("Id")
@@ -582,6 +658,30 @@ namespace Inventarios.Api.Datos.Migraciones
                     b.ToTable("Proveedores", (string)null);
                 });
 
+            modelBuilder.Entity("Inventarios.Api.Entidades.RecuperacionAcceso", b =>
+                {
+                    b.Property<string>("Hash")
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.Property<DateTime>("ExpiraUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("UsadoUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Hash");
+
+                    b.HasIndex("ExpiraUtc");
+
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("RecuperacionesAcceso", (string)null);
+                });
+
             modelBuilder.Entity("Inventarios.Api.Entidades.Rol", b =>
                 {
                     b.Property<int>("Id")
@@ -644,6 +744,41 @@ namespace Inventarios.Api.Datos.Migraciones
                     b.ToTable("SecuenciasDocumento", (string)null);
                 });
 
+            modelBuilder.Entity("Inventarios.Api.Entidades.SesionAcceso", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)");
+
+                    b.Property<DateTime>("ExpiraUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("RevocadaUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("RolId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UltimaActividadUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("VersionCredenciales")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExpiraUtc");
+
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("SesionesAcceso", (string)null);
+                });
+
             modelBuilder.Entity("Inventarios.Api.Entidades.Usuario", b =>
                 {
                     b.Property<int>("Id")
@@ -654,6 +789,9 @@ namespace Inventarios.Api.Datos.Migraciones
 
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
+
+                    b.Property<DateTime?>("BloqueadoHastaUtc")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Correo")
                         .IsRequired()
@@ -675,8 +813,8 @@ namespace Inventarios.Api.Datos.Migraciones
 
                     b.Property<string>("NombreUsuario")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.Property<int>("RolId")
                         .HasColumnType("int");
@@ -869,6 +1007,17 @@ namespace Inventarios.Api.Datos.Migraciones
                     b.Navigation("Producto");
                 });
 
+            modelBuilder.Entity("Inventarios.Api.Entidades.DesafioAcceso", b =>
+                {
+                    b.HasOne("Inventarios.Api.Entidades.Usuario", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Usuario");
+                });
+
             modelBuilder.Entity("Inventarios.Api.Entidades.MovimientoInventario", b =>
                 {
                     b.HasOne("Inventarios.Api.Entidades.Producto", "Producto")
@@ -935,6 +1084,28 @@ namespace Inventarios.Api.Datos.Migraciones
                         .IsRequired();
 
                     b.Navigation("Categoria");
+                });
+
+            modelBuilder.Entity("Inventarios.Api.Entidades.RecuperacionAcceso", b =>
+                {
+                    b.HasOne("Inventarios.Api.Entidades.Usuario", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Usuario");
+                });
+
+            modelBuilder.Entity("Inventarios.Api.Entidades.SesionAcceso", b =>
+                {
+                    b.HasOne("Inventarios.Api.Entidades.Usuario", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("Inventarios.Api.Entidades.Usuario", b =>

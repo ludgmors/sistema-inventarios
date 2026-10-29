@@ -15,19 +15,23 @@ public class SembradorDatos
     private readonly Servicios.ServicioCompras _compras;
     private readonly Servicios.ServicioVentas _ventas;
     private readonly ILogger<SembradorDatos> _logger;
+    private readonly IWebHostEnvironment _entorno;
+    private readonly IConfiguration _configuracion;
 
     public SembradorDatos(
         ContextoInventarios contexto,
         IPasswordHasher<Usuario> hasher,
         Servicios.ServicioCompras compras,
         Servicios.ServicioVentas ventas,
-        ILogger<SembradorDatos> logger)
+        ILogger<SembradorDatos> logger, IWebHostEnvironment entorno, IConfiguration configuracion)
     {
         _contexto = contexto;
         _hasher = hasher;
         _compras = compras;
         _ventas = ventas;
         _logger = logger;
+        _entorno = entorno;
+        _configuracion = configuracion;
     }
 
     public async Task InicializarAsync()
@@ -36,10 +40,14 @@ public class SembradorDatos
 
         await SembrarSeguridadAsync();
         await SembrarParametrosAsync();
+        await SembrarParametrosSeguridadAsync();
         await ConvertirMonedaAQuetzalesAsync();
         await SembrarSecuenciasAsync();
-        await SembrarCatalogosAsync();
-        await SembrarOperacionesDemoAsync();
+        if (_entorno.IsDevelopment())
+        {
+            await SembrarCatalogosAsync();
+            await SembrarOperacionesDemoAsync();
+        }
 
         _logger.LogInformation("Base de datos verificada y datos iniciales listos.");
     }
@@ -64,6 +72,17 @@ public class SembradorDatos
 
         var roles = await _contexto.Roles.ToDictionaryAsync(rol => rol.Nombre);
 
+        if (!_entorno.IsDevelopment())
+        {
+            var correo = _configuracion["Bootstrap:Correo"] ?? "";
+            var clave = _configuracion["Bootstrap:Contrasena"] ?? "";
+            if (!new DTOs.CorreoFormalAttribute().IsValid(correo) || clave.Length is < 12 or > 100)
+                throw new InvalidOperationException("Configure Bootstrap:Correo y Bootstrap:Contrasena (12-100 caracteres) para crear el primer administrador. No se crean cuentas demo en producción.");
+            _contexto.Usuarios.Add(CrearUsuario("Administrador", "admin", correo.Trim().ToLowerInvariant(), clave, roles["Administrador"].Id));
+            await _contexto.SaveChangesAsync();
+            return;
+        }
+
         var usuarios = new List<Usuario>
         {
             CrearUsuario("Administrador del Sistema", "admin", "admin@inventarios.local", "Admin123!", roles["Administrador"].Id),
@@ -74,6 +93,25 @@ public class SembradorDatos
 
         _contexto.Usuarios.AddRange(usuarios);
         await _contexto.SaveChangesAsync();
+    }
+
+    private async Task SembrarParametrosSeguridadAsync()
+    {
+        foreach (var (clave, regla) in Servicios.ServicioProteccionAcceso.Parametros)
+        {
+            if (!await _contexto.ParametrosSistema.AnyAsync(x => x.Clave == clave))
+                _contexto.ParametrosSistema.Add(new ParametroSistema {
+                    Clave = clave, Valor = regla.Defecto.ToString(System.Globalization.CultureInfo.InvariantCulture),
+                    Grupo = "Seguridad", Descripcion = regla.Descripcion
+                });
+        }
+        await _contexto.SaveChangesAsync();
+        // Limpiar solamente historial de seguridad vencido, sin tocar operaciones de inventario.
+        var limite = DateTime.UtcNow.AddDays(-7);
+        await _contexto.LimitesAcceso.Where(x => x.InicioUtc < limite && (x.BloqueadoHastaUtc == null || x.BloqueadoHastaUtc < limite)).ExecuteDeleteAsync();
+        await _contexto.SesionesAcceso.Where(x => x.ExpiraUtc < limite).ExecuteDeleteAsync();
+        await _contexto.RecuperacionesAcceso.Where(x => x.ExpiraUtc < limite).ExecuteDeleteAsync();
+        await _contexto.DesafiosAcceso.Where(x => x.ExpiraUtc < limite).ExecuteDeleteAsync();
     }
 
     private Usuario CrearUsuario(string nombreCompleto, string nombreUsuario, string correo, string contrasena, int rolId)

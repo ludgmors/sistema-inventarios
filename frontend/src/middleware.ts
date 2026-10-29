@@ -3,7 +3,7 @@ import { NextResponse, type NextRequest } from "next/server";
 export function middleware(request: NextRequest) {
   const token = request.cookies.get("access_token")?.value;
   const { pathname } = request.nextUrl;
-  const esLogin = pathname === "/login";
+  const esLogin = pathname === "/login" || pathname.startsWith("/login/");
 
   if (!token && !esLogin) {
     const destino = request.nextUrl.clone();

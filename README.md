@@ -31,6 +31,10 @@ sistema-inventarios/
 
 ## Puesta en marcha
 
+La preparación actual del login, clave JWT privada, LocalDB, correo local y límites
+de actividad se documenta en [Seguridad del acceso](docs/seguridad-login.md).
+Ejecute `./scripts/Configurar-Desarrollo.ps1` antes del primer arranque.
+
 > Guía detallada con verificación y solución de problemas: [`COMO-EJECUTAR.md`](COMO-EJECUTAR.md).
 
 ### 1. Base de datos

@@ -23,7 +23,7 @@ public class ConfiguracionUsuario : IEntityTypeConfiguration<Usuario>
         builder.ToTable("Usuarios");
         builder.HasKey(usuario => usuario.Id);
         builder.Property(usuario => usuario.NombreCompleto).IsRequired().HasMaxLength(150);
-        builder.Property(usuario => usuario.NombreUsuario).IsRequired().HasMaxLength(50);
+        builder.Property(usuario => usuario.NombreUsuario).IsRequired().HasMaxLength(150);
         builder.Property(usuario => usuario.Correo).IsRequired().HasMaxLength(150);
         builder.Property(usuario => usuario.HashContrasena).IsRequired().HasMaxLength(500);
 

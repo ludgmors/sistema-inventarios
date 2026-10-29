@@ -5,6 +5,7 @@ using Inventarios.Api.Servicios;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Inventarios.Api.Controladores;
 
@@ -15,11 +16,13 @@ public class ParametrosController : ControllerBase
 {
     private readonly ContextoInventarios _contexto;
     private readonly ServicioBitacora _bitacora;
+    private readonly IMemoryCache _cache;
 
-    public ParametrosController(ContextoInventarios contexto, ServicioBitacora bitacora)
+    public ParametrosController(ContextoInventarios contexto, ServicioBitacora bitacora, IMemoryCache cache)
     {
         _contexto = contexto;
         _bitacora = bitacora;
+        _cache = cache;
     }
 
     [HttpGet]
@@ -52,6 +55,10 @@ public class ParametrosController : ControllerBase
 
             var valor = item.Valor.Trim();
 
+            if (ServicioProteccionAcceso.Parametros.TryGetValue(parametro.Clave, out var regla) &&
+                (!int.TryParse(valor, out var umbral) || umbral < regla.Minimo || umbral > regla.Maximo))
+                throw new ExcepcionNegocio($"{parametro.Clave} debe estar entre {regla.Minimo} y {regla.Maximo}.");
+
             if (parametro.Clave == "Impuesto.Porcentaje")
             {
                 if (!decimal.TryParse(valor, NumberStyles.Number, CultureInfo.InvariantCulture, out var porcentaje) ||
@@ -68,9 +75,9 @@ public class ParametrosController : ControllerBase
 
             if (parametro.Clave == "Sesion.MinutosExpiracion")
             {
-                if (!int.TryParse(valor, out var minutos) || minutos is < 5 or > 43200)
+                if (!int.TryParse(valor, out var minutos) || minutos is < 5 or > 480)
                 {
-                    throw new ExcepcionNegocio("La duración de la sesión debe estar entre 5 y 43200 minutos.");
+                    throw new ExcepcionNegocio("La duración de la sesión debe estar entre 5 y 480 minutos.");
                 }
             }
 
@@ -94,6 +101,7 @@ public class ParametrosController : ControllerBase
 
         _bitacora.Registrar("Actualización de parámetros", "Parámetros", null, "Configuración general");
         await _contexto.SaveChangesAsync();
+        _cache.Remove("proteccion-parametros");
 
         return await Listar();
     }

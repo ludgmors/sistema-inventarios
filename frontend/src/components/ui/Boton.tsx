@@ -17,11 +17,11 @@ const estilosVariante: Record<Variante, string> = {
   primario:
     "bg-emerald-700 text-white hover:bg-emerald-800 focus-visible:outline-emerald-700 shadow-sm",
   secundario:
-    "bg-white text-slate-700 border border-slate-300 hover:bg-slate-50 focus-visible:outline-slate-400 shadow-sm",
+    "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800 focus-visible:outline-slate-400 shadow-sm",
   peligro:
     "bg-red-600 text-white hover:bg-red-700 focus-visible:outline-red-600 shadow-sm",
   fantasma:
-    "bg-transparent text-slate-600 hover:bg-slate-100 focus-visible:outline-slate-400",
+    "bg-transparent text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 focus-visible:outline-slate-400",
   oscuro:
     "bg-slate-900 text-white hover:bg-slate-800 focus-visible:outline-slate-900 shadow-sm",
 };

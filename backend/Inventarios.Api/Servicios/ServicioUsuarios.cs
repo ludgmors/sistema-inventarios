@@ -11,15 +11,17 @@ public class ServicioUsuarios
     private readonly ContextoInventarios _contexto;
     private readonly IPasswordHasher<Usuario> _hasher;
     private readonly ServicioBitacora _bitacora;
+    private readonly ServicioProteccionAcceso _proteccion;
 
     public ServicioUsuarios(
         ContextoInventarios contexto,
         IPasswordHasher<Usuario> hasher,
-        ServicioBitacora bitacora)
+        ServicioBitacora bitacora, ServicioProteccionAcceso proteccion)
     {
         _contexto = contexto;
         _hasher = hasher;
         _bitacora = bitacora;
+        _proteccion = proteccion;
     }
 
     public async Task<List<UsuarioDto>> ListarAsync(string? buscar)
@@ -69,15 +71,15 @@ public class ServicioUsuarios
 
     public async Task<UsuarioDto> CrearAsync(UsuarioCrearSolicitud solicitud)
     {
-        var nombreUsuario = solicitud.NombreUsuario.Trim();
+        var nombreUsuario = solicitud.NombreUsuario.Trim().ToLowerInvariant();
         var correo = solicitud.Correo.Trim().ToLowerInvariant();
 
-        if (await _contexto.Usuarios.AnyAsync(usuario => usuario.NombreUsuario == nombreUsuario))
+        if (await _contexto.Usuarios.AnyAsync(usuario => usuario.NombreUsuario == nombreUsuario || usuario.Correo == nombreUsuario))
         {
             throw new ExcepcionNegocio("El nombre de usuario ya está registrado.");
         }
 
-        if (await _contexto.Usuarios.AnyAsync(usuario => usuario.Correo == correo))
+        if (await _contexto.Usuarios.AnyAsync(usuario => usuario.Correo == correo || usuario.NombreUsuario == correo))
         {
             throw new ExcepcionNegocio("El correo ya está registrado.");
         }
@@ -113,7 +115,7 @@ public class ServicioUsuarios
 
         var correo = solicitud.Correo.Trim().ToLowerInvariant();
 
-        if (await _contexto.Usuarios.AnyAsync(otro => otro.Id != id && otro.Correo == correo))
+        if (await _contexto.Usuarios.AnyAsync(otro => otro.Id != id && (otro.Correo == correo || otro.NombreUsuario == correo)))
         {
             throw new ExcepcionNegocio("El correo ya está registrado por otro usuario.");
         }
@@ -144,6 +146,7 @@ public class ServicioUsuarios
 
         _bitacora.Registrar("Actualización de usuario", "Seguridad", usuario.Id, $"Usuario {usuario.NombreUsuario}");
         await _contexto.SaveChangesAsync();
+        await _proteccion.RevocarAsync(usuario.Id);
 
         usuario.Rol = rol;
         return Mapear(usuario);
@@ -157,6 +160,7 @@ public class ServicioUsuarios
         usuario.HashContrasena = _hasher.HashPassword(usuario, solicitud.ContrasenaNueva);
         _bitacora.Registrar("Restablecimiento de contraseña", "Seguridad", usuario.Id, $"Usuario {usuario.NombreUsuario}");
         await _contexto.SaveChangesAsync();
+        await _proteccion.RevocarAsync(usuario.Id);
     }
 
     private static UsuarioDto Mapear(Usuario usuario) => new()

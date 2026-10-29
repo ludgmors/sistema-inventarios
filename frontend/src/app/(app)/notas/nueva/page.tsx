@@ -152,7 +152,7 @@ export default function PaginaNuevaNota() {
     <div>
       <Link
         href="/notas"
-        className="mb-4 inline-flex items-center gap-1 text-xs font-medium text-slate-500 hover:text-slate-800"
+        className="mb-4 inline-flex items-center gap-1 text-xs font-medium text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-100"
       >
         <ArrowLeft className="h-3.5 w-3.5" /> Volver a notas
       </Link>
@@ -166,7 +166,7 @@ export default function PaginaNuevaNota() {
         {error && <Aviso tono="error">{error}</Aviso>}
         {errorVenta && <Aviso tono="error">{errorVenta}</Aviso>}
 
-        <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+        <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-5 shadow-sm">
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <Campo etiqueta="Venta de referencia" requerido className="lg:col-span-2">
               <Seleccion
@@ -213,33 +213,33 @@ export default function PaginaNuevaNota() {
 
         {venta && (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+            <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-4 shadow-sm">
               <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-400">
                 Cliente
               </p>
-              <p className="mt-1 truncate text-sm font-semibold text-slate-800">{venta.cliente}</p>
+              <p className="mt-1 truncate text-sm font-semibold text-slate-800 dark:text-slate-100">{venta.cliente}</p>
             </div>
-            <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+            <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-4 shadow-sm">
               <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-400">
                 Total de la venta
               </p>
-              <p className="mt-1 text-sm font-semibold text-slate-800">
+              <p className="mt-1 text-sm font-semibold text-slate-800 dark:text-slate-100">
                 {formatoMoneda(venta.total)}
               </p>
             </div>
-            <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+            <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-4 shadow-sm">
               <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-400">
                 Crédito utilizado
               </p>
-              <p className="mt-1 text-sm font-semibold text-slate-800">
+              <p className="mt-1 text-sm font-semibold text-slate-800 dark:text-slate-100">
                 {formatoMoneda(creditoUtilizado)}
               </p>
             </div>
-            <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4 shadow-sm">
-              <p className="text-[10px] font-semibold uppercase tracking-wide text-emerald-700">
+            <div className="rounded-xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/40 p-4 shadow-sm">
+              <p className="text-[10px] font-semibold uppercase tracking-wide text-emerald-700 dark:text-emerald-300">
                 Crédito disponible
               </p>
-              <p className="mt-1 text-sm font-bold text-emerald-800">
+              <p className="mt-1 text-sm font-bold text-emerald-800 dark:text-emerald-200">
                 {formatoMoneda(disponibleCredito)}
               </p>
             </div>
@@ -247,9 +247,9 @@ export default function PaginaNuevaNota() {
         )}
 
         {!venta && !cargandoVenta && (
-          <div className="rounded-xl border border-dashed border-slate-300 bg-white/60 p-8 text-center">
+          <div className="rounded-xl border border-dashed border-slate-300 dark:border-slate-600 bg-white/60 dark:bg-slate-900/60 p-8 text-center">
             <Info className="mx-auto h-7 w-7 text-slate-300" />
-            <p className="mt-2 text-sm font-medium text-slate-600">
+            <p className="mt-2 text-sm font-medium text-slate-600 dark:text-slate-300">
               Seleccione una venta para cargar sus productos.
             </p>
             <p className="mt-1 text-xs text-slate-400">
@@ -259,10 +259,10 @@ export default function PaginaNuevaNota() {
         )}
 
         {venta && (
-          <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-            <div className="border-b border-slate-100 px-5 py-4">
-              <h2 className="text-sm font-semibold text-slate-900">Productos de la nota</h2>
-              <p className="text-xs text-slate-500">
+          <div className="overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-sm">
+            <div className="border-b border-slate-100 dark:border-slate-800 px-5 py-4">
+              <h2 className="text-sm font-semibold text-slate-900 dark:text-slate-100">Productos de la nota</h2>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
                 Indique la cantidad ajustada. No puede superar la cantidad vendida.
               </p>
             </div>
@@ -270,7 +270,7 @@ export default function PaginaNuevaNota() {
             <div className="overflow-x-auto">
               <table className="w-full min-w-[720px] text-sm">
                 <thead>
-                  <tr className="border-b border-slate-200 bg-slate-50/80 text-left text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+                  <tr className="border-b border-slate-200 dark:border-slate-700 bg-slate-50/80 dark:bg-slate-800/80 text-left text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
                     <th className="px-5 py-3">Producto</th>
                     <th className="px-3 py-3 text-right">Cantidad vendida</th>
                     <th className="px-3 py-3 text-right">Cantidad nota</th>
@@ -278,11 +278,11 @@ export default function PaginaNuevaNota() {
                     <th className="px-5 py-3 text-right">Subtotal</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                   {lineas.map((linea, indice) => (
                     <tr key={linea.productoId}>
-                      <td className="px-5 py-3 text-sm text-slate-700">{linea.producto}</td>
-                      <td className="px-3 py-3 text-right text-xs text-slate-500">
+                      <td className="px-5 py-3 text-sm text-slate-700 dark:text-slate-200">{linea.producto}</td>
+                      <td className="px-3 py-3 text-right text-xs text-slate-500 dark:text-slate-400">
                         {formatoNumero(linea.cantidadVendida)}
                       </td>
                       <td className="px-3 py-3 text-right">
@@ -295,7 +295,7 @@ export default function PaginaNuevaNota() {
                           onChange={(evento) =>
                             actualizarLinea(indice, { cantidad: Number(evento.target.value) })
                           }
-                          className="h-9 w-24 rounded-md border border-slate-300 px-2 text-right text-sm outline-none focus:border-emerald-600"
+                          className="h-9 w-24 rounded-md border border-slate-300 dark:border-slate-600 px-2 text-right text-sm outline-none focus:border-emerald-600"
                         />
                       </td>
                       <td className="px-3 py-3 text-right">
@@ -309,10 +309,10 @@ export default function PaginaNuevaNota() {
                               precioUnitario: Number(evento.target.value),
                             })
                           }
-                          className="h-9 w-24 rounded-md border border-slate-300 px-2 text-right text-sm outline-none focus:border-emerald-600"
+                          className="h-9 w-24 rounded-md border border-slate-300 dark:border-slate-600 px-2 text-right text-sm outline-none focus:border-emerald-600"
                         />
                       </td>
-                      <td className="px-5 py-3 text-right font-semibold text-slate-800">
+                      <td className="px-5 py-3 text-right font-semibold text-slate-800 dark:text-slate-100">
                         {formatoMoneda(linea.cantidad * linea.precioUnitario)}
                       </td>
                     </tr>
@@ -324,7 +324,7 @@ export default function PaginaNuevaNota() {
         )}
 
         <div className="grid gap-5 lg:grid-cols-[1fr_380px]">
-          <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-5 shadow-sm">
             <Campo etiqueta="Motivo" requerido>
               <AreaTexto
                 value={motivo}
@@ -344,15 +344,15 @@ export default function PaginaNuevaNota() {
             </div>
           </div>
 
-          <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-            <h2 className="mb-3 text-sm font-semibold text-slate-900">Resumen de la nota</h2>
+          <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-5 shadow-sm">
+            <h2 className="mb-3 text-sm font-semibold text-slate-900 dark:text-slate-100">Resumen de la nota</h2>
             <dl className="space-y-2 text-sm">
-              <div className="flex justify-between text-slate-500">
+              <div className="flex justify-between text-slate-500 dark:text-slate-400">
                 <dt>Subtotal</dt>
                 <dd>{formatoMoneda(subtotal)}</dd>
               </div>
 
-              <div className="flex items-center justify-between gap-3 text-slate-500">
+              <div className="flex items-center justify-between gap-3 text-slate-500 dark:text-slate-400">
                 <dt>Impuesto (%)</dt>
                 <dd>
                   <input
@@ -362,17 +362,17 @@ export default function PaginaNuevaNota() {
                     step="0.01"
                     value={impuestoPorcentaje}
                     onChange={(evento) => setImpuestoPorcentaje(Number(evento.target.value))}
-                    className="h-8 w-20 rounded-md border border-slate-300 px-2 text-right text-xs outline-none focus:border-emerald-600"
+                    className="h-8 w-20 rounded-md border border-slate-300 dark:border-slate-600 px-2 text-right text-xs outline-none focus:border-emerald-600"
                   />
                 </dd>
               </div>
 
-              <div className="flex justify-between text-slate-500">
+              <div className="flex justify-between text-slate-500 dark:text-slate-400">
                 <dt>Impuesto</dt>
                 <dd>{formatoMoneda(impuesto)}</dd>
               </div>
 
-              <div className="flex justify-between border-t border-slate-200 pt-2 text-base font-bold text-slate-900">
+              <div className="flex justify-between border-t border-slate-200 dark:border-slate-700 pt-2 text-base font-bold text-slate-900 dark:text-slate-100">
                 <dt>Total</dt>
                 <dd>{formatoMoneda(total)}</dd>
               </div>

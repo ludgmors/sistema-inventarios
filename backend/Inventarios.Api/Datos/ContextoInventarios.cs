@@ -11,6 +11,10 @@ public class ContextoInventarios : DbContext
     }
 
     public DbSet<Rol> Roles => Set<Rol>();
+    public DbSet<DesafioAcceso> DesafiosAcceso => Set<DesafioAcceso>();
+    public DbSet<SesionAcceso> SesionesAcceso => Set<SesionAcceso>();
+    public DbSet<RecuperacionAcceso> RecuperacionesAcceso => Set<RecuperacionAcceso>();
+    public DbSet<LimiteAcceso> LimitesAcceso => Set<LimiteAcceso>();
     public DbSet<Usuario> Usuarios => Set<Usuario>();
     public DbSet<Bitacora> Bitacoras => Set<Bitacora>();
     public DbSet<Categoria> Categorias => Set<Categoria>();

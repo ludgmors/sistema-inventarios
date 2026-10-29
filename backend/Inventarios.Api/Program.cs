@@ -13,6 +13,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 var constructor = WebApplication.CreateBuilder(args);
+constructor.WebHost.ConfigureKestrel(opciones => opciones.Limits.MaxRequestBodySize = 1024 * 1024);
 
 // Servicios de la API.
 constructor.Services.AddControllers()
@@ -25,6 +26,19 @@ constructor.Services.AddDbContext<ContextoInventarios>(opciones =>
     opciones.UseSqlServer(constructor.Configuration.GetConnectionString("Inventarios")));
 
 constructor.Services.AddHttpContextAccessor();
+constructor.Services.AddMemoryCache();
+constructor.Services.AddScoped<ServicioProteccionAcceso>();
+constructor.Services.AddScoped<ServicioRecuperacion>();
+constructor.Services.AddScoped<ServicioCorreo>();
+constructor.Services.AddAntiforgery(opciones =>
+{
+    opciones.HeaderName = "X-CSRF-TOKEN";
+    opciones.Cookie.Name = "inventarios_csrf";
+    opciones.Cookie.HttpOnly = true;
+    opciones.Cookie.SameSite = SameSiteMode.Strict;
+    opciones.Cookie.SecurePolicy = constructor.Environment.IsDevelopment()
+        ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.Always;
+});
 constructor.Services.AddSingleton<IPasswordHasher<Usuario>, PasswordHasher<Usuario>>();
 
 constructor.Services.AddScoped<ServicioParametros>();
@@ -43,9 +57,9 @@ constructor.Services.AddScoped<SembradorDatos>();
 var opcionesJwt = constructor.Configuration.GetSection("Jwt").Get<OpcionesJwt>()
     ?? throw new InvalidOperationException("La sección Jwt no está configurada.");
 
-if (string.IsNullOrWhiteSpace(opcionesJwt.Key) || opcionesJwt.Key.Length < 32)
+if (string.IsNullOrWhiteSpace(opcionesJwt.Key) || opcionesJwt.Key.Length < 64)
 {
-    throw new InvalidOperationException("La clave JWT debe tener al menos 32 caracteres.");
+    throw new InvalidOperationException("Configure Jwt:Key fuera del repositorio con al menos 64 caracteres aleatorios.");
 }
 
 constructor.Services
@@ -61,13 +75,22 @@ constructor.Services
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(opcionesJwt.Key)),
             ValidateLifetime = true,
-            ClockSkew = TimeSpan.FromMinutes(2),
+            ClockSkew = TimeSpan.FromSeconds(15),
             NameClaimType = System.Security.Claims.ClaimTypes.Name,
             RoleClaimType = System.Security.Claims.ClaimTypes.Role
         };
 
         opciones.Events = new JwtBearerEvents
         {
+            OnTokenValidated = async contexto =>
+            {
+                var servicio = contexto.HttpContext.RequestServices.GetRequiredService<ServicioAutenticacion>();
+                if (!await servicio.ValidarSesionAsync(contexto.Principal!))
+                {
+                    contexto.Fail("Sesión inválida o revocada.");
+                    contexto.Response.Cookies.Delete("access_token");
+                }
+            },
             OnMessageReceived = contexto =>
             {
                 if (string.IsNullOrEmpty(contexto.Token) &&
@@ -94,10 +117,6 @@ constructor.Services.AddCors(opciones =>
         {
             politica.WithOrigins(origenes);
         }
-        else
-        {
-            politica.SetIsOriginAllowed(_ => true);
-        }
 
         politica.AllowAnyHeader().AllowAnyMethod().AllowCredentials();
     });
@@ -107,8 +126,9 @@ constructor.Services.AddCors(opciones =>
 constructor.Services.Configure<ForwardedHeadersOptions>(opciones =>
 {
     opciones.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
-    opciones.KnownNetworks.Clear();
-    opciones.KnownProxies.Clear();
+    // Mantener la confianza en loopback. Otros proxies deben configurarse explícitamente.
+    foreach (var proxy in constructor.Configuration.GetSection("Seguridad:ProxiesConfiables").Get<string[]>() ?? [])
+        opciones.KnownProxies.Add(System.Net.IPAddress.Parse(proxy));
 });
 
 // Documentación OpenAPI / Swagger.
@@ -129,7 +149,7 @@ constructor.Services.AddSwaggerGen(opciones =>
         Scheme = "bearer",
         BearerFormat = "JWT",
         In = ParameterLocation.Header,
-        Description = "Ingrese el token JWT devuelto por /api/auth/login."
+        Description = "El navegador usa la cookie HttpOnly. Las escrituras requieren también cookie antiforgery y X-CSRF-TOKEN."
     });
 
     opciones.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -152,6 +172,11 @@ var aplicacion = constructor.Build();
 
 aplicacion.UseForwardedHeaders();
 aplicacion.UseMiddleware<ManejoErroresMiddleware>();
+if (!aplicacion.Environment.IsDevelopment())
+{
+    aplicacion.UseHsts();
+    aplicacion.UseHttpsRedirection();
+}
 
 aplicacion.UseSwagger();
 aplicacion.UseSwaggerUI(opciones =>
@@ -163,12 +188,8 @@ aplicacion.UseSwaggerUI(opciones =>
 
 aplicacion.UseCors("Frontend");
 aplicacion.UseAuthentication();
+aplicacion.UseMiddleware<ProteccionAccesoMiddleware>();
 aplicacion.UseAuthorization();
-
-if (!aplicacion.Environment.IsDevelopment())
-{
-    aplicacion.UseHttpsRedirection();
-}
 
 aplicacion.MapControllers();
 aplicacion.MapGet("/", () => Results.Redirect("/swagger"));

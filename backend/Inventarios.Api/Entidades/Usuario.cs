@@ -12,4 +12,5 @@ public class Usuario
     public bool Activo { get; set; } = true;
     public DateTime FechaCreacion { get; set; } = DateTime.Now;
     public DateTime? UltimoAcceso { get; set; }
+    public DateTime? BloqueadoHastaUtc { get; set; }
 }

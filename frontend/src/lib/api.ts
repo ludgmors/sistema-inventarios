@@ -16,14 +16,20 @@ export async function apiFetch<T>(
   ruta: string,
   opciones: RequestInit = {},
 ): Promise<T> {
+  const headers = new Headers(opciones.headers);
+  headers.set("Content-Type", "application/json");
+  const metodo = (opciones.method ?? "GET").toUpperCase();
+  if (!["GET", "HEAD", "OPTIONS"].includes(metodo)) {
+    const csrf = await fetch("/api/auth/csrf", { credentials: "include", cache: "no-store" });
+    if (!csrf.ok) throw new ApiError("No se pudo validar la seguridad. Intente nuevamente.", csrf.status);
+    const datosCsrf = await csrf.json() as { token: string };
+    headers.set("X-CSRF-TOKEN", datosCsrf.token);
+  }
   const respuesta = await fetch(ruta, {
     ...opciones,
     credentials: "include",
     cache: "no-store",
-    headers: {
-      "Content-Type": "application/json",
-      ...(opciones.headers ?? {}),
-    },
+    headers,
   });
 
   if (respuesta.status === 401) {
@@ -46,6 +52,9 @@ export async function apiFetch<T>(
   }
 
   if (!respuesta.ok) {
+    if (datos?.sesionCerrada === true && typeof window !== "undefined") {
+      window.location.href = "/login?motivo=actividad";
+    }
     const mensaje =
       (datos?.detail as string | undefined) ??
       (datos?.title as string | undefined) ??

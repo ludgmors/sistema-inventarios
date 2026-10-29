@@ -46,7 +46,7 @@ export default function PaginaNotas() {
         <div>
           <Link
             href={`/notas/${nota.id}`}
-            className="font-mono text-xs font-semibold text-emerald-700 hover:text-emerald-800"
+            className="font-mono text-xs font-semibold text-emerald-700 dark:text-emerald-300 hover:text-emerald-800 dark:hover:text-emerald-200"
           >
             {nota.numero}
           </Link>
@@ -62,7 +62,7 @@ export default function PaginaNotas() {
       clave: "fecha",
       titulo: "Fecha",
       render: (nota) => (
-        <span className="text-xs text-slate-500">{formatoFecha(nota.fecha)}</span>
+        <span className="text-xs text-slate-500 dark:text-slate-400">{formatoFecha(nota.fecha)}</span>
       ),
     },
     {
@@ -71,7 +71,7 @@ export default function PaginaNotas() {
       render: (nota) => (
         <Link
           href={`/ventas/${nota.ventaId}`}
-          className="font-mono text-xs text-slate-600 hover:text-emerald-700"
+          className="font-mono text-xs text-slate-600 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-emerald-300"
         >
           {nota.ventaNumero}
         </Link>
@@ -82,7 +82,7 @@ export default function PaginaNotas() {
       titulo: "Cliente / motivo",
       render: (nota) => (
         <div className="max-w-xs">
-          <p className="truncate text-sm font-medium text-slate-800">{nota.cliente}</p>
+          <p className="truncate text-sm font-medium text-slate-800 dark:text-slate-100">{nota.cliente}</p>
           <p className="truncate text-[11px] text-slate-400">{nota.motivo}</p>
         </div>
       ),
@@ -92,7 +92,7 @@ export default function PaginaNotas() {
       titulo: "Total",
       alineacion: "derecha",
       render: (nota) => (
-        <span className="text-sm font-bold text-slate-900">{formatoMoneda(nota.total)}</span>
+        <span className="text-sm font-bold text-slate-900 dark:text-slate-100">{formatoMoneda(nota.total)}</span>
       ),
     },
     {
@@ -108,7 +108,7 @@ export default function PaginaNotas() {
       render: (nota) => (
         <Link
           href={`/notas/${nota.id}`}
-          className="inline-flex h-8 items-center gap-1 rounded-lg px-2 text-xs font-medium text-slate-600 hover:bg-slate-100"
+          className="inline-flex h-8 items-center gap-1 rounded-lg px-2 text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
         >
           <Eye className="h-3.5 w-3.5" /> Ver
         </Link>
@@ -135,7 +135,7 @@ export default function PaginaNotas() {
 
       {error && <div className="mb-4"><Aviso tono="error">{error}</Aviso></div>}
 
-      <div className="mb-4 grid gap-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:grid-cols-2 lg:grid-cols-5">
+      <div className="mb-4 grid gap-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-4 shadow-sm sm:grid-cols-2 lg:grid-cols-5">
         <div className="relative">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
           <input
@@ -145,7 +145,7 @@ export default function PaginaNotas() {
               setPagina(1);
             }}
             placeholder="Número, venta o motivo…"
-            className="h-10 w-full rounded-lg border border-slate-300 bg-white pl-9 pr-3 text-sm outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/15"
+            className="h-10 w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 pl-9 pr-3 text-sm outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/15"
           />
         </div>
 
@@ -156,7 +156,7 @@ export default function PaginaNotas() {
             setDesde(evento.target.value);
             setPagina(1);
           }}
-          className="h-10 rounded-lg border border-slate-300 bg-white px-3 text-sm outline-none focus:border-emerald-600"
+          className="h-10 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-3 text-sm outline-none focus:border-emerald-600"
           aria-label="Desde"
         />
 
@@ -167,7 +167,7 @@ export default function PaginaNotas() {
             setHasta(evento.target.value);
             setPagina(1);
           }}
-          className="h-10 rounded-lg border border-slate-300 bg-white px-3 text-sm outline-none focus:border-emerald-600"
+          className="h-10 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-3 text-sm outline-none focus:border-emerald-600"
           aria-label="Hasta"
         />
 

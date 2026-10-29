@@ -6,6 +6,8 @@ Esta carpeta reúne los documentos de análisis, diseño, operación, pruebas y 
 
 ## Contenido
 
+- [Seguridad del acceso](seguridad-login.md): sesiones revocables, límites, CSRF y recuperación por correo.
+
 | Documento | Descripción |
 |---|---|
 | [Informe del proyecto](informe.md) | Misión, objetivos, requerimientos, reglas, alcances, límites, módulos, diagramas, cronograma y participación. |

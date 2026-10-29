@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+@custom-variant dark {
+  @media screen {
+    &:where([data-tema="oscuro"], [data-tema="oscuro"] *) { @slot; }
+  }
+}
+
 @theme {
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
@@ -13,6 +19,22 @@
   --texto-suave: #64748b;
   --marca: #047857;
   --marca-oscura: #065f46;
+}
+
+@media screen {
+  html[data-tema="oscuro"] {
+    color-scheme: dark;
+    --fondo: #020617;
+    --superficie: #0f172a;
+    --borde: #334155;
+    --texto: #f1f5f9;
+    --texto-suave: #94a3b8;
+    --marca: #34d399;
+    --marca-oscura: #6ee7b7;
+  }
+  html[data-tema="claro"] { color-scheme: light; }
+  html[data-tema="oscuro"] ::-webkit-scrollbar-track { background: #0f172a; }
+  html[data-tema="oscuro"] ::-webkit-scrollbar-thumb { background: #475569; border-color: #0f172a; }
 }
 
 * {

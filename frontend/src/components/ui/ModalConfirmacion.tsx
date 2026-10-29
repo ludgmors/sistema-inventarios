@@ -47,10 +47,10 @@ export function ModalConfirmacion({
       }
     >
       <div className="flex gap-3">
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-amber-50 text-amber-600">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400">
           <TriangleAlert className="h-5 w-5" />
         </div>
-        <p className="pt-1 text-sm text-slate-600">{mensaje}</p>
+        <p className="pt-1 text-sm text-slate-600 dark:text-slate-300">{mensaje}</p>
       </div>
     </Modal>
   );

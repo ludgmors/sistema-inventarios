@@ -138,9 +138,9 @@ export function ModalAjuste({
         </Campo>
 
         {producto && (
-          <div className="rounded-lg bg-slate-50 px-3 py-2 text-xs text-slate-500">
+          <div className="rounded-lg bg-slate-50 dark:bg-slate-800 px-3 py-2 text-xs text-slate-500 dark:text-slate-400">
             Existencia actual:{" "}
-            <span className="font-semibold text-slate-700">
+            <span className="font-semibold text-slate-700 dark:text-slate-200">
               {formatoNumero(producto.existenciaActual)} {producto.unidadMedida}
             </span>
             {" · "}Costo: {formatoMoneda(producto.precioCosto)}

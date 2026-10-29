@@ -21,6 +21,10 @@ public class ManejoErroresMiddleware
         {
             await _siguiente(contexto);
         }
+        catch (AccesoLimitadoException excepcion)
+        {
+            await EscribirRespuestaAsync(contexto, 429, "Acceso temporalmente limitado", excepcion.Message, excepcion.Segundos);
+        }
         catch (ExcepcionNegocio excepcion)
         {
             await EscribirRespuestaAsync(contexto, StatusCodes.Status400BadRequest, "Regla de negocio", excepcion.Message);
@@ -58,7 +62,7 @@ public class ManejoErroresMiddleware
         HttpContext contexto,
         int estado,
         string titulo,
-        string detalle)
+        string detalle, int? reintentoSegundos = null)
     {
         if (contexto.Response.HasStarted)
         {
@@ -68,6 +72,7 @@ public class ManejoErroresMiddleware
         contexto.Response.Clear();
         contexto.Response.StatusCode = estado;
         contexto.Response.ContentType = "application/problem+json";
+        if (reintentoSegundos.HasValue) contexto.Response.Headers.RetryAfter = reintentoSegundos.Value.ToString();
 
         var problema = new
         {
