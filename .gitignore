@@ -42,6 +42,9 @@ publish/
 
 # Documentos generados
 docs/informe.html
+
+# Documento local de presentación (no se comparte)
+docs/guion-video.md
 __pycache__/
 *.pyc
 
