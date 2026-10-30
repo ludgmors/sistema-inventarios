@@ -7,7 +7,7 @@ Aplicación web para la gestión de proveedores, productos, compras, ventas, not
 - **Frontend:** Next.js 15.5, React 19, TypeScript, Tailwind CSS 4, Recharts.
 - **Backend:** ASP.NET Core 8, Entity Framework Core 8, JWT, Swagger.
 - **Base de datos:** SQL Server 2022.
-- **Autenticación:** JWT almacenado en cookie `httpOnly` (`access_token`).
+- **Autenticación:** JWT en cookie `httpOnly` (`access_token`) con segundo factor por correo.
 - **Roles:** Administrador, Inventario, Ventas y Consulta.
 
 ## Estructura del repositorio
@@ -17,7 +17,7 @@ sistema-inventarios/
 ├── backend/
 │   └── Inventarios.Api/        API REST, migraciones y datos iniciales
 ├── frontend/                   Aplicación Next.js
-├── docs/                       Informe, manual, despliegue y guion del video
+├── docs/                       Informe, manual, despliegue y pruebas
 ├── .gitignore
 └── README.md
 ```
@@ -101,7 +101,6 @@ dotnet publish -c Release -o publish
 - [Informe en PDF](docs/informe.pdf)
 - [Manual de usuario](docs/manual-usuario.md)
 - [Guía de despliegue](docs/despliegue.md)
-- [Guion del video](docs/guion-video.md)
 - [Matriz de pruebas](docs/pruebas.md)
 - [Checklist de entrega](docs/checklist-entrega.md)
 

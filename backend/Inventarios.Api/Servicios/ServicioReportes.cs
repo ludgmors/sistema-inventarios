@@ -391,35 +391,93 @@ public class ServicioReportes
         };
     }
 
+    private static readonly string[] NombresMes =
+    {
+        "Ene", "Feb", "Mar", "Abr", "May", "Jun",
+        "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"
+    };
+
     public async Task<DashboardDto> DashboardAsync()
     {
         var hoy = DateTime.Today;
         var inicioMes = new DateTime(hoy.Year, hoy.Month, 1);
-        var inicioSemana = hoy.AddDays(-6);
+        var inicioMesAnterior = inicioMes.AddMonths(-1);
+        var inicioTendencia = hoy.AddDays(-29);
+        var inicioSeisMeses = inicioMes.AddMonths(-5);
 
         var ventasHoy = await _contexto.Ventas
             .AsNoTracking()
             .Where(venta => venta.Estado == EstadoDocumento.Registrada && venta.Fecha >= hoy)
             .SumAsync(venta => (decimal?)venta.Total) ?? 0m;
 
-        var ventasMes = await _contexto.Ventas
+        var ventasMesConsulta = _contexto.Ventas
             .AsNoTracking()
-            .Where(venta => venta.Estado == EstadoDocumento.Registrada && venta.Fecha >= inicioMes)
-            .SumAsync(venta => (decimal?)venta.Total) ?? 0m;
+            .Where(venta => venta.Estado == EstadoDocumento.Registrada && venta.Fecha >= inicioMes);
+
+        var ventasMes = await ventasMesConsulta.SumAsync(venta => (decimal?)venta.Total) ?? 0m;
+        var cantidadVentasMes = await ventasMesConsulta.CountAsync();
+        var ventasNetasMes = await ventasMesConsulta
+            .SumAsync(venta => (decimal?)(venta.Subtotal - venta.Descuento)) ?? 0m;
 
         var comprasHoy = await _contexto.Compras
             .AsNoTracking()
             .Where(compra => compra.Estado == EstadoDocumento.Registrada && compra.Fecha >= hoy)
             .SumAsync(compra => (decimal?)compra.Total) ?? 0m;
 
-        var comprasMes = await _contexto.Compras
+        var comprasMesConsulta = _contexto.Compras
             .AsNoTracking()
-            .Where(compra => compra.Estado == EstadoDocumento.Registrada && compra.Fecha >= inicioMes)
+            .Where(compra => compra.Estado == EstadoDocumento.Registrada && compra.Fecha >= inicioMes);
+
+        var comprasMes = await comprasMesConsulta.SumAsync(compra => (decimal?)compra.Total) ?? 0m;
+        var cantidadComprasMes = await comprasMesConsulta.CountAsync();
+
+        var ventasMesAnterior = await _contexto.Ventas
+            .AsNoTracking()
+            .Where(venta => venta.Estado == EstadoDocumento.Registrada &&
+                venta.Fecha >= inicioMesAnterior && venta.Fecha < inicioMes)
+            .SumAsync(venta => (decimal?)venta.Total) ?? 0m;
+
+        var comprasMesAnterior = await _contexto.Compras
+            .AsNoTracking()
+            .Where(compra => compra.Estado == EstadoDocumento.Registrada &&
+                compra.Fecha >= inicioMesAnterior && compra.Fecha < inicioMes)
             .SumAsync(compra => (decimal?)compra.Total) ?? 0m;
+
+        var cantidadVentasMesAnterior = await _contexto.Ventas
+            .AsNoTracking()
+            .Where(venta => venta.Estado == EstadoDocumento.Registrada &&
+                venta.Fecha >= inicioMesAnterior && venta.Fecha < inicioMes)
+            .CountAsync();
+
+        // El costo se toma de los movimientos de salida de las ventas vigentes.
+        var costoVentasMes = await _contexto.MovimientosInventario
+            .AsNoTracking()
+            .Where(movimiento => movimiento.Origen == OrigenMovimiento.Venta &&
+                movimiento.DocumentoId != null &&
+                _contexto.Ventas.Any(venta =>
+                    venta.Id == movimiento.DocumentoId.Value &&
+                    venta.Estado == EstadoDocumento.Registrada &&
+                    venta.Fecha >= inicioMes))
+            .SumAsync(movimiento => (decimal?)(movimiento.CostoUnitario * movimiento.Cantidad)) ?? 0m;
+
+        var margenBrutoMes = ventasNetasMes - costoVentasMes;
+        var porcentajeMargenMes = ventasNetasMes > 0
+            ? Math.Round(margenBrutoMes / ventasNetasMes * 100m, 2)
+            : 0m;
+
+        var valorInventarioCosto = await _contexto.Productos
+            .AsNoTracking()
+            .Where(producto => producto.Activo)
+            .SumAsync(producto => (decimal?)(producto.ExistenciaActual * producto.PrecioCosto)) ?? 0m;
+
+        var valorInventarioVenta = await _contexto.Productos
+            .AsNoTracking()
+            .Where(producto => producto.Activo)
+            .SumAsync(producto => (decimal?)(producto.ExistenciaActual * producto.PrecioVenta)) ?? 0m;
 
         var ventasPorDia = await _contexto.Ventas
             .AsNoTracking()
-            .Where(venta => venta.Estado == EstadoDocumento.Registrada && venta.Fecha >= inicioSemana)
+            .Where(venta => venta.Estado == EstadoDocumento.Registrada && venta.Fecha >= inicioTendencia)
             .GroupBy(venta => venta.Fecha.Date)
             .Select(grupo => new VentaPorDiaDto
             {
@@ -431,15 +489,102 @@ public class ServicioReportes
 
         var serie = new List<VentaPorDiaDto>();
 
-        for (var i = 0; i < 7; i++)
+        for (var i = 0; i < 30; i++)
         {
-            var dia = inicioSemana.AddDays(i);
+            var dia = inicioTendencia.AddDays(i);
             var existente = ventasPorDia.FirstOrDefault(venta => venta.Fecha == dia);
             serie.Add(new VentaPorDiaDto
             {
                 Fecha = dia,
                 Total = existente?.Total ?? 0m,
                 Cantidad = existente?.Cantidad ?? 0
+            });
+        }
+
+        var ventasPorFormaPago = await ventasMesConsulta
+            .GroupBy(venta => venta.FormaPago)
+            .Select(grupo => new VentaFormaPagoDto
+            {
+                FormaPago = grupo.Key,
+                Total = grupo.Sum(venta => venta.Total),
+                Cantidad = grupo.Count()
+            })
+            .OrderByDescending(item => item.Total)
+            .ToListAsync();
+
+        var clientesAgrupados = await ventasMesConsulta
+            .GroupBy(venta => venta.ClienteId)
+            .Select(grupo => new
+            {
+                ClienteId = grupo.Key,
+                Total = grupo.Sum(venta => venta.Total),
+                Cantidad = grupo.Count()
+            })
+            .OrderByDescending(item => item.Total)
+            .Take(5)
+            .ToListAsync();
+
+        var idsClientes = clientesAgrupados
+            .Where(item => item.ClienteId.HasValue)
+            .Select(item => item.ClienteId!.Value)
+            .ToList();
+
+        var nombresClientes = idsClientes.Count == 0
+            ? new Dictionary<int, string>()
+            : await _contexto.Clientes
+                .AsNoTracking()
+                .Where(cliente => idsClientes.Contains(cliente.Id))
+                .ToDictionaryAsync(cliente => cliente.Id, cliente => cliente.Nombre);
+
+        var topClientes = clientesAgrupados.Select(item => new TopClienteDto
+        {
+            ClienteId = item.ClienteId,
+            Cliente = item.ClienteId is int id && nombresClientes.TryGetValue(id, out var nombre)
+                ? nombre
+                : "Cliente general",
+            Total = item.Total,
+            Cantidad = item.Cantidad
+        }).ToList();
+
+        var ventasPorMesCrudo = await _contexto.Ventas
+            .AsNoTracking()
+            .Where(venta => venta.Estado == EstadoDocumento.Registrada && venta.Fecha >= inicioSeisMeses)
+            .GroupBy(venta => new { venta.Fecha.Year, venta.Fecha.Month })
+            .Select(grupo => new
+            {
+                grupo.Key.Year,
+                grupo.Key.Month,
+                Total = grupo.Sum(venta => venta.Total)
+            })
+            .ToListAsync();
+
+        var comprasPorMesCrudo = await _contexto.Compras
+            .AsNoTracking()
+            .Where(compra => compra.Estado == EstadoDocumento.Registrada && compra.Fecha >= inicioSeisMeses)
+            .GroupBy(compra => new { compra.Fecha.Year, compra.Fecha.Month })
+            .Select(grupo => new
+            {
+                grupo.Key.Year,
+                grupo.Key.Month,
+                Total = grupo.Sum(compra => compra.Total)
+            })
+            .ToListAsync();
+
+        var ventasPorMes = new List<MesResumenDto>();
+
+        for (var i = 0; i < 6; i++)
+        {
+            var mes = inicioSeisMeses.AddMonths(i);
+            var venta = ventasPorMesCrudo.FirstOrDefault(item => item.Year == mes.Year && item.Month == mes.Month);
+            var compra = comprasPorMesCrudo.FirstOrDefault(item => item.Year == mes.Year && item.Month == mes.Month);
+
+            ventasPorMes.Add(new MesResumenDto
+            {
+                Anio = mes.Year,
+                Mes = mes.Month,
+                Etiqueta = $"{NombresMes[mes.Month - 1]} {mes:yy}",
+                Ventas = venta?.Total ?? 0m,
+                Compras = compra?.Total ?? 0m
             });
         }
 
@@ -460,7 +605,25 @@ public class ServicioReportes
             VentasUltimosDias = serie,
             TopProductos = await TopProductosAsync(hoy.AddDays(-30), hoy, 5),
             ProductosBajoMinimoLista = (await BajoMinimoAsync()).Take(8).ToList(),
-            UltimasVentas = ultimasVentas.Take(5).ToList()
+            UltimasVentas = ultimasVentas.Take(5).ToList(),
+            VentasMesAnterior = ventasMesAnterior,
+            ComprasMesAnterior = comprasMesAnterior,
+            CantidadVentasMes = cantidadVentasMes,
+            CantidadComprasMes = cantidadComprasMes,
+            CantidadVentasMesAnterior = cantidadVentasMesAnterior,
+            TicketPromedioMes = cantidadVentasMes > 0 ? Math.Round(ventasMes / cantidadVentasMes, 2) : 0m,
+            CostoVentasMes = costoVentasMes,
+            MargenBrutoMes = margenBrutoMes,
+            PorcentajeMargenMes = porcentajeMargenMes,
+            ValorInventarioCosto = valorInventarioCosto,
+            ValorInventarioVenta = valorInventarioVenta,
+            MargenPotencialInventario = valorInventarioVenta - valorInventarioCosto,
+            ProductosSinExistencia = await _contexto.Productos.CountAsync(producto =>
+                producto.Activo && producto.ExistenciaActual <= 0),
+            VentasPorFormaPago = ventasPorFormaPago,
+            TopClientes = topClientes,
+            VentasPorMes = ventasPorMes,
+            ActualizadoUtc = DateTime.UtcNow
         };
     }
 }

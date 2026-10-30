@@ -6,14 +6,25 @@ Guía paso a paso para ejecutar el sistema en Windows, verificar que funciona y 
 
 ## 1. Resumen rápido
 
-El proyecto necesita **dos terminales abiertas**:
+El proyecto necesita **dos terminales abiertas** y el servicio de correo local (Mailpit),
+que se inicia en segundo plano.
 
 | Terminal | Servicio | Dirección |
 |---|---|---|
 | 1 | API ASP.NET Core | http://localhost:5279 |
 | 2 | Frontend Next.js | http://localhost:3000 |
+| 3 | Mailpit (correo local) | http://localhost:8025 |
 
 La base de datos se crea y actualiza automáticamente cuando arranca la API.
+
+```powershell
+# Preparación inicial: clave JWT, cadena de conexión y .env.local
+cd C:\Users\Ludwi\Downloads\sistema_inventarios
+.\scripts\Configurar-Desarrollo.ps1 -Servidor localhost
+
+# Correo local en segundo plano (necesario para el código de acceso)
+.\scripts\Iniciar-Correos.ps1
+```
 
 ```powershell
 # Terminal 1 — Backend
@@ -29,7 +40,8 @@ npm install
 npm run dev
 ```
 
-Luego abrir http://localhost:3000 e iniciar sesión con `admin` / `Admin123!`.
+Luego abrir http://localhost:3000 e iniciar sesión con `admin` / `Admin123!`. El acceso
+pide un código de seis dígitos que llega a la bandeja de Mailpit (http://localhost:8025).
 
 ### 1.1. Si un compañero descarga el proyecto
 
@@ -95,6 +107,7 @@ Notas:
 | Node.js | 22 |
 | npm | Incluido con Node.js |
 | SQL Server | 2022 Developer o Express |
+| Mailpit | Opcional en desarrollo, necesario para el código de acceso |
 | Git | Opcional, para clonar y versionar |
 | `dotnet-ef` | 8.0.8, solo para administrar migraciones |
 
@@ -304,6 +317,16 @@ Abrir http://localhost:3000/login y usar una de estas cuentas:
 | `vendedor` | `Ventas123!` | Ventas |
 | `consulta` | `Consulta123!` | Consulta |
 
+El acceso es en dos pasos:
+
+1. Ingresar usuario o correo y contraseña.
+2. Copiar el código de seis dígitos que aparece en Mailpit (http://localhost:8025) y escribirlo
+   en la pantalla de verificación.
+
+Sin Mailpit en ejecución el código no se envía y el acceso no se completa. Las cuentas demo
+usan correos `@inventarios.gt`; si restaura una base con correos `@inventarios.local`, esos
+usuarios deben cambiarse a un dominio real desde **Usuarios** antes de poder ingresar.
+
 Recomendaciones:
 
 - Usar `admin` para la primera prueba.
@@ -317,12 +340,16 @@ Recomendaciones:
 Después de iniciar sesión con `admin`, comprobar:
 
 - [ ] El panel de control muestra indicadores y gráficos.
+- [ ] El panel muestra el comparativo mensual, el margen estimado y la valorización del inventario.
+- [ ] El panel permite imprimir y exportar a Excel.
 - [ ] **Productos** lista los productos activos.
 - [ ] **Existencias** muestra la existencia y el valor del inventario.
 - [ ] **Compras** permite abrir el formulario de nueva compra.
 - [ ] **Ventas** permite abrir el formulario de nueva venta.
 - [ ] **Movimientos** muestra entradas y salidas.
 - [ ] **Reportes** carga el resumen y permite cambiar fechas.
+- [ ] **Reportes** exporta CSV y Excel de la pestaña activa e imprime con formato gerencial.
+- [ ] **Importar** en Productos, Clientes y Proveedores descarga la plantilla, previsualiza y confirma.
 - [ ] **Parámetros** muestra la configuración del sistema.
 - [ ] **Mi perfil** permite cambiar la contraseña.
 - [ ] Al cerrar sesión, una ruta protegida redirige a `/login`.
@@ -430,7 +457,9 @@ Al arrancar, la API vuelve a aplicar las migraciones y carga los datos iniciales
 
 | Problema | Causa probable | Solución |
 |---|---|---|
-| La página abre, pero el login falla | La API no está corriendo o `API_URL` es incorrecta | Verificar `http://localhost:5279/api/health`, revisar `.env.local` y reiniciar el frontend |
+| La página abre, pero el login falla | La API no está corriendo, `API_URL` es incorrecta o no hay SMTP | Verificar `http://localhost:5279/api/health`, revisar `.env.local`, iniciar Mailpit y reiniciar el frontend |
+| El login indica que la cuenta necesita un correo real | El correo termina en un dominio reservado (`.local`, `.test`, `.invalid`, `.example`) | Cambiar el correo del usuario a un dominio válido desde **Usuarios** o con SQL |
+| La importación rechaza el archivo | Encabezados modificados, columnas obligatorias vacías o errores de formato | Descargar de nuevo la plantilla, revisar la previsualización y corregir las filas marcadas |
 | `ERR_CONNECTION_REFUSED` en `/api` | Backend detenido o puerto equivocado | Iniciar la API en `5279` o corregir `API_URL` |
 | Error de conexión a SQL Server | Servicio detenido, instancia incorrecta o autenticación inválida | Iniciar `MSSQLSERVER`, revisar la cadena de conexión y probar con `sqlcmd` |
 | La API no compila porque el archivo está en uso | Hay una instancia anterior ejecutándose | Detener la API con `Ctrl+C` o cerrar el proceso y volver a compilar |
@@ -514,7 +543,6 @@ curl.exe -I http://localhost:3000
 - [`docs/manual-usuario.md`](docs/manual-usuario.md) — Uso de cada módulo.
 - [`docs/pruebas.md`](docs/pruebas.md) — Matriz de pruebas y resultados.
 - [`docs/despliegue.md`](docs/despliegue.md) — Publicación en GitHub, MonsterASP.NET y Vercel.
-- [`docs/guion-video.md`](docs/guion-video.md) — Guion para la demostración en video.
 
 ---
 

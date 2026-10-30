@@ -11,7 +11,7 @@ El proyecto tiene tres partes:
 
 1. **Backend:** API REST en ASP.NET Core 8 con Entity Framework Core y SQL Server 2022.
 2. **Frontend:** aplicación Next.js 15 con React 19, TypeScript y Tailwind CSS 4.
-3. **Documentación:** informe académico, manual de usuario, guía de despliegue, pruebas, guion del video y checklist de entrega.
+3. **Documentación:** informe académico, manual de usuario, guía de despliegue, pruebas y checklist de entrega.
 
 El sistema funciona localmente y está listo para publicarse. La publicación en internet, el repositorio remoto y el video quedaron pendientes de datos externos: cuentas de hosting, usuario de GitHub y nombres definitivos de los integrantes.
 
@@ -150,7 +150,6 @@ sistema_inventarios/
 │   ├── manual-usuario.md
 │   ├── despliegue.md
 │   ├── pruebas.md
-│   ├── guion-video.md
 │   ├── checklist-entrega.md
 │   ├── generar-informe.py
 │   └── README.md
@@ -359,7 +358,6 @@ La documentación interactiva está en Swagger.
 | `docs/manual-usuario.md` | Uso paso a paso de cada módulo. |
 | `docs/despliegue.md` | Instalación local, GitHub, MonsterASP.NET y Vercel. |
 | `docs/pruebas.md` | Matriz de pruebas técnicas, funcionales y pendientes. |
-| `docs/guion-video.md` | Guion cronometrado de 30 minutos + 5. |
 | `docs/checklist-entrega.md` | Control de requisitos y entregables. |
 | `docs/generar-informe.py` | Generador del HTML imprimible del informe. |
 | `COMO-EJECUTAR.md` | Guía paso a paso para arrancar, verificar y resolver problemas locales. |
@@ -445,8 +443,7 @@ API_URL=https://<dominio-backend>
 4. Configurar `API_URL` en Vercel y desplegar el frontend.
 5. Probar en producción: login con los cuatro roles, compra, venta, nota, anulación, impresión y CSV.
 6. Actualizar enlaces en el informe, README, checklist y Canvas.
-7. Grabar el video siguiendo `docs/guion-video.md`.
-8. Subir informe y video a Google Drive y entregar los enlaces.
+7. Subir informe y video a Google Drive y entregar los enlaces.
 
 ## 20. Notas técnicas y problemas conocidos
 

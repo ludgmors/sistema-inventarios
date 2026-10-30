@@ -54,7 +54,7 @@ Este checklist relaciona los requisitos del curso con el estado del proyecto y l
 | Backend en GitHub | Pendiente | Mismo repositorio, carpeta `backend/`. |
 | Informe PDF | Completado | `docs/informe.pdf`, 28 páginas con diagramas renderizados. |
 | Informe en Google Drive | Pendiente | Subir PDF y configurar permiso de lectura. |
-| Video de 30 minutos | Pendiente | Guion completo en `docs/guion-video.md`. |
+| Video de 30 minutos | Pendiente | Material local del expositor (no incluido en el repositorio). |
 | Video en Google Drive | Pendiente | Subir MP4 y configurar permiso de lectura. |
 | Enlaces en Canvas | Pendiente | Copiar enlaces de app, GitHub, informe y video. |
 | Participación de todos los integrantes | Pendiente | Completar nombres y grabar. |

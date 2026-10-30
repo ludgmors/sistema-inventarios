@@ -116,8 +116,14 @@ dotnet run --urls http://localhost:5279
 
 La configuración crea una clave JWT aleatoria mediante `dotnet user-secrets`, sin
 mostrarla ni modificar archivos versionados. Conserva una clave existente. El SDK
-carga esos secretos en Development. La migración `SeguridadAcceso` se aplica al
+carga esos secretos en Development. Use `-Servidor localhost` (valor predeterminado)
+para la instancia completa o `-Servidor '(localdb)\MSSQLLocalDB'` si trabaja con
+LocalDB. La migración `SeguridadAcceso` se aplica al
 iniciar; agrega tablas y un campo nullable, sin borrar datos del inventario.
+
+Las cuentas demo se siembran con correos `@inventarios.gt`. Si una base anterior
+conserva correos `@inventarios.local`, el login los rechaza hasta que se cambie el
+correo del usuario a un dominio válido.
 
 El ejecutable de Mailpit debe estar instalado aparte. En este entorno se descargó
 en `../.tools/mailpit/mailpit.exe`; se puede indicar otra ruta con `-RutaMailpit`.

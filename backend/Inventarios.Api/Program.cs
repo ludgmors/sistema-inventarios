@@ -51,6 +51,8 @@ constructor.Services.AddScoped<ServicioCompras>();
 constructor.Services.AddScoped<ServicioVentas>();
 constructor.Services.AddScoped<ServicioNotas>();
 constructor.Services.AddScoped<ServicioReportes>();
+constructor.Services.AddScoped<ServicioExportacion>();
+constructor.Services.AddScoped<ServicioImportacion>();
 constructor.Services.AddScoped<SembradorDatos>();
 
 // Autenticación con JWT.

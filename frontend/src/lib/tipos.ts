@@ -326,6 +326,44 @@ export interface Dashboard {
   topProductos: TopProducto[];
   productosBajoMinimoLista: BajoMinimo[];
   ultimasVentas: ReporteVenta[];
+  ventasMesAnterior: number;
+  comprasMesAnterior: number;
+  cantidadVentasMes: number;
+  cantidadComprasMes: number;
+  cantidadVentasMesAnterior: number;
+  ticketPromedioMes: number;
+  costoVentasMes: number;
+  margenBrutoMes: number;
+  porcentajeMargenMes: number;
+  valorInventarioCosto: number;
+  valorInventarioVenta: number;
+  margenPotencialInventario: number;
+  productosSinExistencia: number;
+  ventasPorFormaPago: VentaFormaPago[];
+  topClientes: TopCliente[];
+  ventasPorMes: MesResumen[];
+  actualizadoUtc: string;
+}
+
+export interface VentaFormaPago {
+  formaPago: string;
+  total: number;
+  cantidad: number;
+}
+
+export interface TopCliente {
+  clienteId?: number | null;
+  cliente: string;
+  total: number;
+  cantidad: number;
+}
+
+export interface MesResumen {
+  anio: number;
+  mes: number;
+  etiqueta: string;
+  ventas: number;
+  compras: number;
 }
 
 export interface ResumenPeriodo {

@@ -15,7 +15,6 @@ Esta carpeta reúne los documentos de análisis, diseño, operación, pruebas y 
 | [Manual de usuario](manual-usuario.md) | Acceso, menú y uso paso a paso de cada módulo. |
 | [Guía de despliegue](despliegue.md) | Instalación local, GitHub, Vercel, MonsterASP.NET, SQL Server y variables de entorno. |
 | [Matriz de pruebas](pruebas.md) | Pruebas técnicas, funcionales, de seguridad y pendientes de aceptación. |
-| [Guion del video](guion-video.md) | Guion cronometrado de 30 minutos y reparto por integrante. |
 | [Checklist de entrega](checklist-entrega.md) | Control de requisitos, entregables y pendientes. |
 
 ## Orden sugerido de lectura

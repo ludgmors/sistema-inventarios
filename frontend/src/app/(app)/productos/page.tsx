@@ -1,7 +1,8 @@
 "use client";
 
-import { PackagePlus, Pencil, Search, SlidersHorizontal } from "lucide-react";
+import { FileUp, PackagePlus, Pencil, Search, SlidersHorizontal } from "lucide-react";
 import { useState, type FormEvent } from "react";
+import { ModalImportacion } from "@/components/importacion/ModalImportacion";
 import { Aviso } from "@/components/ui/Aviso";
 import { Boton } from "@/components/ui/Boton";
 import { Campo, Entrada, Seleccion } from "@/components/ui/Campos";
@@ -67,6 +68,7 @@ export default function PaginaProductos() {
   const { datos: categorias } = useApi<Categoria[]>("/api/categorias");
 
   const [modalAbierto, setModalAbierto] = useState(false);
+  const [importarAbierto, setImportarAbierto] = useState(false);
   const [editando, setEditando] = useState<Producto | null>(null);
   const [formulario, setFormulario] = useState<FormularioProducto>(formularioInicial);
   const [guardando, setGuardando] = useState(false);
@@ -218,9 +220,18 @@ export default function PaginaProductos() {
         descripcion="Administre el catálogo, precios y niveles de existencia mínima."
         acciones={
           puedeEditar ? (
-            <Boton onClick={abrirNuevo} icono={<PackagePlus className="h-4 w-4" />}>
-              Nuevo producto
-            </Boton>
+            <>
+              <Boton
+                variante="secundario"
+                onClick={() => setImportarAbierto(true)}
+                icono={<FileUp className="h-4 w-4" />}
+              >
+                Importar
+              </Boton>
+              <Boton onClick={abrirNuevo} icono={<PackagePlus className="h-4 w-4" />}>
+                Nuevo producto
+              </Boton>
+            </>
           ) : undefined
         }
       />
@@ -452,6 +463,16 @@ export default function PaginaProductos() {
           </label>
         </form>
       </Modal>
+
+      <ModalImportacion
+        tipo="productos"
+        abierto={importarAbierto}
+        onCerrar={() => setImportarAbierto(false)}
+        onImportado={async () => {
+          setMensaje("Importación completada. Revise el listado.");
+          await recargar();
+        }}
+      />
     </div>
   );
 }

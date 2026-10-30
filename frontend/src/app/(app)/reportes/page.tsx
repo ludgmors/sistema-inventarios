@@ -4,6 +4,7 @@ import {
   ArrowDownRight,
   ArrowUpRight,
   Download,
+  FileSpreadsheet,
   FileText,
   Printer,
   Receipt,
@@ -13,15 +14,19 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { useAuth } from "@/components/layout/AuthProvider";
+import { InformeImpresion, type EmpresaInforme } from "@/components/reportes/InformeImpresion";
 import { Aviso } from "@/components/ui/Aviso";
 import { Boton } from "@/components/ui/Boton";
 import { Seleccion } from "@/components/ui/Campos";
 import { EncabezadoPagina } from "@/components/ui/EncabezadoPagina";
 import { InsigniaEstado } from "@/components/ui/Insignia";
 import { Tabla, type Columna } from "@/components/ui/Tabla";
-import { construirQuery } from "@/lib/api";
+import { construirQuery, mensajeDeError } from "@/lib/api";
 import {
+  descargarArchivo,
   descargarCsv,
+  fechaCsv,
   formatoFecha,
   formatoMoneda,
   formatoNumero,
@@ -31,6 +36,7 @@ import {
 import { useApi } from "@/lib/useApi";
 import type {
   BajoMinimo,
+  Parametro,
   ReporteCompra,
   ReporteNota,
   ReporteVenta,
@@ -48,12 +54,15 @@ const pestanas: { valor: Pestana; etiqueta: string }[] = [
 ];
 
 export default function PaginaReportes() {
+  const { usuario } = useAuth();
   const [desde, setDesde] = useState(haceDiasISO(30));
   const [hasta, setHasta] = useState(hoyISO());
   const [pestana, setPestana] = useState<Pestana>("resumen");
   const [estadoVentas, setEstadoVentas] = useState("");
   const [estadoCompras, setEstadoCompras] = useState("");
   const [tipoNota, setTipoNota] = useState("");
+  const [exportando, setExportando] = useState(false);
+  const [errorExportacion, setErrorExportacion] = useState("");
 
   const rango = { desde, hasta };
 
@@ -73,6 +82,20 @@ export default function PaginaReportes() {
     `/api/reportes/top-productos${construirQuery({ ...rango, limite: 8 })}`,
   );
   const { datos: bajoMinimo } = useApi<BajoMinimo[]>("/api/reportes/bajo-minimo");
+  const { datos: parametros } = useApi<Parametro[]>("/api/parametros");
+
+  const parametro = (clave: string) =>
+    parametros?.find((item) => item.clave === clave)?.valor ?? "";
+
+  const empresa: EmpresaInforme = {
+    nombre: parametro("Empresa.Nombre") || "Sistema de Inventarios",
+    documento: parametro("Empresa.Documento"),
+    direccion: parametro("Empresa.Direccion"),
+    telefono: parametro("Empresa.Telefono"),
+    correo: parametro("Empresa.Correo"),
+  };
+
+  const usuarioActual = usuario?.nombreCompleto || usuario?.nombreUsuario || "Sistema";
 
   const maximoTop = Math.max(
     ...(topProductos ?? []).map((producto) => producto.cantidadVendida),
@@ -82,59 +105,75 @@ export default function PaginaReportes() {
   const totalVentasPeriodo = (ventas ?? []).reduce((total, venta) => total + venta.total, 0);
   const totalComprasPeriodo = (compras ?? []).reduce((total, compra) => total + compra.total, 0);
   const totalNotasPeriodo = (notas ?? []).reduce((total, nota) => total + nota.total, 0);
+  const subtotalVentas = (ventas ?? []).reduce((total, venta) => total + venta.subtotal, 0);
+  const impuestoVentas = (ventas ?? []).reduce((total, venta) => total + venta.impuesto, 0);
+  const subtotalCompras = (compras ?? []).reduce((total, compra) => total + compra.subtotal, 0);
+  const impuestoCompras = (compras ?? []).reduce((total, compra) => total + compra.impuesto, 0);
 
-  const exportar = () => {
+  const exportarCsv = () => {
     if (pestana === "ventas") {
+      const filas = ventas ?? [];
       descargarCsv(
         `reporte-ventas-${desde}-${hasta}.csv`,
-        ["Número", "Fecha", "Cliente", "Vendedor", "Forma de pago", "Subtotal", "Impuesto", "Total", "Estado"],
-        (ventas ?? []).map((venta) => [
-          venta.numero,
-          formatoFecha(venta.fecha),
-          venta.cliente,
-          venta.usuario,
-          venta.formaPago,
-          venta.subtotal,
-          venta.impuesto,
-          venta.total,
-          venta.estado,
-        ]),
+        ["Documento", "Fecha", "Cliente", "Vendedor", "Forma de pago", "Subtotal", "Impuesto", "Total", "Estado"],
+        [
+          ...filas.map((venta) => [
+            venta.numero,
+            fechaCsv(venta.fecha),
+            venta.cliente,
+            venta.usuario,
+            venta.formaPago,
+            venta.subtotal,
+            venta.impuesto,
+            venta.total,
+            venta.estado,
+          ]),
+          ["TOTALES", "", "", "", "", subtotalVentas, impuestoVentas, totalVentasPeriodo, ""],
+        ],
       );
       return;
     }
 
     if (pestana === "compras") {
+      const filas = compras ?? [];
       descargarCsv(
         `reporte-compras-${desde}-${hasta}.csv`,
-        ["Número", "Fecha", "Proveedor", "Registrado por", "Subtotal", "Impuesto", "Total", "Estado"],
-        (compras ?? []).map((compra) => [
-          compra.numero,
-          formatoFecha(compra.fecha),
-          compra.proveedor,
-          compra.usuario,
-          compra.subtotal,
-          compra.impuesto,
-          compra.total,
-          compra.estado,
-        ]),
+        ["Documento", "Fecha", "Proveedor", "Registrado por", "Subtotal", "Impuesto", "Total", "Estado"],
+        [
+          ...filas.map((compra) => [
+            compra.numero,
+            fechaCsv(compra.fecha),
+            compra.proveedor,
+            compra.usuario,
+            compra.subtotal,
+            compra.impuesto,
+            compra.total,
+            compra.estado,
+          ]),
+          ["TOTALES", "", "", "", subtotalCompras, impuestoCompras, totalComprasPeriodo, ""],
+        ],
       );
       return;
     }
 
     if (pestana === "notas") {
+      const filas = notas ?? [];
       descargarCsv(
         `reporte-notas-${desde}-${hasta}.csv`,
-        ["Número", "Tipo", "Fecha", "Venta", "Cliente", "Motivo", "Total", "Estado"],
-        (notas ?? []).map((nota) => [
-          nota.numero,
-          nota.tipo,
-          formatoFecha(nota.fecha),
-          nota.ventaNumero,
-          nota.cliente,
-          nota.motivo,
-          nota.total,
-          nota.estado,
-        ]),
+        ["Documento", "Tipo", "Fecha", "Venta", "Cliente", "Motivo", "Total", "Estado"],
+        [
+          ...filas.map((nota) => [
+            nota.numero,
+            nota.tipo,
+            fechaCsv(nota.fecha),
+            nota.ventaNumero,
+            nota.cliente,
+            nota.motivo,
+            nota.total,
+            nota.estado,
+          ]),
+          ["TOTALES", "", "", "", "", "", totalNotasPeriodo, ""],
+        ],
       );
       return;
     }
@@ -149,9 +188,46 @@ export default function PaginaReportes() {
         ["Cantidad de compras", resumen?.cantidadCompras ?? 0],
         ["Total de notas de crédito", resumen?.totalNotasCredito ?? 0],
         ["Total de notas de débito", resumen?.totalNotasDebito ?? 0],
+        ["Ticket promedio de venta", (resumen?.cantidadVentas ?? 0) > 0 ? (resumen?.totalVentas ?? 0) / (resumen?.cantidadVentas ?? 1) : 0],
         ["Productos bajo mínimo", bajoMinimo?.length ?? 0],
       ],
     );
+  };
+
+  const exportarExcel = async () => {
+    setExportando(true);
+    setErrorExportacion("");
+
+    try {
+      const consulta = construirQuery({
+        tipo: pestana,
+        desde,
+        hasta,
+        estado: pestana === "ventas" ? estadoVentas : pestana === "compras" ? estadoCompras : "",
+        tipoNota: pestana === "notas" ? tipoNota : "",
+      });
+      const respuesta = await fetch(`/api/reportes/exportar${consulta}`, {
+        credentials: "include",
+        cache: "no-store",
+      });
+
+      if (!respuesta.ok) {
+        throw new Error("No se pudo generar el archivo de Excel.");
+      }
+
+      const blob = await respuesta.blob();
+      const disposicion = respuesta.headers.get("Content-Disposition") ?? "";
+      const coincidencia = /filename\*?=(?:UTF-8'')?"?([^";]+)"?/i.exec(disposicion);
+      const nombre = coincidencia
+        ? decodeURIComponent(coincidencia[1])
+        : `Informe-Gerencial_${pestana}_${desde}_${hasta}.xlsx`;
+
+      descargarArchivo(nombre, blob);
+    } catch (error) {
+      setErrorExportacion(mensajeDeError(error));
+    } finally {
+      setExportando(false);
+    }
   };
 
   const columnasVentas: Columna<ReporteVenta>[] = [
@@ -353,7 +429,8 @@ export default function PaginaReportes() {
           : errorResumen;
 
   return (
-    <div>
+    <>
+      <div className="pantalla-reportes">
       <EncabezadoPagina
         titulo="Reportes"
         descripcion="Analice el desempeño comercial y el valor del inventario en un período."
@@ -368,14 +445,28 @@ export default function PaginaReportes() {
             </Boton>
             <Boton
               variante="secundario"
-              onClick={exportar}
+              onClick={exportarCsv}
               icono={<Download className="h-4 w-4" />}
             >
               Exportar CSV
             </Boton>
+            <Boton
+              variante="secundario"
+              onClick={exportarExcel}
+              cargando={exportando}
+              icono={<FileSpreadsheet className="h-4 w-4" />}
+            >
+              Exportar Excel
+            </Boton>
           </>
         }
       />
+
+      {errorExportacion && (
+        <div className="no-imprimir mb-4">
+          <Aviso tono="error">{errorExportacion}</Aviso>
+        </div>
+      )}
 
       <div className="no-imprimir mb-4 grid gap-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-4 shadow-sm sm:grid-cols-2 lg:grid-cols-4">
         <div>
@@ -679,6 +770,21 @@ export default function PaginaReportes() {
       <p className="mt-5 text-center text-[10px] text-slate-400">
         Reporte generado el {formatoFecha(new Date().toISOString(), true)} · Período {desde} al {hasta}
       </p>
-    </div>
+      </div>
+
+      <InformeImpresion
+        empresa={empresa}
+        desde={desde}
+        hasta={hasta}
+        pestana={pestana}
+        usuario={usuarioActual}
+        resumen={resumen}
+        ventas={ventas ?? undefined}
+        compras={compras ?? undefined}
+        notas={notas ?? undefined}
+        topProductos={topProductos ?? undefined}
+        bajoMinimo={bajoMinimo ?? undefined}
+      />
+    </>
   );
 }

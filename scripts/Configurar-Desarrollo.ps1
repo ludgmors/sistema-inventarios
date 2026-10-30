@@ -1,4 +1,4 @@
-param([string]$Servidor = '(localdb)\MSSQLLocalDB')
+param([string]$Servidor = 'localhost')
 $ErrorActionPreference = 'Stop'
 $proyecto = Join-Path $PSScriptRoot '../backend/Inventarios.Api/Inventarios.Api.csproj'
 $secretos = & dotnet user-secrets list --project $proyecto

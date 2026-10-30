@@ -65,14 +65,55 @@ export const fechaLarga = (): string =>
     year: "numeric",
   }).format(new Date());
 
+export interface Variacion {
+  texto: string;
+  positiva: boolean;
+}
+
+// Variación porcentual para comparativos del panel. Sin base no se inventa
+// un porcentaje: se informa "sin base".
+export const variacionPorcentual = (actual: number, anterior: number): Variacion => {
+  if (!anterior) {
+    return { texto: actual === 0 ? "0.0%" : "sin base", positiva: actual >= 0 };
+  }
+
+  const porcentaje = ((actual - anterior) / anterior) * 100;
+  return {
+    texto: `${porcentaje >= 0 ? "+" : ""}${porcentaje.toFixed(1)}%`,
+    positiva: porcentaje >= 0,
+  };
+};
+
+export const fechaCsv = (valor: string | null | undefined): string =>
+  valor ? valor.slice(0, 10) : "";
+
+export function descargarArchivo(nombreArchivo: string, blob: Blob): void {
+  const enlace = document.createElement("a");
+  enlace.href = URL.createObjectURL(blob);
+  enlace.download = nombreArchivo;
+  enlace.click();
+  URL.revokeObjectURL(enlace.href);
+}
+
+export type ValorCsv = string | number | null | undefined;
+
+// CSV pensado para abrir y sumar en Excel: los números van sin formato ni
+// comillas, las fechas en ISO y el texto solo se entrecomilla si lo necesita.
 export function descargarCsv(
   nombreArchivo: string,
   columnas: string[],
-  filas: (string | number)[][],
+  filas: ValorCsv[][],
 ): void {
-  const escapar = (valor: string | number) => {
-    const texto = String(valor ?? "");
-    return `"${texto.replace(/"/g, '""')}"`;
+  const escapar = (valor: ValorCsv) => {
+    if (valor === null || valor === undefined) return "";
+    if (typeof valor === "number") {
+      return Number.isFinite(valor) ? String(valor) : "";
+    }
+
+    const texto = String(valor);
+    return /["\r\n,;]/.test(texto)
+      ? `"${texto.replace(/"/g, '""')}"`
+      : texto;
   };
 
   const contenido = [
@@ -84,9 +125,5 @@ export function descargarCsv(
     type: "text/csv;charset=utf-8;",
   });
 
-  const enlace = document.createElement("a");
-  enlace.href = URL.createObjectURL(blob);
-  enlace.download = nombreArchivo;
-  enlace.click();
-  URL.revokeObjectURL(enlace.href);
+  descargarArchivo(nombreArchivo, blob);
 }

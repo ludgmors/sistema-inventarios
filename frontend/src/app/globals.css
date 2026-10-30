@@ -133,3 +133,194 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .animar-aparecer {
   animation: aparecer 0.25s ease-out;
 }
+
+/* ============================================================
+   Informe gerencial imprimible
+   ============================================================ */
+.informe-impresion {
+  display: none;
+}
+
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 12mm 12mm;
+  }
+
+  html,
+  body {
+    background: #ffffff !important;
+    color: #0f172a !important;
+  }
+
+  .pantalla-reportes,
+  .pantalla-panel {
+    display: none !important;
+  }
+
+  .informe-impresion {
+    display: block !important;
+    color: #0f172a;
+    font-family: "Segoe UI", Arial, sans-serif;
+    font-size: 9pt;
+    line-height: 1.35;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .informe-cabecera {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 18px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #065f46;
+  }
+
+  .informe-empresa {
+    margin: 0;
+    font-size: 15pt;
+    font-weight: 700;
+    color: #065f46;
+  }
+
+  .informe-contacto {
+    margin: 3px 0 0;
+    font-size: 8pt;
+    color: #475569;
+  }
+
+  .informe-meta {
+    text-align: right;
+    font-size: 8pt;
+    color: #475569;
+  }
+
+  .informe-meta p {
+    margin: 0 0 2px;
+  }
+
+  .informe-titulo {
+    font-size: 11pt !important;
+    font-weight: 700;
+    color: #0f172a !important;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .informe-kpis {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+    margin: 8px 0 2px;
+  }
+
+  .informe-kpis > div {
+    border: 1px solid #cbd5e1;
+    border-top: 3px solid #065f46;
+    border-radius: 4px;
+    padding: 6px 8px;
+    background: #f8fafc;
+  }
+
+  .informe-kpis span {
+    display: block;
+    font-size: 7pt;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #475569;
+  }
+
+  .informe-kpis strong {
+    display: block;
+    margin-top: 1px;
+    font-size: 11pt;
+    color: #0f172a;
+  }
+
+  .informe-kpis small {
+    display: block;
+    font-size: 7pt;
+    color: #64748b;
+  }
+
+  .informe-seccion {
+    margin-top: 10px;
+    break-inside: auto;
+  }
+
+  .informe-seccion h2 {
+    margin: 0 0 5px;
+    padding-bottom: 2px;
+    font-size: 9.5pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: #065f46;
+    border-bottom: 1px solid #cbd5e1;
+  }
+
+  .informe-tabla {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 8pt;
+  }
+
+  .informe-tabla thead {
+    display: table-header-group;
+  }
+
+  .informe-tabla th {
+    padding: 4px 5px;
+    background: #065f46 !important;
+    color: #ffffff !important;
+    font-weight: 600;
+    text-align: left;
+    font-size: 7.5pt;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+
+  .informe-tabla td {
+    padding: 2.5px 5px;
+    border-bottom: 0.5px solid #cbd5e1;
+    vertical-align: top;
+  }
+
+  .informe-tabla tbody tr:nth-child(even) {
+    background: #f8fafc !important;
+  }
+
+  .informe-tabla tr {
+    break-inside: avoid;
+  }
+
+  .informe-tabla tfoot td {
+    padding: 4px 5px;
+    background: #ecfdf5 !important;
+    border-top: 1px solid #065f46;
+    font-weight: 700;
+  }
+
+  .informe-num {
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  .informe-mono {
+    font-family: "Consolas", "Courier New", monospace;
+    font-size: 7.5pt;
+  }
+
+  .informe-pie {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 10px;
+    padding-top: 4px;
+    border-top: 1px solid #cbd5e1;
+    font-size: 7pt;
+    color: #64748b;
+    break-before: avoid;
+  }
+}

@@ -85,10 +85,10 @@ public class SembradorDatos
 
         var usuarios = new List<Usuario>
         {
-            CrearUsuario("Administrador del Sistema", "admin", "admin@inventarios.local", "Admin123!", roles["Administrador"].Id),
-            CrearUsuario("María González", "vendedor", "vendedor@inventarios.local", "Ventas123!", roles["Ventas"].Id),
-            CrearUsuario("Carlos Rodríguez", "bodega", "bodega@inventarios.local", "Inventario123!", roles["Inventario"].Id),
-            CrearUsuario("Ana Martínez", "consulta", "consulta@inventarios.local", "Consulta123!", roles["Consulta"].Id)
+            CrearUsuario("Administrador del Sistema", "admin", "admin@inventarios.gt", "Admin123!", roles["Administrador"].Id),
+            CrearUsuario("María González", "vendedor", "vendedor@inventarios.gt", "Ventas123!", roles["Ventas"].Id),
+            CrearUsuario("Carlos Rodríguez", "bodega", "bodega@inventarios.gt", "Inventario123!", roles["Inventario"].Id),
+            CrearUsuario("Ana Martínez", "consulta", "consulta@inventarios.gt", "Consulta123!", roles["Consulta"].Id)
         };
 
         _contexto.Usuarios.AddRange(usuarios);

@@ -11,10 +11,31 @@ namespace Inventarios.Api.Controladores;
 public class ReportesController : ControllerBase
 {
     private readonly ServicioReportes _reportes;
+    private readonly ServicioExportacion _exportacion;
 
-    public ReportesController(ServicioReportes reportes)
+    public ReportesController(ServicioReportes reportes, ServicioExportacion exportacion)
     {
         _reportes = reportes;
+        _exportacion = exportacion;
+    }
+
+    [HttpGet("exportar")]
+    public async Task<IActionResult> Exportar(
+        [FromQuery] string tipo = "resumen",
+        [FromQuery] DateTime? desde = null,
+        [FromQuery] DateTime? hasta = null,
+        [FromQuery] string? estado = null,
+        [FromQuery] string? tipoNota = null)
+    {
+        var inicio = desde ?? DateTime.Today.AddDays(-30);
+        var fin = hasta ?? DateTime.Today;
+        if (fin < inicio) (inicio, fin) = (fin, inicio);
+
+        var (archivo, nombre) = await _exportacion.ReporteAsync(tipo, inicio, fin, estado, tipoNota);
+        return File(
+            archivo,
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            nombre);
     }
 
     [HttpGet("kardex")]

@@ -44,19 +44,24 @@ Las opciones no permitidas para el rol no se muestran. La autorización definiti
 
 ## 3. Panel de control
 
-El panel presenta:
+El panel gerencial presenta:
 
-- ventas del día y del mes;
-- compras del día y del mes;
-- cantidad de productos activos y productos bajo mínimo;
-- clientes y proveedores activos;
-- movimientos del día;
-- gráfico de ventas de los últimos siete días;
-- productos más vendidos;
-- productos con existencia baja;
+- ventas y compras del mes con variación frente al mes anterior;
+- ticket promedio y margen bruto estimado del mes;
+- valor del inventario al costo y al precio de venta, con margen potencial;
+- productos bajo mínimo y productos sin existencia;
+- comparativo de ventas y compras de los últimos seis meses;
+- ventas de los últimos treinta días;
+- distribución de ventas por forma de pago;
+- top de clientes y productos del mes;
+- productos con existencia baja, con acceso directo a **Nueva compra**;
 - últimas ventas.
 
+El panel indica la hora de actualización y permite **Actualizar**, **Imprimir** y **Exportar Excel**. La impresión usa el mismo formato gerencial de Reportes: encabezado de empresa, período, indicadores y tablas con totales.
+
 Desde el panel se puede ir a **Nueva venta**, **Nueva compra** o **Movimientos**, según el rol.
+
+> El margen bruto es estimado: usa el costo registrado en los movimientos de salida de las ventas vigentes, no un método FIFO exacto.
 
 ---
 
@@ -83,6 +88,8 @@ La tabla permite buscar por código o nombre, filtrar por categoría y estado, e
 
 La existencia actual se modifica automáticamente con compras, ventas, notas y ajustes. No se edita manualmente desde el formulario del producto.
 
+El botón **Importar** permite cargar varios productos desde Excel; ver la sección 4.5.
+
 ### 4.2 Categorías
 
 Ruta: **Catálogos → Categorías**
@@ -100,6 +107,24 @@ Campos principales: código, razón social, documento, contacto, teléfono, corr
 Ruta: **Catálogos → Clientes**
 
 Campos principales: código, nombre, documento, teléfono, correo, dirección y estado. El código debe ser único.
+
+### 4.5 Importar catálogos desde Excel
+
+Disponible en **Productos**, **Proveedores** y **Clientes** con el botón **Importar**.
+
+1. Descargar la plantilla `.xlsx` del módulo.
+2. Completar la hoja **Datos** sin cambiar los encabezados. La fila 2 es un ejemplo y debe reemplazarse.
+3. Subir el archivo y revisar la **previsualización**: filas válidas, advertencias y errores.
+4. Confirmar la importación. Todo se aplica en una sola transacción.
+
+Reglas:
+- El código es la llave. Si ya existe, la fila se omite o se actualiza según la casilla **Actualizar los registros que ya existen**.
+- Si hay errores, no se importa ninguna fila; se corrige el archivo y se repite.
+- Las categorías que no existen se crean automáticamente.
+- La **existencia inicial** solo se aplica a productos nuevos y genera un movimiento de ajuste auditado.
+- Usar punto decimal (`1650.24`), sin símbolo de moneda ni separadores de miles.
+- Máximo 5,000 filas y 5 MB por archivo.
+- Productos y proveedores: Administrador e Inventario. Clientes: Administrador y Ventas.
 
 ---
 
@@ -305,8 +330,9 @@ Ruta: **Análisis → Reportes**
    - **Ventas:** documentos con filtro de estado.
    - **Compras:** documentos con filtro de estado.
    - **Notas:** notas con filtro de tipo.
-3. Usar **Exportar CSV** para descargar la pestaña activa.
-4. Usar **Imprimir** para generar una versión imprimible.
+3. Usar **Exportar CSV** para descargar la pestaña activa con montos numéricos, fechas ISO y fila de totales.
+4. Usar **Exportar Excel** para descargar la pestaña activa en un libro con encabezado de empresa, indicadores, formato de moneda, autofiltro y totales.
+5. Usar **Imprimir** para generar el informe gerencial: encabezado de empresa, período, indicadores y la pestaña activa con totales.
 
 El resumen del período considera documentos registrados; los listados pueden incluir anulados según el filtro.
 
@@ -373,6 +399,8 @@ Los detalles de compras, ventas y notas incluyen el botón **Imprimir**. La vers
 - conserva el documento en el historial.
 
 Se recomienda usar **Guardar como PDF** en el diálogo de impresión para archivar comprobantes.
+
+El módulo **Reportes** usa el mismo mecanismo, pero con un formato gerencial: encabezado con los datos de la empresa, período, usuario y fecha de generación, franja de indicadores y tablas con totales. No incluye logotipo.
 
 ---
 

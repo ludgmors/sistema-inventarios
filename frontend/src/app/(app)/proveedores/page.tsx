@@ -1,7 +1,8 @@
 "use client";
 
-import { Pencil, Plus, Search, Trash2 } from "lucide-react";
+import { FileUp, Pencil, Plus, Search, Trash2 } from "lucide-react";
 import { useState, type FormEvent } from "react";
+import { ModalImportacion } from "@/components/importacion/ModalImportacion";
 import { Aviso } from "@/components/ui/Aviso";
 import { Boton } from "@/components/ui/Boton";
 import { Campo, Entrada } from "@/components/ui/Campos";
@@ -54,6 +55,7 @@ export default function PaginaProveedores() {
   );
 
   const [modalAbierto, setModalAbierto] = useState(false);
+  const [importarAbierto, setImportarAbierto] = useState(false);
   const [editando, setEditando] = useState<Proveedor | null>(null);
   const [formulario, setFormulario] = useState<FormularioProveedor>(inicial);
   const [guardando, setGuardando] = useState(false);
@@ -205,9 +207,18 @@ export default function PaginaProveedores() {
         descripcion="Registre y mantenga actualizada la información de sus proveedores."
         acciones={
           puedeEditar ? (
-            <Boton onClick={abrirNuevo} icono={<Plus className="h-4 w-4" />}>
-              Nuevo proveedor
-            </Boton>
+            <>
+              <Boton
+                variante="secundario"
+                onClick={() => setImportarAbierto(true)}
+                icono={<FileUp className="h-4 w-4" />}
+              >
+                Importar
+              </Boton>
+              <Boton onClick={abrirNuevo} icono={<Plus className="h-4 w-4" />}>
+                Nuevo proveedor
+              </Boton>
+            </>
           ) : undefined
         }
       />
@@ -360,6 +371,16 @@ export default function PaginaProveedores() {
         cargando={eliminando}
         onConfirmar={() => void eliminar()}
         onCerrar={() => setPorEliminar(null)}
+      />
+
+      <ModalImportacion
+        tipo="proveedores"
+        abierto={importarAbierto}
+        onCerrar={() => setImportarAbierto(false)}
+        onImportado={async () => {
+          setMensaje("Importación completada. Revise el listado.");
+          await recargar();
+        }}
       />
     </div>
   );

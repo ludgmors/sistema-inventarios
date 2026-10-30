@@ -97,6 +97,49 @@ public class DashboardDto
     public List<TopProductoDto> TopProductos { get; set; } = new();
     public List<BajoMinimoDto> ProductosBajoMinimoLista { get; set; } = new();
     public List<ReporteVentaDto> UltimasVentas { get; set; } = new();
+
+    // Indicadores gerenciales del mes y comparativos.
+    public decimal VentasMesAnterior { get; set; }
+    public decimal ComprasMesAnterior { get; set; }
+    public int CantidadVentasMes { get; set; }
+    public int CantidadComprasMes { get; set; }
+    public int CantidadVentasMesAnterior { get; set; }
+    public decimal TicketPromedioMes { get; set; }
+    public decimal CostoVentasMes { get; set; }
+    public decimal MargenBrutoMes { get; set; }
+    public decimal PorcentajeMargenMes { get; set; }
+    public decimal ValorInventarioCosto { get; set; }
+    public decimal ValorInventarioVenta { get; set; }
+    public decimal MargenPotencialInventario { get; set; }
+    public int ProductosSinExistencia { get; set; }
+    public List<VentaFormaPagoDto> VentasPorFormaPago { get; set; } = new();
+    public List<TopClienteDto> TopClientes { get; set; } = new();
+    public List<MesResumenDto> VentasPorMes { get; set; } = new();
+    public DateTime ActualizadoUtc { get; set; }
+}
+
+public class VentaFormaPagoDto
+{
+    public string FormaPago { get; set; } = string.Empty;
+    public decimal Total { get; set; }
+    public int Cantidad { get; set; }
+}
+
+public class TopClienteDto
+{
+    public int? ClienteId { get; set; }
+    public string Cliente { get; set; } = string.Empty;
+    public decimal Total { get; set; }
+    public int Cantidad { get; set; }
+}
+
+public class MesResumenDto
+{
+    public int Anio { get; set; }
+    public int Mes { get; set; }
+    public string Etiqueta { get; set; } = string.Empty;
+    public decimal Ventas { get; set; }
+    public decimal Compras { get; set; }
 }
 
 public class ResumenPeriodoDto
