@@ -8,7 +8,7 @@ namespace Inventarios.Api.Controladores;
 
 [ApiController]
 [Route("api/usuarios")]
-[Authorize(Roles = "Administrador")]
+[Authorize(Roles = "Superadmin,Administrador")]
 public class UsuariosController : ControllerBase
 {
     private readonly ServicioUsuarios _usuarios;

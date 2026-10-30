@@ -39,7 +39,7 @@ public class ProteccionAccesoMiddleware(RequestDelegate siguiente)
                 await proteccion.ParametroAsync("Seguridad.OperacionesPorMinuto"), 60, bloqueo);
             motivo = "Límite de operaciones por usuario";
             if (hasta == null && HttpMethods.IsPost(http.Request.Method) && http.Request.Path == "/api/usuarios"
-                && http.User.IsInRole("Administrador"))
+                && (http.User.IsInRole("Administrador") || http.User.IsInRole("Superadmin")))
             {
                 hasta = await proteccion.ConsumirAsync("crear-usuarios:" + usuarioId,
                     await proteccion.ParametroAsync("Seguridad.CreacionUsuarios"), 600, bloqueo);

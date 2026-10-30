@@ -25,6 +25,10 @@ public class ManejoErroresMiddleware
         {
             await EscribirRespuestaAsync(contexto, 429, "Acceso temporalmente limitado", excepcion.Message, excepcion.Segundos);
         }
+        catch (AccesoDenegadoException excepcion)
+        {
+            await EscribirRespuestaAsync(contexto, 403, "Acceso denegado", excepcion.Message);
+        }
         catch (ExcepcionNegocio excepcion)
         {
             await EscribirRespuestaAsync(contexto, StatusCodes.Status400BadRequest, "Regla de negocio", excepcion.Message);

@@ -9,6 +9,7 @@ import { Sidebar } from "./Sidebar";
 import { Topbar } from "./Topbar";
 
 const permisosRuta: { prefijo: string; roles: Rol[] }[] = [
+  { prefijo: "/administracion", roles: ["Administrador"] },
   { prefijo: "/categorias", roles: ["Administrador", "Inventario"] },
   { prefijo: "/proveedores", roles: ["Administrador", "Inventario"] },
   { prefijo: "/clientes", roles: ["Administrador", "Ventas"] },
@@ -20,6 +21,7 @@ const permisosRuta: { prefijo: string; roles: Rol[] }[] = [
 ];
 
 function puedeAbrir(ruta: string, rol: Rol): boolean {
+  if (rol === "Superadmin") return true;
   return !permisosRuta.some(
     (permiso) =>
       (ruta === permiso.prefijo || ruta.startsWith(`${permiso.prefijo}/`)) &&

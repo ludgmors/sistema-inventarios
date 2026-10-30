@@ -12,16 +12,18 @@ public class ServicioUsuarios
     private readonly IPasswordHasher<Usuario> _hasher;
     private readonly ServicioBitacora _bitacora;
     private readonly ServicioProteccionAcceso _proteccion;
+    private readonly IHttpContextAccessor _http;
 
     public ServicioUsuarios(
         ContextoInventarios contexto,
         IPasswordHasher<Usuario> hasher,
-        ServicioBitacora bitacora, ServicioProteccionAcceso proteccion)
+        ServicioBitacora bitacora, ServicioProteccionAcceso proteccion, IHttpContextAccessor http)
     {
         _contexto = contexto;
         _hasher = hasher;
         _bitacora = bitacora;
         _proteccion = proteccion;
+        _http = http;
     }
 
     public async Task<List<UsuarioDto>> ListarAsync(string? buscar)
@@ -59,6 +61,7 @@ public class ServicioUsuarios
         return await _contexto.Roles
             .AsNoTracking()
             .Where(rol => rol.Activo)
+            .Where(rol => EsSuperadmin || rol.Nombre != "Superadmin")
             .OrderBy(rol => rol.Id)
             .Select(rol => new RolDto
             {
@@ -86,6 +89,7 @@ public class ServicioUsuarios
 
         var rol = await _contexto.Roles.FirstOrDefaultAsync(rol => rol.Id == solicitud.RolId && rol.Activo)
             ?? throw new ExcepcionNegocio("El rol seleccionado no existe o está inactivo.");
+        VerificarRolPermitido(rol.Nombre);
 
         var usuario = new Usuario
         {
@@ -109,9 +113,11 @@ public class ServicioUsuarios
 
     public async Task<UsuarioDto> ActualizarAsync(int id, UsuarioActualizarSolicitud solicitud, int usuarioActualId)
     {
+        await using var transaccion = await _contexto.Database.BeginTransactionAsync(System.Data.IsolationLevel.Serializable);
         var usuario = await _contexto.Usuarios.Include(usuario => usuario.Rol)
             .FirstOrDefaultAsync(usuario => usuario.Id == id)
             ?? throw new ExcepcionNegocio("Usuario no encontrado.");
+        VerificarRolPermitido(usuario.Rol.Nombre);
 
         var correo = solicitud.Correo.Trim().ToLowerInvariant();
 
@@ -123,19 +129,20 @@ public class ServicioUsuarios
         var rol = await _contexto.Roles.FirstOrDefaultAsync(rol => rol.Id == solicitud.RolId && rol.Activo)
             ?? throw new ExcepcionNegocio("El rol seleccionado no existe o está inactivo.");
 
-        if (id == usuarioActualId && !solicitud.Activo)
+        VerificarRolPermitido(rol.Nombre);
+        if (id == usuarioActualId && (!solicitud.Activo || rol.Id != usuario.RolId))
         {
-            throw new ExcepcionNegocio("No puede desactivar su propio usuario.");
+            throw new ExcepcionNegocio("No puede desactivar su propia cuenta ni cambiar su propio rol.");
         }
 
-        if (usuario.Rol.Nombre == "Administrador" && (!solicitud.Activo || rol.Nombre != "Administrador"))
+        if (usuario.Rol.Nombre == "Superadmin" && (!solicitud.Activo || rol.Nombre != "Superadmin"))
         {
             var otrosAdministradores = await _contexto.Usuarios.CountAsync(otro =>
-                otro.Id != id && otro.Activo && otro.Rol.Nombre == "Administrador");
+                otro.Id != id && otro.Activo && otro.Rol.Nombre == "Superadmin");
 
             if (otrosAdministradores == 0)
             {
-                throw new ExcepcionNegocio("Debe existir al menos un administrador activo.");
+                throw new ExcepcionNegocio("Debe existir al menos un superadmin activo.");
             }
         }
 
@@ -147,6 +154,7 @@ public class ServicioUsuarios
         _bitacora.Registrar("Actualización de usuario", "Seguridad", usuario.Id, $"Usuario {usuario.NombreUsuario}");
         await _contexto.SaveChangesAsync();
         await _proteccion.RevocarAsync(usuario.Id);
+        await transaccion.CommitAsync();
 
         usuario.Rol = rol;
         return Mapear(usuario);
@@ -154,13 +162,16 @@ public class ServicioUsuarios
 
     public async Task RestablecerContrasenaAsync(int id, RestablecerContrasenaSolicitud solicitud)
     {
-        var usuario = await _contexto.Usuarios.FirstOrDefaultAsync(usuario => usuario.Id == id)
+        await using var transaccion = await _contexto.Database.BeginTransactionAsync(System.Data.IsolationLevel.Serializable);
+        var usuario = await _contexto.Usuarios.Include(x => x.Rol).FirstOrDefaultAsync(usuario => usuario.Id == id)
             ?? throw new ExcepcionNegocio("Usuario no encontrado.");
+        VerificarRolPermitido(usuario.Rol.Nombre);
 
         usuario.HashContrasena = _hasher.HashPassword(usuario, solicitud.ContrasenaNueva);
         _bitacora.Registrar("Restablecimiento de contraseña", "Seguridad", usuario.Id, $"Usuario {usuario.NombreUsuario}");
         await _contexto.SaveChangesAsync();
         await _proteccion.RevocarAsync(usuario.Id);
+        await transaccion.CommitAsync();
     }
 
     private static UsuarioDto Mapear(Usuario usuario) => new()
@@ -175,4 +186,13 @@ public class ServicioUsuarios
         FechaCreacion = usuario.FechaCreacion,
         UltimoAcceso = usuario.UltimoAcceso
     };
+
+    private bool EsSuperadmin => _http.HttpContext?.User.IsInRole("Superadmin") == true;
+    private void VerificarRolPermitido(string rol)
+    {
+        if (rol == "Superadmin" && !EsSuperadmin)
+            throw new AccesoDenegadoException("Solo un superadmin puede asignar ese rol o modificar cuentas de superadmin.");
+    }
 }
+
+public class AccesoDenegadoException(string mensaje) : Exception(mensaje);

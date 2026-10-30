@@ -159,7 +159,7 @@ nunca del Host enviado por el solicitante. No hay integración ni cuenta externa
 creada automáticamente.
 
 En una base nueva de producción no se siembran usuarios, catálogos ni operaciones
-demo. Para crear el primer administrador se requieren `Bootstrap__Correo` y
+demo. Para crear el primer superadmin se requieren `Bootstrap__Correo` y
 `Bootstrap__Contrasena` (12–100 caracteres), guardados como secretos. Luego pueden
 retirarse. Si se despliega una copia de una base de desarrollo, se deben desactivar
 sus cuentas demo existentes y cambiar las credenciales antes de publicarla.

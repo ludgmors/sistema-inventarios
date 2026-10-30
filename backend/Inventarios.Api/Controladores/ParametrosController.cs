@@ -44,7 +44,7 @@ public class ParametrosController : ControllerBase
     }
 
     [HttpPut]
-    [Authorize(Roles = "Administrador")]
+    [Authorize(Roles = "Superadmin,Administrador")]
     public async Task<ActionResult<List<ParametroDto>>> Actualizar(ParametrosActualizarSolicitud solicitud)
     {
         foreach (var item in solicitud.Parametros)

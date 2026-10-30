@@ -145,7 +145,7 @@ public class MovimientosController : ControllerBase
     }
 
     [HttpPost("ajuste")]
-    [Authorize(Roles = "Administrador,Inventario")]
+    [Authorize(Roles = "Superadmin,Administrador,Inventario")]
     public async Task<ActionResult<AjusteRespuestaDto>> RegistrarAjuste(AjusteInventarioSolicitud solicitud)
     {
         var producto = await _contexto.Productos

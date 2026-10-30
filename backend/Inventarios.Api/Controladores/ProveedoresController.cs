@@ -90,7 +90,7 @@ public class ProveedoresController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Roles = "Administrador,Inventario")]
+    [Authorize(Roles = "Superadmin,Administrador,Inventario")]
     public async Task<ActionResult<ProveedorDto>> Crear(ProveedorGuardarSolicitud solicitud)
     {
         var codigo = solicitud.Codigo.Trim();
@@ -121,7 +121,7 @@ public class ProveedoresController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
-    [Authorize(Roles = "Administrador,Inventario")]
+    [Authorize(Roles = "Superadmin,Administrador,Inventario")]
     public async Task<ActionResult<ProveedorDto>> Actualizar(int id, ProveedorGuardarSolicitud solicitud)
     {
         var proveedor = await _contexto.Proveedores.FirstOrDefaultAsync(proveedor => proveedor.Id == id)
@@ -150,7 +150,7 @@ public class ProveedoresController : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
-    [Authorize(Roles = "Administrador")]
+    [Authorize(Roles = "Superadmin,Administrador")]
     public async Task<IActionResult> Eliminar(int id)
     {
         var proveedor = await _contexto.Proveedores.FirstOrDefaultAsync(proveedor => proveedor.Id == id)

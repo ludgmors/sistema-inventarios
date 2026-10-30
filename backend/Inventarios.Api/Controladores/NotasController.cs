@@ -37,7 +37,7 @@ public class NotasController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Roles = "Administrador,Ventas")]
+    [Authorize(Roles = "Superadmin,Administrador,Ventas")]
     public async Task<ActionResult<NotaDto>> Crear(NotaCrearSolicitud solicitud)
     {
         var nota = await _notas.CrearAsync(solicitud, User.ObtenerUsuarioId());
@@ -45,7 +45,7 @@ public class NotasController : ControllerBase
     }
 
     [HttpPost("{id:int}/anular")]
-    [Authorize(Roles = "Administrador")]
+    [Authorize(Roles = "Superadmin,Administrador")]
     public async Task<ActionResult<NotaDto>> Anular(int id)
     {
         return Ok(await _notas.AnularAsync(id, User.ObtenerUsuarioId()));

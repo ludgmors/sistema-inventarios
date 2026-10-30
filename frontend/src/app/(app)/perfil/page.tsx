@@ -11,6 +11,7 @@ import { useAuth } from "@/components/layout/AuthProvider";
 import { apiFetch, mensajeDeError } from "@/lib/api";
 
 const permisosPorRol: Record<string, string[]> = {
+  Superadmin: ["Acceso completo a todos los módulos", "Gestión de administradores y superadmins", "Control de usuarios, parámetros y reportes"],
   Administrador: [
     "Acceso completo al sistema",
     "Anulación de compras, ventas y notas",
