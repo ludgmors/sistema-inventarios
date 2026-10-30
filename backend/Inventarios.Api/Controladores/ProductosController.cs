@@ -114,7 +114,7 @@ public class ProductosController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Roles = "Administrador,Inventario")]
+    [Authorize(Roles = "Superadmin,Administrador,Inventario")]
     public async Task<ActionResult<ProductoDto>> Crear(ProductoGuardarSolicitud solicitud)
     {
         var codigo = solicitud.Codigo.Trim();
@@ -152,7 +152,7 @@ public class ProductosController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
-    [Authorize(Roles = "Administrador,Inventario")]
+    [Authorize(Roles = "Superadmin,Administrador,Inventario")]
     public async Task<ActionResult<ProductoDto>> Actualizar(int id, ProductoGuardarSolicitud solicitud)
     {
         var producto = await _contexto.Productos.Include(producto => producto.Categoria)
@@ -188,7 +188,7 @@ public class ProductosController : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
-    [Authorize(Roles = "Administrador")]
+    [Authorize(Roles = "Superadmin,Administrador")]
     public async Task<IActionResult> Eliminar(int id)
     {
         var producto = await _contexto.Productos.FirstOrDefaultAsync(producto => producto.Id == id)

@@ -1,5 +1,5 @@
 ﻿param(
-    [Parameter(Mandatory=$true)][ValidateSet('Preparar','CrearCuenta','LimpiarUsuarios','PermitirEnvio','VentanaEnvios','VencerVentanaEnvios','Expirar','AdelantarReenvio','CambiarCorreo','Desactivar','CambiarClave','CodigoCambiado')][string]$Accion,
+    [Parameter(Mandatory=$true)][ValidateSet('Preparar','CrearCuenta','HacerSuperadmin','HacerAdministrador','LimpiarUsuarios','PermitirEnvio','VentanaEnvios','VencerVentanaEnvios','Expirar','AdelantarReenvio','CambiarCorreo','Desactivar','CambiarClave','CodigoCambiado')][string]$Accion,
     [string]$Usuario = '',
     [ValidatePattern('^$|^[a-f0-9]{32}$')][string]$DesafioId = ''
 )
@@ -14,6 +14,8 @@ try {
     switch ($Accion) {
         'Preparar' { $cmd.CommandText = "UPDATE Usuarios SET Correo='admin@example.com' WHERE NombreUsuario='admin'; DELETE FROM LimitesAcceso; UPDATE SesionesAcceso SET RevocadaUtc=SYSUTCDATETIME() WHERE RevocadaUtc IS NULL;" }
         'CrearCuenta' { $cmd.CommandText = "INSERT INTO Usuarios (NombreCompleto,NombreUsuario,Correo,HashContrasena,RolId,Activo,FechaCreacion) SELECT 'Prueba 2FA',@usuario,@usuario+'@example.com',HashContrasena,(SELECT Id FROM Roles WHERE Nombre='Consulta'),1,GETDATE() FROM Usuarios WHERE NombreUsuario='admin';" }
+        'HacerSuperadmin' { $cmd.CommandText = "UPDATE Usuarios SET RolId=(SELECT Id FROM Roles WHERE Nombre='Superadmin') WHERE NombreUsuario=@usuario AND NombreUsuario LIKE 'dosfa-%';" }
+        'HacerAdministrador' { $cmd.CommandText = "UPDATE Usuarios SET RolId=(SELECT Id FROM Roles WHERE Nombre='Administrador') WHERE NombreUsuario=@usuario AND NombreUsuario LIKE 'dosfa-%';" }
         'VentanaEnvios' { $cmd.CommandText = "INSERT INTO LimitesAcceso(Clave,InicioUtc,Cantidad) SELECT CONVERT(varchar(64),HASHBYTES('SHA2_256',CONVERT(varchar(100),'2fa-envios:'+CONVERT(varchar(20),Id))),2),DATEADD(second,-890,SYSUTCDATETIME()),3 FROM Usuarios WHERE NombreUsuario=@usuario;" }
         'VencerVentanaEnvios' { $cmd.CommandText = "UPDATE LimitesAcceso SET InicioUtc=DATEADD(second,-901,SYSUTCDATETIME()) WHERE Clave=(SELECT CONVERT(varchar(64),HASHBYTES('SHA2_256',CONVERT(varchar(100),'2fa-envios:'+CONVERT(varchar(20),Id))),2) FROM Usuarios WHERE NombreUsuario=@usuario);" }
         'LimpiarUsuarios' { $cmd.CommandText = "UPDATE Usuarios SET Activo=0 WHERE NombreUsuario LIKE 'dosfa-%';" }

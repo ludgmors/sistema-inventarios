@@ -65,7 +65,7 @@ public class CategoriasController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Roles = "Administrador,Inventario")]
+    [Authorize(Roles = "Superadmin,Administrador,Inventario")]
     public async Task<ActionResult<CategoriaDto>> Crear(CategoriaGuardarSolicitud solicitud)
     {
         var nombre = solicitud.Nombre.Trim();
@@ -96,7 +96,7 @@ public class CategoriasController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
-    [Authorize(Roles = "Administrador,Inventario")]
+    [Authorize(Roles = "Superadmin,Administrador,Inventario")]
     public async Task<ActionResult<CategoriaDto>> Actualizar(int id, CategoriaGuardarSolicitud solicitud)
     {
         var categoria = await _contexto.Categorias.FirstOrDefaultAsync(categoria => categoria.Id == id)
@@ -126,7 +126,7 @@ public class CategoriasController : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
-    [Authorize(Roles = "Administrador")]
+    [Authorize(Roles = "Superadmin,Administrador")]
     public async Task<IActionResult> Eliminar(int id)
     {
         var categoria = await _contexto.Categorias.FirstOrDefaultAsync(categoria => categoria.Id == id)

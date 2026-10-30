@@ -88,7 +88,7 @@ public class ClientesController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Roles = "Administrador,Ventas")]
+    [Authorize(Roles = "Superadmin,Administrador,Ventas")]
     public async Task<ActionResult<ClienteDto>> Crear(ClienteGuardarSolicitud solicitud)
     {
         var codigo = solicitud.Codigo.Trim();
@@ -118,7 +118,7 @@ public class ClientesController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
-    [Authorize(Roles = "Administrador,Ventas")]
+    [Authorize(Roles = "Superadmin,Administrador,Ventas")]
     public async Task<ActionResult<ClienteDto>> Actualizar(int id, ClienteGuardarSolicitud solicitud)
     {
         var cliente = await _contexto.Clientes.FirstOrDefaultAsync(cliente => cliente.Id == id)
@@ -146,7 +146,7 @@ public class ClientesController : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
-    [Authorize(Roles = "Administrador")]
+    [Authorize(Roles = "Superadmin,Administrador")]
     public async Task<IActionResult> Eliminar(int id)
     {
         var cliente = await _contexto.Clientes.FirstOrDefaultAsync(cliente => cliente.Id == id)

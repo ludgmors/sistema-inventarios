@@ -54,16 +54,18 @@ public class SembradorDatos
 
     private async Task SembrarSeguridadAsync()
     {
-        if (!await _contexto.Roles.AnyAsync())
+        var rolesIniciales = new[]
         {
-            _contexto.Roles.AddRange(
+                new Rol { Nombre = "Superadmin", Descripcion = "Acceso completo y control de cuentas superadmin" },
                 new Rol { Nombre = "Administrador", Descripcion = "Acceso completo al sistema" },
                 new Rol { Nombre = "Inventario", Descripcion = "Productos, compras, proveedores y ajustes" },
                 new Rol { Nombre = "Ventas", Descripcion = "Ventas, clientes y notas" },
-                new Rol { Nombre = "Consulta", Descripcion = "Solo consulta de información" });
-
-            await _contexto.SaveChangesAsync();
-        }
+                new Rol { Nombre = "Consulta", Descripcion = "Solo consulta de información" }
+        };
+        foreach (var rolInicial in rolesIniciales)
+            if (!await _contexto.Roles.AnyAsync(x => x.Nombre == rolInicial.Nombre))
+                _contexto.Roles.Add(rolInicial);
+        await _contexto.SaveChangesAsync();
 
         if (await _contexto.Usuarios.AnyAsync())
         {
@@ -78,7 +80,7 @@ public class SembradorDatos
             var clave = _configuracion["Bootstrap:Contrasena"] ?? "";
             if (!new DTOs.CorreoFormalAttribute().IsValid(correo) || clave.Length is < 12 or > 100)
                 throw new InvalidOperationException("Configure Bootstrap:Correo y Bootstrap:Contrasena (12-100 caracteres) para crear el primer administrador. No se crean cuentas demo en producción.");
-            _contexto.Usuarios.Add(CrearUsuario("Administrador", "admin", correo.Trim().ToLowerInvariant(), clave, roles["Administrador"].Id));
+            _contexto.Usuarios.Add(CrearUsuario("Superadministrador", "admin", correo.Trim().ToLowerInvariant(), clave, roles["Superadmin"].Id));
             await _contexto.SaveChangesAsync();
             return;
         }

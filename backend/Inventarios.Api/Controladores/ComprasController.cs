@@ -36,7 +36,7 @@ public class ComprasController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Roles = "Administrador,Inventario")]
+    [Authorize(Roles = "Superadmin,Administrador,Inventario")]
     public async Task<ActionResult<CompraDto>> Crear(CompraCrearSolicitud solicitud)
     {
         var compra = await _compras.CrearAsync(solicitud, User.ObtenerUsuarioId());
@@ -44,7 +44,7 @@ public class ComprasController : ControllerBase
     }
 
     [HttpPost("{id:int}/anular")]
-    [Authorize(Roles = "Administrador")]
+    [Authorize(Roles = "Superadmin,Administrador")]
     public async Task<ActionResult<CompraDto>> Anular(int id)
     {
         return Ok(await _compras.AnularAsync(id, User.ObtenerUsuarioId()));

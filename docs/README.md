@@ -6,6 +6,8 @@ Esta carpeta reúne los documentos de análisis, diseño, operación, pruebas y 
 
 ## Contenido
 
+- [Panel administrativo](panel-administrativo.md): gestión de accesos y jerarquía Administrador/Superadmin.
+
 - [Seguridad del acceso](seguridad-login.md): sesiones revocables, límites, CSRF y recuperación por correo.
 
 | Documento | Descripción |

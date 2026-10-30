@@ -12,7 +12,6 @@ import {
   ShoppingCart,
   Tags,
   Truck,
-  UserCog,
   Users,
   Warehouse,
   X,
@@ -76,7 +75,6 @@ const grupos: GrupoMenu[] = [
     titulo: "Configuración",
     items: [
       { href: "/parametros", etiqueta: "Parámetros", icono: Settings, roles: ["Administrador"] },
-      { href: "/usuarios", etiqueta: "Usuarios y roles", icono: UserCog, roles: ["Administrador"] },
       { href: "/perfil", etiqueta: "Mi perfil", icono: Users },
     ],
   },
@@ -90,7 +88,7 @@ export function Sidebar({
   onCerrar: () => void;
 }) {
   const ruta = usePathname();
-  const { usuario } = useAuth();
+  const { usuario, tieneRol } = useAuth();
 
   const esActivo = (href: string) =>
     href === "/" ? ruta === "/" : ruta === href || ruta.startsWith(`${href}/`);
@@ -123,7 +121,7 @@ export function Sidebar({
       <nav className="flex-1 space-y-5 overflow-y-auto px-3 py-5">
         {grupos.map((grupo) => {
           const items = grupo.items.filter(
-            (item) => !item.roles || (usuario && item.roles.includes(usuario.rol)),
+            (item) => !item.roles || tieneRol(...item.roles),
           );
 
           if (items.length === 0) return null;

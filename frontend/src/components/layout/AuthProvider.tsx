@@ -61,7 +61,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [router]);
 
   const tieneRol = useCallback(
-    (...roles: string[]) => (usuario ? roles.includes(usuario.rol) : false),
+    (...roles: string[]) => (usuario ? usuario.rol === "Superadmin" || roles.includes(usuario.rol) : false),
     [usuario],
   );
 

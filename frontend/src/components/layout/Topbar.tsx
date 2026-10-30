@@ -1,12 +1,14 @@
 "use client";
 
-import { CalendarDays, LogOut, Menu } from "lucide-react";
+import { CalendarDays, Menu } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { useAuth } from "./AuthProvider";
+import { MenuPerfil } from "./MenuPerfil";
 import { fechaLarga } from "@/lib/formato";
 import { SelectorTema } from "@/components/tema/SelectorTema";
 
 const titulos: { ruta: string; titulo: string }[] = [
+  { ruta: "/administracion/usuarios", titulo: "Administración · Usuarios y roles" },
+  { ruta: "/administracion", titulo: "Panel administrativo" },
   { ruta: "/productos", titulo: "Productos" },
   { ruta: "/categorias", titulo: "Categorías" },
   { ruta: "/proveedores", titulo: "Proveedores" },
@@ -27,21 +29,12 @@ const titulos: { ruta: string; titulo: string }[] = [
 
 export function Topbar({ onAbrirMenu }: { onAbrirMenu: () => void }) {
   const ruta = usePathname();
-  const { usuario, cerrarSesion } = useAuth();
 
   const titulo =
     titulos
       .filter((item) => ruta === item.ruta || ruta.startsWith(`${item.ruta}/`))
       .sort((a, b) => b.ruta.length - a.ruta.length)[0]?.titulo ??
     (ruta === "/" ? "Panel de control" : "Sistema de Inventarios");
-
-  const iniciales = (usuario?.nombreCompleto ?? "")
-    .split(" ")
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((parte) => parte[0])
-    .join("")
-    .toUpperCase();
 
   return (
     <header className="no-imprimir sticky top-0 z-20 flex h-16 items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-700 bg-white/90 dark:bg-slate-900/90 px-4 backdrop-blur lg:px-8">
@@ -66,24 +59,7 @@ export function Topbar({ onAbrirMenu }: { onAbrirMenu: () => void }) {
 
       <div className="flex items-center gap-2 sm:gap-3">
         <SelectorTema />
-        <div className="hidden text-right sm:block">
-          <p className="text-xs font-semibold text-slate-800 dark:text-slate-100">{usuario?.nombreCompleto}</p>
-          <p className="text-[10px] uppercase tracking-wide text-emerald-700 dark:text-emerald-300">{usuario?.rol}</p>
-        </div>
-
-        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-700 text-xs font-bold text-white">
-          {iniciales || "SI"}
-        </div>
-
-        <button
-          type="button"
-          onClick={() => void cerrarSesion()}
-          className="rounded-lg border border-slate-200 dark:border-slate-700 p-2 text-slate-500 dark:text-slate-400 transition hover:border-red-200 dark:hover:border-red-800 hover:bg-red-50 dark:hover:bg-red-950/40 hover:text-red-600 dark:hover:text-red-400"
-          title="Cerrar sesión"
-          aria-label="Cerrar sesión"
-        >
-          <LogOut className="h-4 w-4" />
-        </button>
+        <MenuPerfil />
       </div>
     </header>
   );
