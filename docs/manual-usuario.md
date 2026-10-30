@@ -36,7 +36,7 @@ El menú lateral se adapta al rol del usuario:
 | Operaciones | Compras, Ventas, Notas de ajuste |
 | Inventario | Movimientos, Existencias |
 | Análisis | Reportes |
-| Configuración | Parámetros, Usuarios y roles, Mi perfil |
+| Configuración | Parámetros, Panel administrativo, Mi perfil |
 
 Las opciones no permitidas para el rol no se muestran. La autorización definitiva se valida en la API.
 
@@ -359,24 +359,28 @@ Los cambios aplican a documentos nuevos. Los documentos históricos conservan su
 
 ## 12. Usuarios y roles
 
-Ruta: **Configuración → Usuarios y roles** (solo Administrador)
+Ruta: **Menú del perfil → Panel administrativo → Usuarios y roles** (Administrador y Superadmin)
+
+El **Superadmin** puede gestionar todos los módulos y todas las cuentas, incluidas las de otros superadmins. El **Administrador** gestiona usuarios y otros administradores, pero no puede asignar el rol Superadmin ni modificar cuentas de ese nivel. La antigua ruta `/usuarios` redirige a esta sección.
 
 ### 12.1 Crear usuario
 
 1. Presionar **Nuevo usuario**.
 2. Completar nombre completo, nombre de usuario, correo y rol.
-3. Definir una contraseña inicial de al menos 8 caracteres.
+3. Definir una contraseña inicial de 12 a 100 caracteres.
 4. Crear.
 
 ### 12.2 Editar usuario
 
-Permite cambiar nombre, correo, rol y estado. El nombre de usuario no se modifica. El Administrador no puede desactivar su propia cuenta desde la interfaz.
+Permite cambiar nombre, correo, rol y estado. El nombre de usuario no se modifica. Nadie puede desactivar su propia cuenta ni cambiar su propio rol. Las cuentas Superadmin solo las modifica otro Superadmin.
 
 ### 12.3 Restablecer contraseña
 
 1. Presionar **Clave** en la fila del usuario.
 2. Escribir la contraseña nueva y confirmarla.
 3. Restablecer.
+
+Las cuentas Superadmin solo pueden restablecerse por otro Superadmin.
 
 ---
 

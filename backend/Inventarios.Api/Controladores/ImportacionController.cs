@@ -83,9 +83,9 @@ public class ImportacionController : ControllerBase
     private bool PuedeImportar(string tipo) => tipo switch
     {
         TiposImportacion.Productos or TiposImportacion.Proveedores =>
-            User.IsInRole("Administrador") || User.IsInRole("Inventario"),
+            User.IsInRole("Superadmin") || User.IsInRole("Administrador") || User.IsInRole("Inventario"),
         TiposImportacion.Clientes =>
-            User.IsInRole("Administrador") || User.IsInRole("Ventas"),
+            User.IsInRole("Superadmin") || User.IsInRole("Administrador") || User.IsInRole("Ventas"),
         _ => false
     };
 
