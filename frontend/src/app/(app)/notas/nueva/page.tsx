@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { Aviso } from "@/components/ui/Aviso";
 import { Boton } from "@/components/ui/Boton";
-import { AreaTexto, Campo, Entrada, Seleccion } from "@/components/ui/Campos";
+import { AreaTexto, Campo, Entrada, EntradaNumero, Seleccion } from "@/components/ui/Campos";
 import { EncabezadoPagina } from "@/components/ui/EncabezadoPagina";
 import { apiFetch, mensajeDeError } from "@/lib/api";
 import { formatoMoneda, formatoNumero, hoyISO } from "@/lib/formato";
@@ -286,31 +286,23 @@ export default function PaginaNuevaNota() {
                         {formatoNumero(linea.cantidadVendida)}
                       </td>
                       <td className="px-3 py-3 text-right">
-                        <input
-                          type="number"
-                          min={0}
-                          max={linea.cantidadVendida}
-                          step="0.0001"
-                          value={linea.cantidad}
-                          onChange={(evento) =>
-                            actualizarLinea(indice, { cantidad: Number(evento.target.value) })
-                          }
-                          className="h-9 w-24 rounded-md border border-slate-300 dark:border-slate-600 px-2 text-right text-sm outline-none focus:border-emerald-600"
-                        />
+                        <div className="ml-auto w-24">
+                          <EntradaNumero
+                            valor={linea.cantidad}
+                            onCambio={(cantidad) => actualizarLinea(indice, { cantidad })}
+                            maximo={linea.cantidadVendida}
+                          />
+                        </div>
                       </td>
                       <td className="px-3 py-3 text-right">
-                        <input
-                          type="number"
-                          min={0}
-                          step="0.01"
-                          value={linea.precioUnitario}
-                          onChange={(evento) =>
-                            actualizarLinea(indice, {
-                              precioUnitario: Number(evento.target.value),
-                            })
-                          }
-                          className="h-9 w-24 rounded-md border border-slate-300 dark:border-slate-600 px-2 text-right text-sm outline-none focus:border-emerald-600"
-                        />
+                        <div className="ml-auto w-24">
+                          <EntradaNumero
+                            valor={linea.precioUnitario}
+                            onCambio={(precioUnitario) =>
+                              actualizarLinea(indice, { precioUnitario })
+                            }
+                          />
+                        </div>
                       </td>
                       <td className="px-5 py-3 text-right font-semibold text-slate-800 dark:text-slate-100">
                         {formatoMoneda(linea.cantidad * linea.precioUnitario)}
@@ -355,14 +347,11 @@ export default function PaginaNuevaNota() {
               <div className="flex items-center justify-between gap-3 text-slate-500 dark:text-slate-400">
                 <dt>Impuesto (%)</dt>
                 <dd>
-                  <input
-                    type="number"
-                    min={0}
-                    max={100}
-                    step="0.01"
-                    value={impuestoPorcentaje}
-                    onChange={(evento) => setImpuestoPorcentaje(Number(evento.target.value))}
-                    className="h-8 w-20 rounded-md border border-slate-300 dark:border-slate-600 px-2 text-right text-xs outline-none focus:border-emerald-600"
+                  <EntradaNumero
+                    valor={impuestoPorcentaje}
+                    onCambio={setImpuestoPorcentaje}
+                    maximo={100}
+                    className="w-20 [&>input]:h-8 [&>input]:py-1 [&>input]:text-xs"
                   />
                 </dd>
               </div>

@@ -5,7 +5,7 @@ import { useState, type FormEvent } from "react";
 import { ModalImportacion } from "@/components/importacion/ModalImportacion";
 import { Aviso } from "@/components/ui/Aviso";
 import { Boton } from "@/components/ui/Boton";
-import { Campo, Entrada, Seleccion } from "@/components/ui/Campos";
+import { Campo, Entrada, EntradaNumero, Seleccion } from "@/components/ui/Campos";
 import { EncabezadoPagina } from "@/components/ui/EncabezadoPagina";
 import { Insignia } from "@/components/ui/Insignia";
 import { Modal } from "@/components/ui/Modal";
@@ -409,13 +409,10 @@ export default function PaginaProductos() {
             </Campo>
 
             <Campo etiqueta="Existencia mínima" requerido>
-              <Entrada
-                type="number"
-                min={0}
-                step="0.0001"
-                value={formulario.existenciaMinima}
-                onChange={(evento) =>
-                  setFormulario({ ...formulario, existenciaMinima: Number(evento.target.value) })
+              <EntradaNumero
+                valor={formulario.existenciaMinima}
+                onCambio={(existenciaMinima) =>
+                  setFormulario({ ...formulario, existenciaMinima })
                 }
                 required
               />
@@ -424,27 +421,17 @@ export default function PaginaProductos() {
 
           <div className="grid gap-4 sm:grid-cols-2">
             <Campo etiqueta="Precio de costo" requerido>
-              <Entrada
-                type="number"
-                min={0}
-                step="0.01"
-                value={formulario.precioCosto}
-                onChange={(evento) =>
-                  setFormulario({ ...formulario, precioCosto: Number(evento.target.value) })
-                }
+              <EntradaNumero
+                valor={formulario.precioCosto}
+                onCambio={(precioCosto) => setFormulario({ ...formulario, precioCosto })}
                 required
               />
             </Campo>
 
             <Campo etiqueta="Precio de venta" requerido>
-              <Entrada
-                type="number"
-                min={0}
-                step="0.01"
-                value={formulario.precioVenta}
-                onChange={(evento) =>
-                  setFormulario({ ...formulario, precioVenta: Number(evento.target.value) })
-                }
+              <EntradaNumero
+                valor={formulario.precioVenta}
+                onCambio={(precioVenta) => setFormulario({ ...formulario, precioVenta })}
                 required
               />
             </Campo>

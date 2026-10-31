@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useMemo, useState, type FormEvent } from "react";
 import { Aviso } from "@/components/ui/Aviso";
 import { Boton } from "@/components/ui/Boton";
-import { Campo, Entrada, Seleccion, AreaTexto } from "@/components/ui/Campos";
+import { Campo, Entrada, EntradaNumero, Seleccion, AreaTexto } from "@/components/ui/Campos";
 import { Cargando } from "@/components/ui/Cargando";
 import { EncabezadoPagina } from "@/components/ui/EncabezadoPagina";
 import { apiFetch, mensajeDeError } from "@/lib/api";
@@ -162,13 +162,10 @@ export default function PaginaNuevaCompra() {
             </Campo>
 
             <Campo etiqueta="Impuesto (%)">
-              <Entrada
-                type="number"
-                min={0}
-                max={100}
-                step="0.01"
-                value={impuestoPorcentaje}
-                onChange={(evento) => setImpuestoPorcentaje(Number(evento.target.value))}
+              <EntradaNumero
+                valor={impuestoPorcentaje}
+                onCambio={setImpuestoPorcentaje}
+                maximo={100}
               />
             </Campo>
           </div>
@@ -213,25 +210,17 @@ export default function PaginaNuevaCompra() {
                   </Campo>
 
                   <Campo etiqueta={indice === 0 ? "Cantidad" : undefined}>
-                    <Entrada
-                      type="number"
-                      min={0.0001}
-                      step="0.0001"
-                      value={linea.cantidad}
-                      onChange={(evento) =>
-                        actualizarLinea(indice, { cantidad: Number(evento.target.value) })
-                      }
+                    <EntradaNumero
+                      valor={linea.cantidad}
+                      onCambio={(cantidad) => actualizarLinea(indice, { cantidad })}
                     />
                   </Campo>
 
                   <Campo etiqueta={indice === 0 ? "Costo unitario" : undefined}>
-                    <Entrada
-                      type="number"
-                      min={0}
-                      step="0.01"
-                      value={linea.precioUnitario}
-                      onChange={(evento) =>
-                        actualizarLinea(indice, { precioUnitario: Number(evento.target.value) })
+                    <EntradaNumero
+                      valor={linea.precioUnitario}
+                      onCambio={(precioUnitario) =>
+                        actualizarLinea(indice, { precioUnitario })
                       }
                     />
                   </Campo>

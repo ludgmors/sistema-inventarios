@@ -4,7 +4,7 @@ import { Save } from "lucide-react";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { Aviso } from "@/components/ui/Aviso";
 import { Boton } from "@/components/ui/Boton";
-import { AreaTexto, Campo, Entrada, Seleccion } from "@/components/ui/Campos";
+import { AreaTexto, Campo, EntradaNumero, Seleccion } from "@/components/ui/Campos";
 import { Modal } from "@/components/ui/Modal";
 import { apiFetch, mensajeDeError } from "@/lib/api";
 import { formatoMoneda, formatoNumero } from "@/lib/formato";
@@ -159,25 +159,12 @@ export function ModalAjuste({
           </Campo>
 
           <Campo etiqueta="Cantidad" requerido>
-            <Entrada
-              type="number"
-              min={0.0001}
-              step="0.0001"
-              value={cantidad}
-              onChange={(evento) => setCantidad(Number(evento.target.value))}
-              required
-            />
+            <EntradaNumero valor={cantidad} onCambio={setCantidad} required />
           </Campo>
         </div>
 
         <Campo etiqueta="Costo unitario" ayuda="Se usa para valorizar la entrada o salida.">
-          <Entrada
-            type="number"
-            min={0}
-            step="0.01"
-            value={costoUnitario}
-            onChange={(evento) => setCostoUnitario(Number(evento.target.value))}
-          />
+          <EntradaNumero valor={costoUnitario} onCambio={setCostoUnitario} />
         </Campo>
 
         <Campo etiqueta="Observación">

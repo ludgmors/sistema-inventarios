@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useMemo, useState, type FormEvent } from "react";
 import { Aviso } from "@/components/ui/Aviso";
 import { Boton } from "@/components/ui/Boton";
-import { AreaTexto, Campo, Entrada, Seleccion } from "@/components/ui/Campos";
+import { AreaTexto, Campo, Entrada, EntradaNumero, Seleccion } from "@/components/ui/Campos";
 import { Cargando } from "@/components/ui/Cargando";
 import { EncabezadoPagina } from "@/components/ui/EncabezadoPagina";
 import { apiFetch, mensajeDeError } from "@/lib/api";
@@ -21,7 +21,7 @@ interface LineaVenta {
   descuento: number;
 }
 
-const formasPago = ["Efectivo", "Tarjeta", "Transferencia", "Yappy", "Cheque"];
+const formasPago = ["Efectivo", "Tarjeta", "Transferencia", "Cheque"];
 
 export default function PaginaNuevaVenta() {
   const router = useRouter();
@@ -258,40 +258,25 @@ export default function PaginaNuevaVenta() {
                   </Campo>
 
                   <Campo etiqueta={indice === 0 ? "Cantidad" : undefined}>
-                    <Entrada
-                      type="number"
-                      min={0.0001}
-                      step="0.0001"
-                      value={linea.cantidad}
-                      onChange={(evento) =>
-                        actualizarLinea(indice, { cantidad: Number(evento.target.value) })
-                      }
+                    <EntradaNumero
+                      valor={linea.cantidad}
+                      onCambio={(cantidad) => actualizarLinea(indice, { cantidad })}
                     />
                   </Campo>
 
                   <Campo etiqueta={indice === 0 ? "Precio" : undefined}>
-                    <Entrada
-                      type="number"
-                      min={0}
-                      step="0.01"
-                      value={linea.precioUnitario}
-                      onChange={(evento) =>
-                        actualizarLinea(indice, {
-                          precioUnitario: Number(evento.target.value),
-                        })
+                    <EntradaNumero
+                      valor={linea.precioUnitario}
+                      onCambio={(precioUnitario) =>
+                        actualizarLinea(indice, { precioUnitario })
                       }
                     />
                   </Campo>
 
                   <Campo etiqueta={indice === 0 ? "Descuento" : undefined}>
-                    <Entrada
-                      type="number"
-                      min={0}
-                      step="0.01"
-                      value={linea.descuento}
-                      onChange={(evento) =>
-                        actualizarLinea(indice, { descuento: Number(evento.target.value) })
-                      }
+                    <EntradaNumero
+                      valor={linea.descuento}
+                      onCambio={(descuento) => actualizarLinea(indice, { descuento })}
                     />
                   </Campo>
 
@@ -353,13 +338,10 @@ export default function PaginaNuevaVenta() {
                 <dt>Descuento general</dt>
                 <dd className="flex items-center gap-1">
                   <span className="text-xs text-slate-400">Q</span>
-                  <input
-                    type="number"
-                    min={0}
-                    step="0.01"
-                    value={descuento}
-                    onChange={(evento) => setDescuento(Number(evento.target.value))}
-                    className="h-8 w-24 rounded-md border border-slate-300 dark:border-slate-600 px-2 text-right text-xs outline-none focus:border-emerald-600"
+                  <EntradaNumero
+                    valor={descuento}
+                    onCambio={setDescuento}
+                    className="w-24 [&>input]:h-8 [&>input]:py-1 [&>input]:text-xs"
                   />
                 </dd>
               </div>
@@ -367,14 +349,11 @@ export default function PaginaNuevaVenta() {
               <div className="flex items-center justify-between gap-3 text-slate-500 dark:text-slate-400">
                 <dt>Impuesto (%)</dt>
                 <dd>
-                  <input
-                    type="number"
-                    min={0}
-                    max={100}
-                    step="0.01"
-                    value={impuestoPorcentaje}
-                    onChange={(evento) => setImpuestoPorcentaje(Number(evento.target.value))}
-                    className="h-8 w-20 rounded-md border border-slate-300 dark:border-slate-600 px-2 text-right text-xs outline-none focus:border-emerald-600"
+                  <EntradaNumero
+                    valor={impuestoPorcentaje}
+                    onCambio={setImpuestoPorcentaje}
+                    maximo={100}
+                    className="w-20 [&>input]:h-8 [&>input]:py-1 [&>input]:text-xs"
                   />
                 </dd>
               </div>
