@@ -130,4 +130,4 @@ API_URL=https://<dominio-backend>
 - Backend y base de datos funcionales.
 - Frontend con todos los módulos y compilación de producción correcta.
 - Pruebas de integración de compras, ventas, notas y ajustes completadas.
-- Pendiente: publicar el repositorio, desplegar en Vercel/MonsterASP.NET, completar nombres de integrantes.
+- Pendiente: publicar el repositorio, desplegar en Vercel/MonsterASP.  NET, completar nombres de integrantes.
